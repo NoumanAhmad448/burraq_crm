@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::domain(config("app.url"))->group(function () {
 
-    Route::get('', [HomeController1::class, 'index'])->name('index');
+    Route::get('', [HomeController1::class, 'index'])->middleware(['auth'])->name('index');
     Route::get('post/{slug}', [HomeController1::class, 'post'])->name('public_posts');
     Route::get('posts', [HomeController::class, 'posts'])->name('all_public_posts');
     Route::get('page/{slug}', [HomeController1::class, 'page'])->name('public_pages');

@@ -251,23 +251,23 @@ jobs:
         with:
           fetch-depth: 0 # Fetch the entire repository history
 
-      # - name: Sync files to server via FTP
-      #   uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65
-      #   with:
-      #     server: ${{ secrets.FTP_SERVER }}
-      #     username: ${{ secrets.FTP_USERNAME }}
-      #     password: ${{ secrets.FTP_PASS }}
-      #     server-dir: /
-      #     log-level: verbose
-      #     timeout: 60000000
-      #     port: 21
-      #     # passive: true  # Use passive mode to avoid unexpected disconnects
-      #     protocol: ftps
-      #     exclude: |
-      #       **/.git*
-      #       **/.git*/**
-      #       **/node_modules/**
-      #       **/vendor/**
+      - name: Sync files to server via FTP
+        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASS }}
+          server-dir: /crm.burraqengineering.com/
+          log-level: verbose
+          timeout: 60000000
+          port: 21
+          # passive: true  # Use passive mode to avoid unexpected disconnects
+          protocol: ftps
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/vendor/**
 
       # - name: Deploy to Staging server
       #   uses: easingthemes/ssh-deploy@a1aa0b6cf96ce2406eef90faa35007a4a7bf0ac0
@@ -279,34 +279,34 @@ jobs:
       #     REMOTE_USER: ${{ secrets.SSH_USERNAME }}
       #     TARGET: /
       #     EXCLUDE: "/dist/, /node_modules/ , /.git, /vendor/"
-      # SCRIPT_BEFORE: |
-      #   whoami
-      # SCRIPT_AFTER_REQUIRED: true
-      # SCRIPT_AFTER: |
-      #   cd ${{secrets.SERVER_PATH}} &&
-      #   sudo chmod -R 775 ${{secrets.SERVER_PATH}}/server_deploy.sh &&
-      #   sudo chown -R root:root ${{secrets.SERVER_PATH}}/server_deploy.sh &&
-      #   ./server_deploy.sh
+      #   SCRIPT_BEFORE: |
+      #     whoami
+      #   SCRIPT_AFTER_REQUIRED: true
+      #   SCRIPT_AFTER: |
+      #     cd ${{secrets.SERVER_PATH}} &&
+      #     sudo chmod -R 775 ${{secrets.SERVER_PATH}}/server_deploy.sh &&
+      #     sudo chown -R root:root ${{secrets.SERVER_PATH}}/server_deploy.sh &&
+      #     ./server_deploy.sh
       # Step 5: Set up SSH
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@836c84ec59a0e7bc0eabc79988384eb567561ee2
-        with:
-          ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY }}
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@836c84ec59a0e7bc0eabc79988384eb567561ee2
+      #   with:
+      #     ssh-private-key: |
+      #       ${{ secrets.SSH_PRIVATE_KEY }}
 
       # Step 6: Add remote server to known hosts
-      - name: Add remote server to known hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      # - name: Add remote server to known hosts
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # Step 6: Deploy using rsync
-      - name: Deploy using rsync
-        run: |
-          rsync -avz --delete --exclude='.env' \
-            --exclude='.env.testing' \
-            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ./ "${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{secrets.SERVER_PATH}}/"
+      # # Step 6: Deploy using rsync
+      # - name: Deploy using rsync
+      #   run: |
+      #     rsync -avz --delete --exclude='.env' \
+      #       --exclude='.env.testing' \
+      #       -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+      #       ./ "${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{secrets.SERVER_PATH}}/"
 
       - name: Run server-side deployment script
         uses: appleboy/ssh-action@9817ef4a1793d4009d854d26cfb0ba4b615d5791
