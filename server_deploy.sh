@@ -4,30 +4,30 @@
 yes | php artisan down
 
 # Create necessary directories
-mkdir -p /home/nomilyskills/public_html/storage/app
-mkdir -p /home/nomilyskills/public_html/storage/framework/cache
-mkdir -p /home/nomilyskills/public_html/storage/framework/sessions
-mkdir -p /home/nomilyskills/public_html/storage/framework/views
-mkdir -p /home/nomilyskills/public_html/storage/logs
-mkdir -p /home/nomilyskills/public_html/bootstrap/cache
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/app
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/framework/cache
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/framework/sessions
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/framework/views
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/logs
+mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 
 # Generate artisan key
 yes | php artisan key:generate
 
 # Secure .env and other sensitive files
-sudo chmod -R 775 /home/nomilyskills/public_html/
-sudo chmod 444 /home/nomilyskills/public_html/.env
-sudo chown -R root:root /home/nomilyskills/public_html/
+sudo chmod -R 775 /home/nomilyskills/public_html/crm.burraqengineering.com/
+sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
+sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com/
 
 # Set correct permissions for storage & bootstrap/cache
-yes | chmod -R 777 /home/nomilyskills/public_html/storage/ /home/nomilyskills/public_html/bootstrap/cache
+yes | chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage/ /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 
 # Check PHP version
 php --version
 
 # Check if PHP 8.1 is installed
-if ! php -v | grep -q "PHP 8.1"; then
-  echo "PHP 8.1 is not installed. Exiting."
+if ! php -v | grep -q "PHP 8.2"; then
+  echo "PHP 8.2 is not installed. Exiting."
   exit 1
 fi
 
@@ -51,7 +51,7 @@ yes | composer require --dev phpunit/phpunit
 # yes | php artisan db:seed --class=LanguageSeeder
 
 # Avoid any node permission error
-sudo chown -R root:root /home/nomilyskills/public_html/
+sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com/
 
 # Create a custom link of public folder with storage folder
 yes | php artisan storage:link-custom
@@ -151,9 +151,9 @@ php artisan event:cache && php artisan optimize
 php artisan health:check --no-notification
 
 # Reset permissions for web server & FTP user
-sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/
-sudo chmod -R 755 /home/nomilyskills/public_html/
-sudo chmod 444 /home/nomilyskills/public_html/.env
+sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/crm.burraqengineering.com/
+sudo chmod -R 755 /home/nomilyskills/public_html/crm.burraqengineering.com/
+sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
 # Run cron
 php artisan schedule:run >> /dev/null 2>&1

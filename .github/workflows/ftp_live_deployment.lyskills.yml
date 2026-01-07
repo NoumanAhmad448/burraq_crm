@@ -291,7 +291,8 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@836c84ec59a0e7bc0eabc79988384eb567561ee2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: |
+            ${{ secrets.SSH_PRIVATE_KEY }}
 
       # Step 6: Add remote server to known hosts
       - name: Add remote server to known hosts
