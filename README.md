@@ -5,7 +5,7 @@ Burraq CRM
 
 ## Development(Local Setup)
 1. Visit the github repo where sample .env file was stored else use the .env.dev
-2. Do not forget to add value of following keys
+2. Do not forget to add value of following keys in .env file
 ```
 DB_TESTING_DATABASE
 ```
@@ -189,7 +189,7 @@ This guide provides step-by-step instructions for deploying the **burraq_crm** L
 
 ---
 
-## **2. Server Configuration**
+## **2. Server Configuration(Deployment)**
 
 ### **2.1. Verify Server Requirements**
 
@@ -216,7 +216,8 @@ This guide provides step-by-step instructions for deploying the **burraq_crm** L
     ```bash
     systemctl status mysql
     ```
-
+Upload the .env and server_deploy.sh file to the server and setup everything inside 
+the .env file and skip the below guidline.
 ### **2.2. Create FTP Access**
 
 1. In cPanel, go to **FTP Accounts**.
