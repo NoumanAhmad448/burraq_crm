@@ -26,7 +26,7 @@ class UniqueNameRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return User::where('email',$value.'@lyskills.com')->count() === 0;
+        return User::where('email',$value.'@burraqengineering.com')->count() === 0;
     }
 
     /**

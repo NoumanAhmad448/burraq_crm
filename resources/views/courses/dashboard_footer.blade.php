@@ -5,8 +5,8 @@
             <div class="ml-md-4"> copyright © {{ date('Y') }} </div>
         </div>
         <div class="col-md-4 d-flex align-items-center">
-            <a href="https://lyskills.com/page/terms-and-conditions" class="text-info mr-4"> Terms </a>
-            <a href="https://lyskills.com/page/privacy-policy" class="text-info"> Privacy Policy </a>
+            <a href="https://burraqengineering.com/page/terms-and-conditions" class="text-info mr-4"> Terms </a>
+            <a href="https://burraqengineering.com/page/privacy-policy" class="text-info"> Privacy Policy </a>
         </div>
     </div>
 </div>

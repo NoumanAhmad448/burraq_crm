@@ -34,7 +34,7 @@
         <span style="font-size:25px;"><i>has completed the course</i></span> <br /><br />
         <div style="font-size:30px;color: #000;"> {{ $title }} </div>
         <!--<div style="font-size:25px">on  </div> <br/><br/>-->
-        <!--<div style="font-size:30px"> Lyskills.com </div><br>-->
+        <!--<div style="font-size:30px"> crm.burraqengineering.com </div><br>-->
         <div style="display: flex;justify-content: center;">
             <img src="{{ asset(config('setting.img_logo_path')) }}" alt="company logo" style="width: 150px;" />
         </div>

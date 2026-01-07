@@ -8,6 +8,7 @@
                 <img src="{{ asset(config('setting.img_logo_path')) }}" alt="lyskills" class="img-fluid" width="150" />
             </x-slot>
 
+            @if(false)
             <a href="{{ route('google-login') }}" style="" class="btn btn-info btn-lg d-block my-1"> <i
                     class="fa fa-google" aria-hidden="true"></i>
                 Sign In With Google
@@ -21,6 +22,7 @@
                     class="fa fa-linkedin" aria-hidden="true"></i>
                 Sign In With LinkedIn
             </a>
+            @endif
 
             <x-jet-validation-errors class="mb-4" />
 
@@ -107,11 +109,11 @@
         </script>
         <script>
             var seo =
-                "Login to Lyskills an E learning platform to shape the future of your students by giving the online training of their desire course.";
+                "Login to CRM an E learning platform to shape the future of your students by giving the online training of their desire course.";
             $("#seo_desc").attr('content',
                 seo);
             $("#seo_fb").attr('content', seo);
-            $('#seo_title').text('Login | Lyskills');
+            $('#seo_title').text('Login | CRM');
         </script>
     @endsection
 </x-guest-layout>

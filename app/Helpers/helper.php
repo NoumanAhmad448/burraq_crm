@@ -115,7 +115,7 @@ if (!function_exists('setEmailConfigViaAdmin')) {
         config(['mail.mailers.username' => getAdminEmail()]);
         config(['mail.mailers.password' => 'BurraqLyskills']);
         config(['mail.from.address' => getAdminEmail()]);
-        config(['mail.from.name' => 'Lyskills']);
+        config(['mail.from.name' => 'CRM']);
     }
 }
 if (!function_exists('setEmailConfigViaIns')) {
@@ -126,14 +126,14 @@ if (!function_exists('setEmailConfigViaIns')) {
         config(['mail.mailers.username' => getInsEmail()]);
         config(['mail.mailers.password' => 'BurraqLyskills']);
         config(['mail.from.address' => getInsEmail()]);
-        config(['mail.from.name' => 'Instructor ' . $i_name . ' From Lyskills']);
+        config(['mail.from.name' => 'Instructor ' . $i_name . ' From CRM']);
     }
 }
 if (!function_exists('getAdminEmail')) {
 
     function getAdminEmail()
     {
-        return  'admin@lyskills.com';
+        return  'admin@burraqengineering.com';
     }
 }
 
@@ -141,7 +141,7 @@ if (!function_exists('getInsEmail')) {
 
     function getInsEmail()
     {
-        return  'instructor@lyskills.com';
+        return  'instructor@burraqengineering.com';
     }
 }
 
@@ -159,7 +159,7 @@ if (!function_exists('getStudentEmail')) {
 
     function getStudentEmail()
     {
-        return  'student@lyskills.com';
+        return  'student@burraqengineering.com';
     }
 }
 
@@ -171,7 +171,7 @@ if (!function_exists('setEmailConfigForCourse')) {
         config(['mail.mailers.username' => getCourseEmail()]);
         config(['mail.mailers.password' => config("setting.no_reply_email_pass")]);
         config(['mail.from.address' => getCourseEmail()]);
-        // config(['mail.from.name' => 'Instructor '.$i_name. ' From Lyskills']);
+        // config(['mail.from.name' => 'Instructor '.$i_name. ' From CRM']);
 
     }
 }
@@ -179,7 +179,7 @@ if (!function_exists('getCourseEmail')) {
 
     function getCourseEmail()
     {
-        return  'no-reply@lyskills.com';
+        return  'no-reply@burraqengineering.com';
     }
 }
 

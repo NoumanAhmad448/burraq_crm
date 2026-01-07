@@ -1,6 +1,7 @@
-<div class="container-fluid">
-    <footer class="footer-bg mt-auto">
+<div class="container-fluid text-center py-3">
+    <footer class="footer-bg mt-auto text-center">
         <div class="container-fluid">
+            @if(false)
             <div class="row pt-2 pt-md-5">
                 <div class="col-md-3 mt-3 mt-md-0">
                     <h3 class="mb-3"> About US </h3>
@@ -29,12 +30,12 @@
 
                 <div class="col-md-3 mt-3 mt-md-0">
                     <ul class="list-unstyled">
-                        <li class="mt-2"><a class="text-white" href="https://lyskills.com/page/about-us"> About Us
+                        <li class="mt-2"><a class="text-white" href="https://burraqengineering.com/page/about-us"> About Us
                             </a></li>
-                        <li class="mt-2"><a class="text-white" href="https://lyskills.com/page/privacy-policy">
+                        <li class="mt-2"><a class="text-white" href="https://burraqengineering.com/page/privacy-policy">
                                 Privacy Policy </a>
                         </li>
-                        <li class="mt-2"><a class="text-white" href="https://lyskills.com/page/terms-and-conditions">
+                        <li class="mt-2"><a class="text-white" href="https://burraqengineering.com/page/terms-and-conditions">
                                 Terms &
                                 Conditions
                             </a></li>
@@ -49,7 +50,7 @@
 
                     <h3 class="my-3">Follow Us</h3>
                     <div class="d-inline text-white">
-                        <a class="text-white mr-2" href="https://www.facebook.com/Lyskills-113826713695283">
+                        <a class="text-white mr-2" href="https://www.facebook.com/CRM-113826713695283">
                             <i class="fa fa-facebook-official" aria-hidden="true"></i>
                         </a>
 
@@ -72,9 +73,10 @@
                 </div>
 
             </div>
-            <div class="row mt-3 pb-3">
+            @endif
+            <div class="row mt-3 pb-3 text-center">
                 <div class="col">
-                    <p class="text-center">&copy; Copyright {{ date('Y') }}- Lyskills. All Rights Are Reserved.</p>
+                    <p class="text-center">&copy; Copyright {{ date('Y') }}- Burraq CRM. All Rights Are Reserved.</p>
                 </div>
             </div>
         </div>
@@ -90,6 +92,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
+@if(false)
 <!--load whatsapp-->
 <a href="https://wa.me/923349376619" class="whatsapp mr-3 mb-4" style="position: fixed; left: 5;bottom:0"> <img
         src="https://img.icons8.com/color/48/000000/whatsapp--v4.png" style="width: 4.5rem" alt="whatsapp" /> </a>
@@ -103,5 +106,6 @@
 <div class="fb-customerchat" style="bottom: 10px" attribution=setup_tool page_id="113826713695283"
     greeting_dialog_display="hide">
 </div>
+@endif
 
 @yield('script')

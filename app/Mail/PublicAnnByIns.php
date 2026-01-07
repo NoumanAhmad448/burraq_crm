@@ -33,7 +33,7 @@ class PublicAnnByIns extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject("Instructor, Lyskills " .$this->subject)->from(getInsEmail())->markdown('emails.public-announcement-by-i',
+        return $this->subject("Instructor, CRM " .$this->subject)->from(getInsEmail())->markdown('emails.public-announcement-by-i',
         ['body' => $this->body]);
     }
 }

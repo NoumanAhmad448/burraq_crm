@@ -8,7 +8,7 @@
             <div class="col">
                 <div class="d-flex flex-row justify-content-between my-3">
                     <section class="d-flex">
-                        <a class="mr-1" href="{{ route('dashboard') }}"> Lyskills </a>
+                        <a class="mr-1" href="{{ route('dashboard') }}"> CRM </a>
                         <div> Step 1 of 2 </div>
                     </section>
                     <a href="{{ route('dashboard') }}" class="mr-3"> Exit </a>

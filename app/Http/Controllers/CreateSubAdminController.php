@@ -15,7 +15,7 @@ class CreateSubAdminController extends Controller
             if(isSuperAdmin()){
                 $data = $request->validated();
                 $data['password'] = Hash::make($data['password']);
-                $data['email'] = $data['email']."@lyskills.com";
+                $data['email'] = $data['email']."@burraqengineering.com";
                 $data['email_verified_at'] = now();
                 $data['is_admin'] = 1;
                 User::create($data);
@@ -32,7 +32,7 @@ class CreateSubAdminController extends Controller
             if(isSuperAdmin()){
             $data = $request->validated();
             $data['password'] = Hash::make($data['password']);
-            $data['email'] = $data['email']."@lyskills.com";
+            $data['email'] = $data['email']."@burraqengineering.com";
             $user->update($data);
             return redirect()->route('show_sub_admins')->with('status',"Account has been updated");
         }

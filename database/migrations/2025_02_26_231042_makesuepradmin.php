@@ -19,7 +19,7 @@ return new class extends Migration
     {
         if (class_exists(\App\Models\User::class)) {
             User::firstOrCreate(
-                ['email' => 'admin@lyskills.com'],  // Check if user exists by email
+                ['email' => 'admin@burraqengineering.com'],  // Check if user exists by email
                 [
                     'name' => 'Super Admin',
                     'password' => Hash::make('konichiwa'),  // Secure password hashing

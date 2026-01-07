@@ -54,7 +54,7 @@
                     @csrf
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">https://lyskills.com/course/</span>
+                            <span class="input-group-text">https://burraqengineering.com/course/</span>
                         </div>
                         <input type="text" class="form-control @error('slug') is-invalid @enderror" placeholder="url"
                             aria-label="url" aria-describedby="url" name="slug" id="slug"

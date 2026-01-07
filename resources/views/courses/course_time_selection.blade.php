@@ -6,7 +6,7 @@
             <div class="col">
                 <div class="d-flex flex-row justify-content-between my-4">
                     <section class="d-flex">
-                        <a class="mr-1" href="http://127.0.0.1:8000/dashboard"> Lyskills </a>
+                        <a class="mr-1" href="http://127.0.0.1:8000/dashboard"> CRM </a>
                         <div> Step 4 of 4 </div>
                     </section>
                     <a href="http://127.0.0.1:8000/dashboard" class="mr-3"> Exit </a>

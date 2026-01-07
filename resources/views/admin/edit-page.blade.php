@@ -30,7 +30,7 @@
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
-        <img src="{{ config('setting.s3Url') . $page->upload_img }}" alt="Lyskills" width="100" height="50"
+        <img src="{{ config('setting.s3Url') . $page->upload_img }}" alt="CRM" width="100" height="50"
             class="img-fluid mb-1" />
         <div class="form-group">
             <input type="file" class="d-none" id="upload_img" name="upload_img">

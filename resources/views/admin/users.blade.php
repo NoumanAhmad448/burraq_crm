@@ -89,7 +89,7 @@
         </div>
     @else
         <div class="text-center jumbotron bg-light">
-            <img src="{{ asset('img/not_found.png') }}" alt="Lyskills" class="img-fluid img-thumbnail rounded-pill"
+            <img src="{{ asset('img/not_found.png') }}" alt="CRM" class="img-fluid img-thumbnail rounded-pill"
                 width="100" />
 
             <div> Sorry, No record was found. <b> Please refine your search by trying another option </b> </div>

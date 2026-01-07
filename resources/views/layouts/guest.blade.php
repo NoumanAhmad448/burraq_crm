@@ -39,7 +39,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
     @yield('page-css')
 </head>
 
-<body style="min-height: 100vh !important" class="d-flex flex-column ">
+<body class="d-flex flex-column min-vh-100">
     @include('modals.modal')
     @if (isset($ann) && $ann->count() && config('setting.user_notification'))
         <div class="container-fluid font-bold text-center">
@@ -65,7 +65,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
                         <div class="d-md-flex align-items-md-center">
                             @if (config('setting.show_site_log'))
                                 <a href="{{ route('index') }}" class=""> <img
-                                        src="{{ asset(config('setting.img_logo_path')) }}" alt="Lyskills"
+                                        src="{{ asset(config('setting.img_logo_path')) }}" alt="CRM"
                                         width="80" class="img-fluid" /> </a>
                             @endif
                             @if (config('setting.category_menu'))
@@ -115,7 +115,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
                                 </a>
                             @else
                                 <a href="{{ route('instructor.register') }}" class="ml-3 mt-5 mt-md-3 text-dark">
-                                    {{ __('Teach on Lyskills') }} </a>
+                                    {{ __('Teach on CRM') }} </a>
         @endif
         </div>
         </div>
@@ -193,7 +193,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
             @endif
 
             <!-- main Content -->
-            <main>
+            <main class="min-vh-100 d-flex flex-column">
                 @yield('content')
             </main>
 

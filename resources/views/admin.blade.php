@@ -67,7 +67,7 @@
                     @enderror
                 </div>
                 <button type="submit" class="btn btn-info">Login</button>
-                <a href="{{ route('index') }}" class="text-info ml-3"> Visit Lyskills </a>
+                <a href="{{ route('index') }}" class="text-info ml-3"> Visit CRM </a>
             </form>
         </div>
 

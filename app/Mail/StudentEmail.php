@@ -40,6 +40,6 @@ class StudentEmail extends Mailable
      */
     public function build()
     {
-        return $this->from(getStudentEmail(), 'Student '.$this->name." From Lyskills" )->subject('STUDENT FROM LYSKILLS ' .$this->subject)->markdown('emails.student-email-to-ins');
+        return $this->from(getStudentEmail(), 'Student '.$this->name." From CRM" )->subject('STUDENT FROM LYSKILLS ' .$this->subject)->markdown('emails.student-email-to-ins');
     }
 }

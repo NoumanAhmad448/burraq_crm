@@ -12,7 +12,7 @@
                             width="150" />
                     </div>
                     <!--</x-slot>-->
-
+                    @if(false)
                     <a href="{{ route('google-login') }}" class="btn btn-info btn-lg  my-1 d-block" style=""> <i
                             class="fa fa-google" aria-hidden="true"></i>
                         Sign Up With Google
@@ -26,6 +26,7 @@
                             class="fa fa-linkedin" aria-hidden="true"></i>
                         Sign Up With LinkedIn
                     </a>
+                    @endif
                     <x-jet-validation-errors class="mb-4" />
 
                     <form method="POST" action="{{ route('register') }}">
@@ -90,9 +91,9 @@
                             <div class="form-check mt-3">
                                 <input class="form-check-input" type="checkbox" id="terms" name="terms">
                                 <label class="form-check-label" for="terms">
-                                    I accept these <a href="https://lyskills.com/page/terms-and-conditions"
+                                    I accept these <a href="https://burraqengineering.com/page/terms-and-conditions"
                                         class="text-primary">terms</a> and <a class="text-primary"
-                                        href="https://lyskills.com/page/privacy-policy">conditions</a>
+                                        href="https://burraqengineering.com/page/privacy-policy">conditions</a>
                                 </label>
                             </div>
                             @if (app()->environment(config('app.live_env')))
@@ -151,7 +152,7 @@
             $("#seo_desc").attr('content',
                 seo);
             $("#seo_fb").attr('content', seo);
-            $('#seo_title').text('Register | Lyskills');
+            $('#seo_title').text('Register | CRM');
         </script>
     @endsection
     @section('page-css')
