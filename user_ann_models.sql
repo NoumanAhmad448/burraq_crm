@@ -52,7 +52,7 @@ INSERT INTO `user_ann_models` (`id`, `message`, `created_at`, `updated_at`) VALU
 (10, 'Signup and Join the Online Instructor and Student Community.', '2021-07-28 16:39:20', '2021-07-28 16:39:20'),
 (11, '5$ Sale up to 15 August', '2021-08-08 16:49:19', '2021-08-08 16:49:19'),
 (12, 'Defence Day Offer 10$ Each Course', '2021-09-04 16:13:28', '2021-09-04 16:13:28'),
-(13, 'Welcome to Lyskills', '2021-09-14 12:54:43', '2021-09-14 12:54:43'),
+(13, 'Welcome to CRM', '2021-09-14 12:54:43', '2021-09-14 12:54:43'),
 (14, 'December End-of-Year 12$ Sale is Available on all Courses', '2021-12-03 01:26:50', '2021-12-03 01:50:30'),
 (15, '!!!25 DEC OFFER MOST OF THE COURSES ARE FREE ENROLL AND ENJOY!!!', '2021-12-25 02:32:00', '2021-12-25 02:32:00'),
 (16, '!!!Massive Course on Electrical Design Engineer!!! It is on Promotion Buy Now. 40$ in Febuary and 180$ after Febuary.', '2022-02-03 02:09:31', '2022-02-03 02:09:31'),

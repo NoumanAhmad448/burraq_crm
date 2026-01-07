@@ -8,7 +8,7 @@ return [
     ],
     'buttons' => [
         'save' => 'Save Changes',
-        'instructor' => 'Register to Lyskills'
+        'instructor' => 'Register to CRM'
     ],
     'labels' => [
         'original_filename' => 'Original filename',
@@ -31,7 +31,7 @@ return [
         'student' => 'student'
     ],
     'meta' => [
-        'title' => 'Welcome to Lyskills',
+        'title' => 'Welcome to CRM',
         'description' => 'Learn from expert instructors'
     ],
     'hero' => [
@@ -39,7 +39,7 @@ return [
         'subtitle' => 'Discover courses from top instructors'
     ],
     'become_instructor' => [
-        'title' => 'Register to Lyskills',
+        'title' => 'Register to CRM',
         'description' => 'Share your knowledge and earn money by becoming an instructor'
     ],
     'features' => [
@@ -65,8 +65,8 @@ return [
         'read_more' => 'Read More'
     ],
     'instructor' => [
-        'title' => 'Register to Lyskills',
-        'description' => 'Spread your knowledge to millions of students around the world through Lyskills teaching platform. You can teach any tech you love from heart',
+        'title' => 'Register to CRM',
+        'description' => 'Spread your knowledge to millions of students around the world through CRM teaching platform. You can teach any tech you love from heart',
         'cta' => 'Start Teaching Now'
     ],
     'faq' => [

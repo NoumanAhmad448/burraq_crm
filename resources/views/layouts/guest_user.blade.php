@@ -104,7 +104,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
                         <div class="d-md-flex align-items-md-center">
                             @if (config('setting.show_site_log'))
                                 <a href="{{ route('index') }}" class=""> <img
-                                        src="{{ asset(config('setting.img_logo_path')) }}" alt="Lyskills"
+                                        src="{{ asset(config('setting.img_logo_path')) }}" alt="CRM"
                                         width="80" class="img-fluid" /></a>
                             @endif
                             <div class="dropdown">
@@ -152,7 +152,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
                             </a>
                         @else
                             <a href="{{ route('dashboard') }}" class="ml-3 mt-5 mt-md-3 text-dark">
-                                {{ __('Teach on Lyskills') }} </a>
+                                {{ __('Teach on CRM') }} </a>
                             @endif
                         </div>
                     </div>

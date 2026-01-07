@@ -5,7 +5,7 @@
     our system and proceed with your course.
 
     @component('mail::button', ['url' => config('app.url')])
-        Lyskills.com
+        crm.burraqengineering.com
     @endcomponent
 
 @endcomponent

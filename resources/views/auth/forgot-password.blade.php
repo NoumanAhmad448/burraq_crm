@@ -52,7 +52,7 @@
             $("#seo_desc").attr('content',
                 seo);
             $("#seo_fb").attr('content', seo);
-            $('#seo_title').text('Forgot Password | Lyskills');
+            $('#seo_title').text('Forgot Password | CRM');
         </script>
     @endsection
 </x-guest-layout>

@@ -3,11 +3,21 @@ Burraq CRM
 </h3>
 
 
-## Development
-
-1. Turn on xampp
-2. PHP server
-
+## Development(Local Setup)
+1. Visit the github repo where sample .env file was stored else use the .env.dev
+2. Do not forget to add value of following keys
+```
+DB_TESTING_DATABASE
+```
+```
+DB_Laravel
+```
+3. Turn on xampp
+4. Run migrations
+```
+php artisan migrate
+```
+5. PHP server
 ```
 php artisan serve --port=8080
 ```
@@ -40,13 +50,7 @@ ftp_live_deployment.burraq_crm.yml
 3. show loader on user request `profile.js` and search for `hide loader` & `show loader`
 4. server logs `server_logs` function in `helper.php`
 5. server configuration `php_config` function in `helper.php`
-
-6. Add all global setting constants in `custom_lib .blade.php`
-7. custom javascript functions in `common_functions.js`
-8. show loader on user request `profile.js` and search for `hide loader` & `show loader`
-9. server logs `server_logs` function in `helper.php`
-10. server configuration `php_config` function in `helper.php`
-11. All php related dates or carbon classes is in ```burraq_crmCarbon```
+6. All php related dates or carbon classes is in ```burraq_crmCarbon```
 
 ```
 8. Checkout storage on server
@@ -80,9 +84,9 @@ file and change the DB connection
 ```
 
 ```
-mkdir -p /home/nomiburraq_crm/public_html/storage/app 
+mkdir -p /home/nomiburraq_crm/public_html/storage/app
 mkdir -p /home/nomiburraq_crm/public_html/storage/framework/cache
-mkdir -p /home/nomiburraq_crm/public_html/storage/framework/sessions 
+mkdir -p /home/nomiburraq_crm/public_html/storage/framework/sessions
 mkdir -p /home/nomiburraq_crm/public_html/storage/framework/views
 mkdir -p /home/nomiburraq_crm/public_html/storage/logs
 ```
@@ -284,11 +288,6 @@ chmod -R 775 /home/web_server/public_html/bootstrap/cache
     nano /opt/cpanel/ea-php80/root/etc/php.ini
     ```
 2. Ensure the following settings are configured:
-    ```ini
-    upload_max_filesize = 8G
-    post_max_size = 8G
-    memory_limit = 8G
-    ```
     ```ini
     upload_max_filesize = 8G
     post_max_size = 8G

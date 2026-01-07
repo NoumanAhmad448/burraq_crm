@@ -30,7 +30,7 @@ class BloggerController extends Controller
         try {
             $data = $request->validated();
             $data['password'] = Hash::make($data['password']);
-            $data['email'] = $data['email'] . "@lyskills.com";
+            $data['email'] = $data['email'] . "@burraqengineering.com";
             $data['email_verified_at'] = now();
             $data['is_blogger'] = 1;
             User::create($data);
@@ -57,7 +57,7 @@ class BloggerController extends Controller
         try {
             $data = $request->validated();
             $data['password'] = Hash::make($data['password']);
-            $data['email'] = $data['email'] . "@lyskills.com";
+            $data['email'] = $data['email'] . "@burraqengineering.com";
             $user->update($data);
             return redirect()->route('show_blogger___')->with('status', "Account has been updated");
         } catch (Exception $e) {

@@ -3,8 +3,8 @@
 
     {!! $body !!}
 
-    @component('mail::button', ['url' => 'https://lyskills.com'])
-        Lyskills
+    @component('mail::button', ['url' => 'https://burraqengineering.com'])
+        CRM
     @endcomponent
 
     Thanks,<br>

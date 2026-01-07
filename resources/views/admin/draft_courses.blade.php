@@ -133,7 +133,7 @@
         {{-- </div> --}}
     @else
         <div class="jumbotron bg-light text-center">
-            <img src="{{ asset('img/not_found.png') }}" alt="Lyskills" class="img-fluid img-thumbnail rounded-pill"
+            <img src="{{ asset('img/not_found.png') }}" alt="CRM" class="img-fluid img-thumbnail rounded-pill"
                 width="100" />
             <div> Sorry, No course is in draft yet. </div>
         </div>

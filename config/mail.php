@@ -37,7 +37,7 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'server1.lyskills.com'),
+            'host' => env('MAIL_HOST', 'server1.burraqengineering.com'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
@@ -85,8 +85,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'testing.lyskillls@lyskills.com'),
-        'name' => env('MAIL_FROM_NAME', 'Lyskills'),
+        'address' => env('MAIL_FROM_ADDRESS', 'testing.lyskillls@burraqengineering.com'),
+        'name' => env('MAIL_FROM_NAME', 'CRM'),
     ],
 
     /*

@@ -20,7 +20,7 @@
             <div class="col-md-4">
                 <h2> Email </h2>
                 <div>
-                    Lyskills.info@gmail.com
+                    CRM.info@gmail.com
                 </div>
             </div>
             <div class="col-md-4">

@@ -25,9 +25,9 @@ return [
     "You are logged in!" => "تم تسجيل الدخول بنجاح!",
 
     "Sign Up With Google" => "التسجيل باستخدام Google",
-    "Teach on Lyskills.com" => "التدريس على Lyskills.com",
+    "Teach on crm.burraqengineering.com" => "التدريس على crm.burraqengineering.com",
     "rgstr" => "التسجيل",
-    "site_name" => "Lyskills",
+    "site_name" => "CRM",
 
     // باقي الترجمة هنا (نفس النمط)...
 ];

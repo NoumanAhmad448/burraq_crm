@@ -34,6 +34,6 @@ class PaymentMail extends Mailable
     {
         $month = LyskillsCarbon::currentMonth() -1;
         $year = LyskillsCarbon::currentYear();
-        return $this->from(getAdminEmail())->subject("Month ".$month. " Year". $year. " Payment from Lyskills")->markdown('emails.monthly-payment');
+        return $this->from(getAdminEmail())->subject("Month ".$month. " Year". $year. " Payment from CRM")->markdown('emails.monthly-payment');
     }
 }

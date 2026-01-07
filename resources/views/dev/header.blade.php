@@ -27,7 +27,7 @@
     <nav class="navbar bg-website" style="flex: 1">
         @if (config('setting.show_site_log'))
             <a class="navbar-brand text-white" href="{{ route('a_home') }}">
-                Lyskills
+                CRM
             </a>
         @endif
         <ul class="navbar-nav ml-auto">

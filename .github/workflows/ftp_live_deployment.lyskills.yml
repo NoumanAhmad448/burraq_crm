@@ -1,4 +1,4 @@
-name: Lyskills Deployment
+name: CRM Deployment
 
 on:
   push:

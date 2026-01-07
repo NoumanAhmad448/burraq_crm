@@ -30,7 +30,7 @@
                         <input type="text" class="form-control" id="email" name="email" placeholder="username"
                             aria-label="username" value="{{ Str::of($user->email)->explode('@')[0] }}">
                         <div class="input-group-append">
-                            <span class="input-group-text text-white bg-info">@lyskills.com</span>
+                            <span class="input-group-text text-white bg-info">@burraqengineering.com</span>
                         </div>
                     </div>
                 </div>

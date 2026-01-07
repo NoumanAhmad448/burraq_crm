@@ -63,6 +63,7 @@
             </div>
         @endif
     @endif
+    @if (config('setting.instructor_registration'))
     <div class="container-fluid">
         @include('sn.load_container')
         <div class="content-main jumbotron bg-website text-white my-2 text-center">
@@ -75,6 +76,7 @@
             </a>
         </div>
     </div>
+    @endif
     @if (config('setting.all_faqs'))
         @if (isset($faq) && $faq)
             <div class="container-fluid my-3">

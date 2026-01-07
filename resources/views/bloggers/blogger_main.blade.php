@@ -29,7 +29,7 @@
     <nav class="navbar bg-info">
         <a class="navbar-brand text-white" href="{{ route('blogger_home') }}">
             {{-- <img src="{{asset(config("setting.img_logo_path"))}}" alt="lyskills" class="img-fluid" width="60"/> --}}
-            Lyskills
+            CRM
         </a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
