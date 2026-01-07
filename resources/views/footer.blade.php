@@ -74,7 +74,7 @@
 
             </div>
             @endif
-            <div class="row mt-3 pb-3 text-center">
+            <div class="row py-3 text-center">
                 <div class="col">
                     <p class="text-center">&copy; Copyright {{ date('Y') }}- Burraq CRM. All Rights Are Reserved.</p>
                 </div>

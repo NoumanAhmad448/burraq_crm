@@ -34,13 +34,13 @@
 
                         <div style="">
                             <x-jet-label for="name" value="{{ __('Name') }}" />
-                            <x-jet-input id="name" class="block mt-1 w-full" type="text" placeholder="Name"
+                            <x-jet-input id="name" class="block mt-1 w-75" type="text" placeholder="Name"
                                 name="name" :value="old('name')" required autofocus autocomplete="name" />
                         </div>
 
                         <div class="mt-4">
                             <x-jet-label for="email" value="{{ __('Email') }}" />
-                            <x-jet-input id="email" class="block mt-1 w-full" placeholder="email address" type="email"
+                            <x-jet-input id="email" class="block mt-1 w-75" placeholder="email address" type="email"
                                 name="email" :value="old('email')" required />
                         </div>
 
@@ -51,44 +51,44 @@
                                 <input id="password" class="form-control" placeholder="password min 8 digits"
                                     type="password" name="password" required autocomplete="new-password">
                                 <div class="input-group-append">
-                                    <span class="input-group-text bg-info cursor-pointer cursor_pointer text-white"
+                                    <span class="input-group-text  bg-website cursor-pointer cursor_pointer text-white"
                                         id="show_pass"><i class="fa fa-eye" aria-hidden="true"></i>
                                 </div>
                             </div>
 
                             <!--<div class="flex">-->
-                            <!--    <x-jet-input id="password" class="block mt-1 w-full"-->
+                            <!--    <x-jet-input id="password" class="block mt-1 w-75"-->
                             <!--    placeholder="password min 8 digits"-->
                             <!--    type="password" name="password" required autocomplete="new-password" />-->
                             <!--    <div class="input-group-append rounded-2xl">-->
-                            <!--        <span class="input-group-text bg-info cursor-pointer cursor_pointer text-white" id="show_pass"><i class="fa fa-eye" aria-hidden="true"></i>-->
+                            <!--        <span class="input-group-text  bg-website cursor-pointer cursor_pointer text-white" id="show_pass"><i class="fa fa-eye" aria-hidden="true"></i>-->
                             <!--        </span>-->
                             <!--    </div>-->
                             <!--</div>-->
                         </div>
 
-                        <div class="form-group mt-4">
+                        <div class="form-group mt-4 w-75">
                             <x-jet-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                             <div class="input-group mb-3">
 
-                                <input id="password_confirmation" placeholder="confirm password" class="form-control"
+                                <input id="password_confirmation" placeholder="confirm password" class="form-control w-75"
                                     type="password" name="password_confirmation" required autocomplete="new-password">
                                 <div class="input-group-append">
-                                    <span class="input-group-text bg-info cursor-pointer cursor_pointer text-white"
+                                    <span class="input-group-text  bg-website cursor-pointer cursor_pointer text-white"
                                         id="c_pass"><i class="fa fa-eye" aria-hidden="true"></i>
                                 </div>
                                 <!--<div class="flex">-->
                                 <!--<x-jet-input id="password_confirmation"-->
                                 <!--    placeholder="confirm password"-->
-                                <!-- class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />-->
+                                <!-- class="block mt-1 w-75" type="password" name="password_confirmation" required autocomplete="new-password" />-->
                                 <!-- <div class="input-group-append rounded-2xl">-->
-                                <!--    <span class="input-group-text bg-info cursor-pointer cursor_pointer text-white" id="c_pass"><i class="fa fa-eye" aria-hidden="true"></i>-->
+                                <!--    <span class="input-group-text  bg-website cursor-pointer cursor_pointer text-white" id="c_pass"><i class="fa fa-eye" aria-hidden="true"></i>-->
                                 <!--    </span>-->
                                 <!--</div>-->
                                 <!-- </div>-->
                             </div>
 
-                            <div class="form-check mt-3">
+                            <div class="form-check mt-3 w-75">
                                 <input class="form-check-input" type="checkbox" id="terms" name="terms">
                                 <label class="form-check-label" for="terms">
                                     I accept these <a href="https://burraqengineering.com/page/terms-and-conditions"
