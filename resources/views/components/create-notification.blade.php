@@ -1,0 +1,5 @@
+<div>
+    {{ $slot }}
+    {{ $createNotifcationForm }}
+
+</div>

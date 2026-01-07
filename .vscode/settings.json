@@ -1,0 +1,17 @@
+{
+    "github-actions.workflows.pinned.workflows": [
+        "dynamic/github-code-scanning/codeql"
+    ],
+    "intelephense.files.exclude": [
+        "**/.git/**",
+        "**/.svn/**",
+        "**/.hg/**",
+        "**/CVS/**",
+        "**/.DS_Store/**",
+        "**/bower_components/**",
+        "**/.history/**"
+    ],
+    "search.exclude": {
+        "**/node_modules": false
+    }
+}
