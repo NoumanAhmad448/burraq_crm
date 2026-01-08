@@ -327,7 +327,7 @@ jobs:
           rsync -avz --progress \
             -e "ssh -vvv -o BatchMode=yes" \
             ./ \
-            root@104.207.95.102:/home/nomilyskills/public_html/crm.burraqengineering.com/
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{secrets.SERVER_PATH}}
 
       - name: Run server-side deployment script
         uses: appleboy/ssh-action@9817ef4a1793d4009d854d26cfb0ba4b615d5791
