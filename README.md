@@ -424,3 +424,11 @@ php /home/web_server/public_html/artisan queue:work --daemon
 -   Ensure the `mod_rewrite` module is enabled.
 
 By following these comprehensive deployment guidelines, you can successfully deploy the **burraq_crm** Laravel project to the server.
+
+
+## SSH Debugging
+1. Crate public key in your local machine
+2. Copy the pulblic key
+3. Go to the server
+4. Use ```
+```
