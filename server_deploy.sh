@@ -26,8 +26,8 @@ yes | chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/stor
 php --version
 
 # Check if PHP 8.1 is installed
-if ! php -v | grep -q "PHP 8.2"; then
-  echo "PHP 8.2 is not installed. Exiting."
+if ! php -v | grep -q "PHP 8.1"; then
+  echo "PHP 8.1 is not installed. Exiting."
   exit 1
 fi
 
