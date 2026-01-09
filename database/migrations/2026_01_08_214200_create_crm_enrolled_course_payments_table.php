@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('enrolled_course_id')->constrained('crm_enrolled_courses');
             $table->decimal('paid_amount', 10, 2);
-            $table->foreignId('payment_by')->constrained('users', "id");
+            $table->unsignedInteger('payment_by');
             $table->date('paid_at');
             $table->timestamps();
         });
