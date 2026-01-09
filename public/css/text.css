@@ -1,1 +1,108 @@
+/* ================================
+   Sidebar Wrapper
+================================ */
+#sidebar-wrapper {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    min-height: 100vh;
+    padding-top: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+/* Closed state */
+#sidebar-wrapper.closed {
+    margin-left: -260px;
+}
+
+/* ================================
+   Sidebar Menu
+================================ */
+#side_menu {
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Menu item */
+#side_menu .nav-item {
+    margin: 2px 0;
+}
+
+/* Menu link */
+#side_menu .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Icon */
+#side_menu .nav-link i {
+    font-size: 15px;
+    width: 22px;
+    text-align: center;
+    color: #6b7280;
+}
+
+/* Hover */
+#side_menu .nav-link:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Hover icon */
+#side_menu .nav-link:hover i {
+    color: #2563eb;
+}
+
+/* Active state */
+#side_menu .nav-link.active {
+    background-color: #eef2ff;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+#side_menu .nav-link.active i {
+    color: #1d4ed8;
+}
+
+/* ================================
+   Section separators
+================================ */
+#side_menu hr {
+    margin: 12px 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ================================
+   Hamburger icon
+================================ */
+#hamburger {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    color: #374151;
+}
+
+#hamburger:hover {
+    background-color: #f3f4f6;
+}
+
+/* ================================
+   Mobile Behavior
+================================ */
+@media (max-width: 767px) {
+    #sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        z-index: 1050;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+    }
+}
 

@@ -43,14 +43,15 @@ in the browser.
 ftp_live_deployment.burraq_crm.yml
 ```
 
-## Development Guildlines
+## Development Guidline
 
 1. Add all global setting constants in `custom_lib .blade.php`
 2. custom javascript functions in `common_functions.js`
 3. show loader on user request `profile.js` and search for `hide loader` & `show loader`
 4. server logs `server_logs` function in `helper.php`
 5. server configuration `php_config` function in `helper.php`
-6. All php related dates or carbon classes is in ```burraq_crmCarbon```
+6. All php related dates or carbon classes is in ```LyskillsCarbon```
+7. main menu nav bar of admin is stored in ```sidebar_menu.blade.php```
 
 ```
 8. Checkout storage on server
@@ -416,14 +417,8 @@ php /home/web_server/public_html/artisan queue:work --daemon
     apachectl configtest
     ```
 -   Ensure the `mod_rewrite` module is enabled.
+- Check status of apache on Service Status in whm and check if httpd is running
 
--   Check for syntax errors:
-    ```bash
-    apachectl configtest
-    ```
--   Ensure the `mod_rewrite` module is enabled.
-
-By following these comprehensive deployment guidelines, you can successfully deploy the **burraq_crm** Laravel project to the server.
 
 
 ## SSH Debugging

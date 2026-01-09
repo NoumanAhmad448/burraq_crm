@@ -271,6 +271,10 @@ require __DIR__ . '/admin_page.php';
 require __DIR__ . '/cron_job.php';
 require __DIR__ . '/assignment.php';
 require __DIR__ . '/categories_controller.php';
+require __DIR__.'/student.php';
+require __DIR__.'/courses.php';
+require __DIR__.'/student_courses.php';
+
 
 if (trim(config('app.env')) == config("setting.roles.dev")) {
     URL::forceScheme(config("setting.http"));
