@@ -45,16 +45,7 @@ class StudentController extends Controller
             $photoPath = null;
             if ($request->hasFile('photo')) {
                 $img = $request->file('photo');
-
-                $f_name = $img->getClientOriginalName();
-                $manager = new ImageManager();
-                $image = $manager->make($img)->resize(500, 500);
-
-                $uploadData = new \App\Helpers\UploadData();
-                $photoPath = $uploadData->upload(
-                    $image->stream()->__toString(),
-                    $f_name
-                );
+                $photoPath = uploadPhoto($img);
             }
 
             /* ---------- STUDENT CREATE ---------- */
@@ -142,6 +133,7 @@ class StudentController extends Controller
         $student = Student::where('is_deleted', 0)->findOrFail($id);
         $courses = Course::all();
 
+        // dd($student->total_fee);
         return view('admin.students.edit', compact('student', 'courses'));
     }
 
@@ -154,19 +146,56 @@ class StudentController extends Controller
 
         $remainingFee = $request->total_fee - $request->paid_fee;
 
-        $student->update([
-            'name'          => $request->name,
-            'father_name'   => $request->father_name,
-            'mobile'        => $request->mobile,
-            'email'         => $request->email,
-            'total_fee'     => $request->total_fee,
-            'paid_fee'      => $request->paid_fee,
-            'remaining_fee' => $remainingFee,
-            'role'          => $request->role,
-        ]);
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $img = $request->file('photo');
+            $photoPath = uploadPhoto($img);
+        }
+
+        $data = [
+            'name'           => $request->name,
+            'father_name'    => $request->father_name,
+            'cnic'           => $request->cnic,
+            'mobile'         => $request->mobile,
+            'email'          => $request->email,
+            'admission_date' => $request->admission_date,
+            'due_date'       => $request->due_date,
+            'total_fee'      => $request->total_fee,
+            'paid_fee'       => $request->paid_fee,
+            'remaining_fee'  => $remainingFee,
+        ];
+        if ($photoPath) {
+            $data['photo'] = $photoPath;
+        }
+
+        $student->update($data);
+
+        if ($request->has('courses')) {
+                foreach ($request->courses as $courseId => $courseData) {
+
+                    if(array_key_exists("selected", $courseData) && $courseData['selected']) {
+                        EnrolledCourse::find($courseData['CEId'])->update([
+                            'student_id' => $student->id,
+                            'course_id'  => $courseId,
+                            'total_fee'  => $courseData['total_fee'],
+                        ]);
+
+                        /* ---------- PAYMENT AGAINST ENROLLED COURSE ---------- */
+                        if (!empty($courseData['paid_amount']) && $courseData['paid_amount'] > 0) {
+                            EnrolledCoursePayment::where('enrolled_course_id', $courseData['CEId'])->update([
+                                'paid_amount'        => $courseData['paid_amount'],
+                                'paid_at'       => now(),
+                                'payment_by'         => auth()->user()->id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
 
         return redirect()->back()->with('success', 'Student updated successfully');
     }
+
 
     /**
      * Soft delete student (ADMIN ONLY)
