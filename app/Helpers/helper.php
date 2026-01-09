@@ -6,6 +6,8 @@ use App\Classes\LyskillsCarbon;
 use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Http\Request;
+use Intervention\Image\ImageManager;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
@@ -282,3 +284,17 @@ if (! function_exists('throw_exception')) {
         }
     }
 }
+
+  function uploadPhoto($img)
+    {
+
+        $f_name = $img->getClientOriginalName();
+        $manager = new ImageManager();
+        $image = $manager->make($img)->resize(500, 500);
+
+        $uploadData = new \App\Helpers\UploadData();
+        return $uploadData->upload(
+            $image->stream()->__toString(),
+            $f_name
+        );
+    }

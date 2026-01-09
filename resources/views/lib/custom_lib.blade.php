@@ -19,6 +19,8 @@
 <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -28,5 +30,6 @@
     debug = debug == "1" ? true : false;
     let err_msg = '{{ config('setting.err_msg') }}';
 </script>
+@include('lib.custom_js')
 <script src='{{ asset('js/common_functions.js') }}'></script>
 {{-- should not include after this line --}}
