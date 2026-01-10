@@ -13,7 +13,8 @@ use App\Models\Student as CrmStudent;
 use App\Observers\CrmStudentObserver;
 use App\Models\EnrolledCourse;
 use App\Observers\EnrolledCourseObserver;
-
+use App\Models\Inquiry;
+use App\Observers\InquiryObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,8 +45,7 @@ class AppServiceProvider extends ServiceProvider
         // Factory::factoryForModel(CronJobs::class, CronJobsFactory::class);
         CrmStudent::observe(CrmStudentObserver::class);
         EnrolledCourse::observe(EnrolledCourseObserver::class);
-
-
+        Inquiry::observe(InquiryObserver::class);
 
         try {
             DB::connection()->getPdo();  // Try to connect to the database
