@@ -36,10 +36,10 @@
                                 <td>{{ $student->father_name }}</td>
                                 <td>
 
-                                    @foreach ($student->enrolledCourses as $enrolled)
-                                        <a href="{{ route('student.course.detail', $enrolled->id) }}">
-                                            {{ \Str::limit($enrolled->course->name, 30) }}
-                                        </a><br>
+                                    @foreach ($student->enrolledCourses as $id => $enrolled)
+                                        <a href="#" class="text-decoration-none ">
+                                            {{$id + 1}} - {{ \Str::limit($enrolled->course->name, 30) }} <br/>
+                                        </a>
                                     @endforeach
 
                                 </td>

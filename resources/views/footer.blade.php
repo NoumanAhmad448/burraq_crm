@@ -74,11 +74,14 @@
 
             </div>
             @endif
+            @if(!request()->routeIs('login', 'register'))
+
             <div class="row py-3 text-center">
                 <div class="col">
                     <p class="text-center">&copy; Copyright {{ date('Y') }}- Burraq CRM. All Rights Are Reserved.</p>
                 </div>
             </div>
+            @endif
         </div>
     </footer>
 </div>

@@ -13,7 +13,7 @@ use App\Models\EnrolledCoursePayment;
 use App\Models\Payment;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
@@ -246,7 +246,7 @@ class StudentController extends Controller
     public function print($id)
     {
         $student = Student::with('enrolledCourses.course')->findOrFail($id);
-
+        // dd($student);
         $pdf = PDF::loadView('admin.students.print', [
             'student' => $student,
             'company' => 'Burraq Engineering'
