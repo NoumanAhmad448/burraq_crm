@@ -51,10 +51,11 @@
                 <label>Note</label>
                 <textarea name="note" class="form-control" rows="4">@if($is_update) {{ $inquiry->note }} @else {{ old('note') }} @endif</textarea>
             </div>
-
-            <button type="submit" class="btn btn-success">
-                @if($is_update) Update @else Save @endif Inquiry
-            </button>
+            @if($is_update == false || $is_update && auth()->user()->is_admin)
+                <button type="submit" class="btn btn-success">
+                    @if($is_update) Update @else Save @endif Inquiry
+                </button>
+            @endif
         </form>
     </div>
 </div>

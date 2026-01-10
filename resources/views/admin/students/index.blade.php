@@ -23,6 +23,9 @@
                         <tr>
                             <th>Name</th>
                             <th>Father Name</th>
+                            <th>Total Fee</th>
+                            <th>Payed Fee</th>
+                            <th>Remaining Fee</th>
                             <th>Courses</th>
                             <th>Actions</th>
                         </tr>
@@ -34,6 +37,11 @@
                             <tr>
                                 <td>{{ $student->name }}</td>
                                 <td>{{ $student->father_name }}</td>
+                                <td>{{ (int)$student->total_fee }}</td>
+                                <td>{{ (int) $student->paid_fee }}</td>
+                                <td>
+                                    {{ (int) $student->remaining_fee }}
+                                </td>
                                 <td>
 
                                     @foreach ($student->enrolledCourses as $id => $enrolled)
@@ -44,24 +52,24 @@
 
                                 </td>
                                 <td>
-                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-sm btn-info p-1">
                                         Edit
                                     </a>
                                     @if (auth()->user()->is_admin)
                                         <a href="{{ route('students.logs', $student->id) }}"
-                                            class="btn btn-sm btn-outline-primary">
+                                            class="btn btn-sm btn-outline-primary p-1">
                                             View Logs
                                         </a>
 
                                         <a href="{{ route('students.course.payments', $student->id) }}"
-                                            class="btn btn-sm btn-outline-info">
+                                            class="btn btn-sm btn-outline-info p-1">
                                             Course & Payments
                                         </a>
 
 
 
                                         <a href="{{ route('students.delete', $student->id) }}"
-                                            class="btn btn-sm btn-danger">
+                                            class="btn btn-sm btn-danger p-1">
                                             Delete
                                         </a>
                                     @endif
