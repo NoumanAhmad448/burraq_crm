@@ -39,10 +39,16 @@
                                 @endif
                             </td>
                             <td>
-                                <pre>{{ json_encode($log->old_data, JSON_PRETTY_PRINT) }}</pre>
+                                <details>
+                                <summary class="text-primary cursor-pointer">View</summary>
+                                    <pre class="mt-2">{{ json_encode($log->old_data, JSON_PRETTY_PRINT) }}</pre>
+                                </details>
                             </td>
                             <td>
-                                <pre>{{ json_encode($log->new_data, JSON_PRETTY_PRINT) }}</pre>
+                                <details>
+                                <summary class="text-primary cursor-pointer">View</summary>
+                                <pre class="mt-2">{{ json_encode($log->new_data, JSON_PRETTY_PRINT) }}</pre>
+                                </details>
                             </td>
                             <td>{{ $log?->user?->name }}</td>
                             <td>{{ $log->ip_address }}</td>

@@ -22,6 +22,7 @@ class Student extends Model
         'remaining_fee',
         'role',
         'is_deleted',
+        'payment_slip_path',
     ];
 
     public function enrolledCourses()

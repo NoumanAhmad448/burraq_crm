@@ -25,10 +25,10 @@
                 enctype="multipart/form-data">
                 @csrf
                 @method('post')
-                @if($is_update && $student?->photo)
+                @if ($is_update && $student?->photo)
                     <div class="row justify-content-center align-items-center mb-4">
                         <img src="{{ asset(img_path($student?->photo)) }}" alt="lyskills" width="100" height="100"
-                        class="img-fluid mb-1 rounded-circle shadow-sm img-fluid w-25 h-25" />
+                            class="img-fluid mb-1 rounded-circle shadow-sm img-fluid w-25 h-25" />
                     </div>
                 @endif
                 <div class="row">
@@ -64,8 +64,7 @@
 
                     <div class="col-md-4 mt-2">
                         <label>Photo</label>
-                        <input type="file" name="photo" class="form-control"
-                            value="{{ old('photo') }}">
+                        <input type="file" name="photo" class="form-control" value="{{ old('photo') }}">
                     </div>
 
                     <div class="col-md-4 mt-2">
@@ -81,68 +80,95 @@
 
                     <div class="col-md-4 mt-2">
                         <label>Total Fee *</label>
-                        <input type="text" name="total_fee" class="form-control" required        step="any"
+                        <input type="text" name="total_fee" class="form-control" required step="any"
                             value="@if ($is_update) {{ (int) $student->total_fee }}@else{{ old('total_fee') }} @endif">
                     </div>
                     <div class="col-md-4 mt-2">
                         <label>Paid Fee *</label>
-                        <input type="text" name="paid_fee" class="form-control" required        step="0.01"
-
+                        <input type="text" name="paid_fee" class="form-control" required step="0.01"
                             value="@if ($is_update) {{ (int) $student->paid_fee }}@else{{ old('paid_fee') }} @endif">
                     </div>
-
+                    <div class="col-md-4 mt-2">
+                        <label>Payment Slip</label>
+                        <input type="file" name="payment_slip_path" class="form-control"
+                            value="{{ old('payment_slip_path') }}">
+                        <br />
+                        @if ($is_update && $student->payment_slip_path)
+                            <a href="{{ asset(img_path($student->payment_slip_path)) }}" target="_blank">View Current
+                                Slip</a>
+                        @endif
+                    </div>
                 </div>
 
                 {{-- ================= COURSES ================= --}}
                 <hr>
                 <strong>Enroll Courses</strong>
 
-                @foreach ($courses as $course)
-                    <div class="row mt-2">
-                        <div class="col-md-1">
-                            <input type="checkbox" name="courses[{{ $course->id }}][selected]"
-                            @if($is_update && $student?->enrolledCourses->contains('course_id', $course->id)) checked @endif
-                            >
-                            @if($is_update)
-                                <input type="hidden" name="courses[{{ $course->id }}][CEId]"
-                                @if($student?->enrolledCourses->contains('course_id', $course->id))
-                                value="{{ $student?->enrolledCourses->where('course_id', $course->id)->first()->id }}" @endif
-                            >
-                            @endif
-                        </div>
+                <table class="table table-bordered mt-2 courses">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width:5%">Select</th>
+                            <th style="width:35%">Course</th>
+                            <th style="width:30%">Total Fee</th>
+                            <th style="width:30%">Paid Amount</th>
+                        </tr>
+                    </thead>
 
-                        <div class="col-md-5">
-                            {{ $course->name }} @if ($course->is_deleted)
-                                                            <span class="badge badge-danger ml-2">Deleted</span>
-                                                        @endif
-
-                        </div>
-
-                        <div class="col-md-3">
-                            <input type="text" name="courses[{{ $course->id }}][total_fee]"
-                                placeholder="Course Fee" class="form-control"
-                                value="@if($is_update && $student?->enrolledCourses->contains('course_id', $course->id)) {{ $student?->enrolledCourses->where('course_id', $course->id)->first()->total_fee }}@else{{ old('total_fee') }}@endif">
-                        </div>
-
-                        <div class="col-md-3">
+                    <tbody>
+                        @foreach ($courses as $course)
                             @php
-                            if($is_update){
-                                $enrolledCourses = $student?->enrolledCourses->where('course_id', $course->id)->where("student_id", $student?->id)->first();
-                            }
-                            //  dump($enrolledCourses?->id);
+                                $enrolledCourse = null;
+                                if ($is_update) {
+                                    $enrolledCourse = $student?->enrolledCourses
+                                        ->where('course_id', $course->id)
+                                        ->where('student_id', $student?->id)
+                                        ->first();
+                                }
                             @endphp
-                            @if($is_update)
-                                <input type="hidden" name="courses[{{ $course->id }}][payId]"
-                                @if($is_update && $enrolledCourses)
-                                value="{{ $enrolledCourses?->payments?->first()?->id }}" @endif
-                            >
-                            @endif
-                            <input type="text" name="courses[{{ $course->id }}][paid_amount]" placeholder="Paid"
-                                class="form-control" @if($is_update && $enrolledCourses)
-                                value="{{ (int) $enrolledCourses?->payments?->first()?->paid_amount }}" @else value="{{ old('paid_amount') }}@endif">
-                        </div>
-                    </div>
-                @endforeach
+
+                            <tr>
+                                {{-- Select --}}
+                                <td class="text-center">
+                                    <input type="checkbox" name="courses[{{ $course->id }}][selected]"
+                                        @if ($enrolledCourse) checked @endif>
+
+                                    @if ($is_update && $enrolledCourse)
+                                        <input type="hidden" name="courses[{{ $course->id }}][CEId]"
+                                            value="{{ $enrolledCourse->id }}">
+                                    @endif
+                                </td>
+
+                                {{-- Course --}}
+                                <td>
+                                    {{ $course->name }} - (int) {{$course->fee}}
+                                    @if ($course->is_deleted)
+                                        <span class="badge badge-danger ml-2">Deleted</span>
+                                    @endif
+                                </td>
+
+                                {{-- Total Fee --}}
+                                <td>
+                                    <input type="text" name="courses[{{ $course->id }}][total_fee]"
+                                        class="form-control" placeholder="Course Fee"
+                                        value="{{ $enrolledCourse?->total_fee ?? old('total_fee') }}">
+                                </td>
+
+                                {{-- Paid Amount --}}
+                                <td>
+                                    @if ($is_update && $enrolledCourse?->payments?->first())
+                                        <input type="hidden" name="courses[{{ $course->id }}][payId]"
+                                            value="{{ $enrolledCourse->payments->first()->id }}">
+                                    @endif
+
+                                    <input type="text" name="courses[{{ $course->id }}][paid_amount]"
+                                        class="form-control" placeholder="Paid"
+                                        value="{{ (int) ($enrolledCourse?->payments?->first()?->paid_amount ?? old('paid_amount')) }}">
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
 
                 {{-- ================= CHECKBOX OPTIONS ================= --}}
                 <hr>
@@ -156,12 +182,11 @@
                         <label class="form-check-label">Continue Add</label>
                     </div>
                 @else
-                        <div class="d-flex justify-content-end mb-3">
-                            <a href="{{ route('students.print', $student->id) }}"
-                            class="btn btn-secondary">
-                                Print Student
-                            </a>
-                        </div>
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="{{ route('students.print', $student->id) }}" class="btn btn-secondary">
+                            Print Student
+                        </a>
+                    </div>
                 @endif
 
                 <button class="btn btn-primary mt-3">
@@ -174,3 +199,13 @@
             </form>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable(".courses", {
+                searchable: true,
+                perPage: 5
+            });
+
+        });
+    </script>
