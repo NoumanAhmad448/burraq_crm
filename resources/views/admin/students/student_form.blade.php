@@ -140,7 +140,7 @@
 
                                 {{-- Course --}}
                                 <td>
-                                    {{ $course->name }} - (int) {{$course->fee}}
+                                    {{ $course->name }} -  {{(int) $course->fee}}
                                     @if ($course->is_deleted)
                                         <span class="badge badge-danger ml-2">Deleted</span>
                                     @endif
