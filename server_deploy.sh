@@ -153,6 +153,8 @@ php artisan health:check --no-notification
 # Reset permissions for web server & FTP user
 sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/crm.burraqengineering.com/
 sudo chmod -R 755 /home/nomilyskills/public_html/crm.burraqengineering.com/
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
 # Run cron
