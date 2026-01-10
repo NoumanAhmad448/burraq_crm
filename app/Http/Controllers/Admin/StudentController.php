@@ -110,7 +110,7 @@ class StudentController extends Controller
             DB::rollBack();
             // server_logs('Student Create Error', $e->getMessage());
             Log::error($e->getMessage());
-            dd($e->getMessage());
+            // dd($e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong');
         }
     }
@@ -222,6 +222,11 @@ class StudentController extends Controller
             }
 
 
+        if ($request->print) {
+            return redirect()
+                ->route('students.print', $student->id)
+                ->with('success', 'Student created successfully');
+        }
         return redirect()->back()->with('success', 'Student updated successfully');
     }
 
