@@ -18,7 +18,7 @@
             </div>
 
             <div class="card-body">
-                <table class="table table-bordered crm_students">
+                <table class="table table-bordered crm_students" id="crm_students">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -29,6 +29,7 @@
                     </thead>
 
                     <tbody>
+                        {{-- {{dd($students)}} --}}
                         @foreach ($students as $student)
                             <tr>
                                 <td>{{ $student->name }}</td>
@@ -46,8 +47,19 @@
                                     <a href="{{ route('students.edit', $student->id) }}" class="btn btn-sm btn-info">
                                         Edit
                                     </a>
-
                                     @if (auth()->user()->is_admin)
+                                        <a href="{{ route('students.logs', $student->id) }}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            View Logs
+                                        </a>
+
+                                        <a href="{{ route('students.course.payments', $student->id) }}"
+                                            class="btn btn-sm btn-outline-info">
+                                            Course & Payments
+                                        </a>
+
+
+
                                         <a href="{{ route('students.delete', $student->id) }}"
                                             class="btn btn-sm btn-danger">
                                             Delete
@@ -73,5 +85,14 @@
                 $('#studentDetailModal').html(res).modal('show');
             });
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable("#crm_students", {
+                searchable: true,
+                perPage: 10
+            });
+
+        });
     </script>
 @endsection

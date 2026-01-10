@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Student as CrmStudent;
+use App\Observers\CrmStudentObserver;
+use App\Models\EnrolledCourse;
+use App\Observers\EnrolledCourseObserver;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +42,10 @@ class AppServiceProvider extends ServiceProvider
     {
 
         // Factory::factoryForModel(CronJobs::class, CronJobsFactory::class);
+        CrmStudent::observe(CrmStudentObserver::class);
+        EnrolledCourse::observe(EnrolledCourseObserver::class);
+
+
 
         try {
             DB::connection()->getPdo();  // Try to connect to the database

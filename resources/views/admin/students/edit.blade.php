@@ -6,7 +6,11 @@
 
 @section('content')
     <div class="container-fluid">
-
+    @if(session('msg'))
+        <div class="alert alert-success">
+            {{ session('msg') }}
+        </div>
+    @endif
         @include('admin.students.student_form', [
             'is_update' => true,
         ])

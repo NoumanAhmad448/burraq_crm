@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\StudentCoursePaymentController;
+use App\Http\Controllers\StudentLogController;
 
 Route::middleware(config('middlewares.auth'))->group(function () {
 
@@ -43,4 +45,13 @@ Route::middleware(config('middlewares.auth'))->group(function () {
         'enrolled-course/payment/store',
         [StudentController::class, 'storePayment']
     )->name('enrolled.course.payment.store');
+
+    // routes/web.php
+    Route::get('/students/{student}/logs', [StudentLogController::class, 'index'])
+        ->name('students.logs');
+
+    Route::get(
+        '/students/{student}/courses/payments',
+        [StudentCoursePaymentController::class, 'index']
+    )->name('students.course.payments');
 });

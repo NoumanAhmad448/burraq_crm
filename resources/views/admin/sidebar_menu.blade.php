@@ -11,11 +11,6 @@
             'icon' => 'fa-video-camera',
             'route' => route('courses.index'),
         ],
-        [
-            'title' => 'Enrollments',
-            'icon' => 'fa-book',
-            'route' => route('course-enrollment'),
-        ],
     ];
 
 @endphp
