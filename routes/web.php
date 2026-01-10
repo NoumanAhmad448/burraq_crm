@@ -274,6 +274,7 @@ require __DIR__ . '/categories_controller.php';
 require __DIR__.'/student.php';
 require __DIR__.'/courses.php';
 require __DIR__.'/student_courses.php';
+require __DIR__.'/inquiries.php';
 
 
 Route::get('/register', function () {

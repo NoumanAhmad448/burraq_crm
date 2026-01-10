@@ -11,7 +11,13 @@
             'icon' => 'fa-video-camera',
             'route' => route('courses.index'),
         ],
+        [
+            "title" => "Inquiries",
+            "icon" => "fa-question-circle",
+            "route" => route('inquiries.index'),
+        ]
     ];
+
 
 @endphp
 
