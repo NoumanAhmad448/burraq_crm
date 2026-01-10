@@ -3,6 +3,7 @@
 use App\Models\CourseStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\LyskillsCarbon;
+use App\Helpers\UploadData;
 use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Http\Request;
@@ -298,3 +299,7 @@ if (! function_exists('throw_exception')) {
             $f_name
         );
     }
+
+function img_path($img_path){
+    return UploadData::$img_path . $img_path;
+}

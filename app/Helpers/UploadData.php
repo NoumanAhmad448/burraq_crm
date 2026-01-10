@@ -17,6 +17,8 @@ class UploadData implements UploadDataInterface{
         "videoStoragePath" => "uploads"
     ];
 
+    public static $img_path = "storage/";
+
     protected $manager;
 
     public function __construct(){
@@ -70,7 +72,7 @@ class UploadData implements UploadDataInterface{
 
         debug_logs("Before Uploading...!");
         debug_logs($object);
-
+        // dd($object);
         $response = "";
 
         // Check environment
@@ -82,6 +84,7 @@ class UploadData implements UploadDataInterface{
         }
 
         debug_logs($response);
+        // dd($response);
         if($this->default_setting['isVideo']){
             debug_logs("Video path ". $path);
             $path = $response;

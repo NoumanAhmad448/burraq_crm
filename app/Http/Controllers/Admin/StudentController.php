@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\LyskillsCarbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
@@ -12,7 +13,7 @@ use App\Models\EnrolledCoursePayment;
 use App\Models\Payment;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
@@ -130,10 +131,15 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $student = Student::where('is_deleted', 0)->findOrFail($id);
+        $student = Student::where('is_deleted', 0)
+            ->with([
+                'enrolledCourses.payments'
+            ])
+            ->findOrFail($id);
+
         $courses = Course::all();
 
-        // dd($student->total_fee);
+        // dd($student);
         return view('admin.students.edit', compact('student', 'courses'));
     }
 
@@ -171,22 +177,45 @@ class StudentController extends Controller
         $student->update($data);
 
         if ($request->has('courses')) {
+            // dd($request->courses);
                 foreach ($request->courses as $courseId => $courseData) {
 
                     if(array_key_exists("selected", $courseData) && $courseData['selected']) {
-                        EnrolledCourse::find($courseData['CEId'])->update([
-                            'student_id' => $student->id,
-                            'course_id'  => $courseId,
-                            'total_fee'  => $courseData['total_fee'],
-                        ]);
-
-                        /* ---------- PAYMENT AGAINST ENROLLED COURSE ---------- */
-                        if (!empty($courseData['paid_amount']) && $courseData['paid_amount'] > 0) {
-                            EnrolledCoursePayment::where('enrolled_course_id', $courseData['CEId'])->update([
-                                'paid_amount'        => $courseData['paid_amount'],
-                                'paid_at'       => now(),
-                                'payment_by'         => auth()->user()->id,
+                        // dd($courseData);
+                        $enrolled_course = EnrolledCourse::find($courseData['CEId']);
+                        if($enrolled_course){
+                            $enrolled_course?->update([
+                                'student_id' => $student->id,
+                                'course_id'  => $courseId,
+                                'total_fee'  => $courseData['total_fee'],
                             ]);
+                        }else{
+                            $enrolled_course = EnrolledCourse::create([
+                                'student_id' => $student->id,
+                                'course_id'  => $courseId,
+                                'total_fee'  => $courseData['total_fee'],
+                            ]);
+                        }
+                        // dd($enrolled_course);
+                        /* ---------- PAYMENT AGAINST ENROLLED COURSE ---------- */
+                        if (!empty($courseData['paid_amount']) && $courseData['paid_amount'] > 0 && $enrolled_course) {
+                            if(array_key_exists("payId", $courseData) && $courseData['payId'] && EnrolledCoursePayment::find($courseData['payId'])){
+                                EnrolledCoursePayment::find($courseData['payId'])?->update(
+                                    [
+                                        'paid_amount' => $courseData['paid_amount'],
+                                        'paid_at' => now(),
+                                        'payment_by' => auth()->user()->id,
+                                    ]
+                                );
+                            } else {
+                                EnrolledCoursePayment::create([
+                                    'enrolled_course_id' => $enrolled_course?->id,
+                                    'paid_amount'        => $courseData['paid_amount'],
+                                    'paid_at'            => LyskillsCarbon::now(),
+                                    'payment_by'         => auth()->user()->id
+                                ]);
+                            }
+
                         }
                     }
                 }
@@ -217,7 +246,7 @@ class StudentController extends Controller
     public function print($id)
     {
         $student = Student::with('enrolledCourses.course')->findOrFail($id);
-
+        // dd($student);
         $pdf = PDF::loadView('admin.students.print', [
             'student' => $student,
             'company' => 'Burraq Engineering'

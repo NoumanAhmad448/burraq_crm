@@ -23,7 +23,7 @@
 </div>
 </form>
 
-<table class="table table-bordered">
+<table class="table table-bordered" id="crm_students">
 <thead>
 <tr>
     <th>Name</th>
@@ -52,4 +52,16 @@
 </table>
 
 </div>
+@endsection
+@section('page-js')
+
+<script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable("#crm_students", {
+                searchable: true,
+                perPage: 10
+            });
+
+        });
+    </script>
 @endsection

@@ -25,26 +25,26 @@ class EnrolledCourse extends Model
     }
 
     public function totalPaid()
-{
-    return $this->payments()->sum('amount');
-}
+    {
+        return $this->payments()->sum('amount');
+    }
 
-public function remainingAmount()
-{
-    return $this->course->fee - $this->totalPaid();
-}
+    public function remainingAmount()
+    {
+        return $this->course->fee - $this->totalPaid();
+    }
 
-public function student()
-{
-    return $this->belongsTo(Student::class);
-}
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 
 
 
-// public function payments()
-// {
-//     return $this->hasMany(Payment::class)
-//                 ->where('is_deleted', 0);
-// }
+    // public function payments()
+    // {
+    //     return $this->hasMany(Payment::class)
+    //                 ->where('is_deleted', 0);
+    // }
 
 }

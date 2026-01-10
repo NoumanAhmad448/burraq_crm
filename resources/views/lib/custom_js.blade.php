@@ -28,3 +28,11 @@
     $('#sidebar-wrapper').toggleClass('closed');
     $('#sidebar-col').toggleClass('d-none');
 </script>
+<script>
+    $(function() {
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d'
+            });
+
+    });
+</script>

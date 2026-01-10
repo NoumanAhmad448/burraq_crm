@@ -48,7 +48,7 @@
                         <x-jet-input id="password" class="block mt-1 w-full" placeholder="password min 8 digits"
                             type="password" name="password" required autocomplete="new-password" />
                         <div class="input-group-append rounded-2xl">
-                            <span class="input-group-text bg-info cursor-pointer cursor_pointer text-white"
+                            <span class="input-group-text bg-website cursor-pointer cursor_pointer text-white"
                                 id="show_pass"><i class="fa fa-eye" aria-hidden="true"></i>
                             </span>
                         </div>

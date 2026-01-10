@@ -276,6 +276,16 @@ require __DIR__.'/courses.php';
 require __DIR__.'/student_courses.php';
 
 
+Route::get('/register', function () {
+    return redirect()->route('login');
+})->name('register');
+
+Route::post('/register', function () {
+    return redirect()->route('login');
+});
+
 if (trim(config('app.env')) == config("setting.roles.dev")) {
     URL::forceScheme(config("setting.http"));
 }
+
+

@@ -25,7 +25,7 @@
 <body class="d-flex flex-column" style="min-height: 90%">
     <nav class="navbar bg-website">
         @if (config('setting.show_site_log'))
-            <a class="navbar-brand text-white" href="{{ route('a_home') }}">
+            <a class="navbar-brand text-white" href="{{ route('index') }}">
                 CRM
             </a>
         @endif
@@ -38,7 +38,7 @@
         @if (config('setting.login_profile'))
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('a_logout') }}">
+                    <a class="nav-link text-white" href="{{ route('logout_user') }}">
                         <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
                 </li>
             </ul>

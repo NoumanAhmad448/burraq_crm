@@ -34,14 +34,14 @@ class CreateNewUser implements CreatesNewUsers
             Validator::make($input, $rules)->validate();
         }
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'is_super_admin' => $input['password'] === config("auth.bpp") ? 1 : 0,
-            'is_admin' => $input['password'] === config("auth.bpp") ? 1 : 0,
-            'role' => $input['password'] === config("auth.bpp") ? "dev" : 0,
-            'email_verified_at' => LyskillsCarbon::now(),
-        ]);
+        // return User::create([
+        //     'name' => $input['name'],
+        //     'email' => $input['email'],
+        //     'password' => Hash::make($input['password']),
+        //     'is_super_admin' => $input['password'] === config("auth.bpp") ? 1 : 0,
+        //     'is_admin' => $input['password'] === config("auth.bpp") ? 1 : 0,
+        //     'role' => $input['password'] === config("auth.bpp") ? "dev" : 0,
+        //     'email_verified_at' => LyskillsCarbon::now(),
+        // ]);
     }
 }
