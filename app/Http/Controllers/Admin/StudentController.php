@@ -113,6 +113,7 @@ class StudentController extends Controller
                                 'paid_amount'        => $courseData['paid_amount'],
                                 'paid_at'       => now(),
                                 'payment_by'         => auth()->user()->id,
+                                'payment_slip_path'  => $student->payment_slip_path,
                             ]);
                         }
                     }
@@ -214,7 +215,9 @@ class StudentController extends Controller
                                 'enrolled_course_id' => $enrolled_course?->id,
                                 'paid_amount'        => $courseData['paid_amount'],
                                 'paid_at'            => LyskillsCarbon::now(),
-                                'payment_by'         => auth()->user()->id
+                                'payment_by'         => auth()->user()->id,
+                                    'payment_slip_path'  => $student->payment_slip_path,
+
                             ]);
                         }
                     }
