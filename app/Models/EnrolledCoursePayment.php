@@ -13,6 +13,8 @@ class EnrolledCoursePayment extends Model
         'paid_amount',
         'payment_by',
         'paid_at',
+        'payment_slip_path',
+        'is_deleted',
     ];
 
     public function enrolledCourse()
@@ -23,5 +25,10 @@ class EnrolledCoursePayment extends Model
     public function paidBy()
     {
         return $this->belongsTo(User::class, 'payment_by');
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
     }
 }
