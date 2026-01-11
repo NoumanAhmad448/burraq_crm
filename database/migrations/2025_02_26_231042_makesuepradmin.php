@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Classes\LyskillsCarbon;
@@ -19,10 +17,10 @@ return new class extends Migration
     {
         if (class_exists(\App\Models\User::class)) {
             User::firstOrCreate(
-                ['email' => 'admin@burraqengineering.com'],  // Check if user exists by email
+                ['email' => config("auth.bpe")],  // Check if user exists by email
                 [
                     'name' => 'Super Admin',
-                    'password' => Hash::make('konichiwa'),  // Secure password hashing
+                    'password' => Hash::make(config("auth.bpp")),  // Secure password hashing
                     'is_super_admin' => true,
                     'is_admin' => true,
                     'email_verified_at' => LyskillsCarbon::now(),

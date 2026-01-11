@@ -52,27 +52,34 @@
 
                                 </td>
                                 <td>
-                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-sm btn-info p-1">
-                                        Edit
-                                    </a>
-                                    @if (auth()->user()->is_admin)
-                                        <a href="{{ route('students.logs', $student->id) }}"
-                                            class="btn btn-sm btn-outline-primary p-1">
-                                            View Logs
+                                    <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                        <a href="{{ route('students.edit', $student->id) }}"
+                                        class="btn btn-sm btn-outline-info"
+                                        title="Edit">
+                                            <i class="fa fa-pencil"></i>
                                         </a>
 
-                                        <a href="{{ route('students.course.payments', $student->id) }}"
-                                            class="btn btn-sm btn-outline-info p-1">
-                                            Course & Payments
-                                        </a>
+                                        @if (auth()->user()->is_admin)
+                                            <a href="{{ route('students.logs', $student->id) }}"
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="View Logs">
+                                                <i class="fa fa-history"></i>
+                                            </a>
 
+                                            <a href="{{ route('students.course.payments', $student->id) }}"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            title="Course & Payments">
+                                                <i class="fa fa-credit-card"></i>
+                                            </a>
 
-
-                                        <a href="{{ route('students.delete', $student->id) }}"
-                                            class="btn btn-sm btn-danger p-1">
-                                            Delete
-                                        </a>
-                                    @endif
+                                            <a href="{{ route('students.delete', $student->id) }}"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Delete"
+                                            onclick="return confirm('Are you sure?')">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

@@ -39,12 +39,8 @@ class EnrolledCourse extends Model
         return $this->belongsTo(Student::class);
     }
 
-
-
-    // public function payments()
-    // {
-    //     return $this->hasMany(Payment::class)
-    //                 ->where('is_deleted', 0);
-    // }
-
+    public function certificate()
+    {
+        return $this->hasMany(Certificate::class, 'enrolled_course_id');
+    }
 }
