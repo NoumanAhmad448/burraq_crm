@@ -2,51 +2,34 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
-    use HasFactory;
+    protected $table = 'crm_certificates';
 
-    protected $fillable = ['user_id', 'course_id', 'code', 'download_count'];
+    protected $fillable = [
+        'student_id',
+        'enrolled_course_id',
+        'generated_by',
+        'generated_count',
+        'last_generated_at'
+    ];
 
-    // Relationships
+    public function enrolledCourse()
+    {
+        return $this->belongsTo(EnrolledCourse::class, 'enrolled_course_id');
+    }
     public function student()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Student::class, 'student_id');
     }
 
-    public function course()
+    public function user()
     {
-        return $this->belongsTo(Course::class, 'course_id');
-    }
-    // Function to generate a unique certificate code
-    public static function generateCode()
-    {
-        return strtoupper(uniqid('CERT-'));
-    }
-
-    // Function to fetch or create a certificate and increment download count
-    public static function fetchOrCreateCertificate($studentId, $courseId)
-    {
-        $certificate = self::where('user_id', $studentId)
-            ->where('course_id', $courseId)
-            ->first();
-
-        if ($certificate) {
-            // Increment the download count
-            $certificate->increment('download_count');
-        } else {
-            // Create a new certificate
-            $certificate = self::create([
-                'user_id' => $studentId,
-                'course_id' => $courseId,
-                'code' => self::generateCode(),
-                'download_count' => 1,
-            ]);
-        }
-
-        return $certificate;
+        return $this->belongsTo(User::class, 'generated_by');
     }
 }
+

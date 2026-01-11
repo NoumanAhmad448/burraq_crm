@@ -15,7 +15,12 @@
             "title" => "Inquiries",
             "icon" => "fa-question-circle",
             "route" => route('inquiries.index'),
-        ]
+        ],
+        // [
+        //     "title" => "Certificates",
+        //     "icon" => "fa-certificate",
+        //     "route" => route('certificates.index'),
+        // ]
     ];
 
 
