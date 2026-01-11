@@ -63,7 +63,10 @@
 @section('page-js')
     <script>
         $(document).ready(function() {
-            $('#crm_students').DataTable();
+            new simpleDatatables.DataTable("#crm_students", {
+                searchable: true,
+                perPage: 10
+            });
         });
     </script>
 @endsection

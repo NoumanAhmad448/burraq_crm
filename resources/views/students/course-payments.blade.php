@@ -50,18 +50,14 @@
 </div>
 @endsection
 
-<script>
-$(document).ready(function () {
-    $('.datatable').DataTable({
-        pageLength: 10,
-        ordering: true,
-        searching: true,
-        lengthChange: false,
-        order: [[0, 'asc']],
-        language: {
-            search: "",
-            searchPlaceholder: "Search records"
-        }
-    });
-});
-</script>
+@section('page-js')
+    <script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable(".datatable", {
+                searchable: true,
+                perPage: 10
+            });
+
+        });
+    </script>
+@endsection

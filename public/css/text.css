@@ -106,4 +106,237 @@
     }
 }
 
+/* ===== Dashboard Stat Cards ===== */
+
+.stat-card {
+    border: none;
+    border-left: 4px solid #0d6efd;      /* Accent color */
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    transition: all 0.25s ease;
+    height: 100%;
+}
+
+/* Hover animation */
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Icon styling */
+.stat-card .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #0d6efd;
+}
+
+/* Title text */
+.stat-card h6 {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+
+/* Count / number */
+.stat-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* Optional small text (trend / info) */
+.stat-card small {
+    font-size: 12px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .stat-card h2 {
+        font-size: 24px;
+    }
+
+    .stat-card .icon-wrapper {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+}
+
+/* Top controls container */
+.datatable-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+/* Search wrapper */
+.datatable-search {
+    position: relative;
+    margin-left: auto;
+}
+
+/* Search input */
+.datatable-input {
+    width: 260px;
+    padding: 9px 14px 9px 36px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.datatable-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    outline: none;
+}
+
+/* Font Awesome 4.7 search icon */
+
+
+/* Dropdown wrapper */
+.datatable-dropdown label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+/* Select field */
+.datatable-selector {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Focus */
+.datatable-selector:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    outline: none;
+}
+
+@media (max-width: 576px) {
+    .datatable-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .datatable-input {
+        width: 100%;
+    }
+
+    .datatable-dropdown label {
+        justify-content: space-between;
+    }
+}
+
+/* Search wrapper */
+.datatable-search {
+    position: relative;
+}
+
+/* Search input */
+.datatable-input {
+    width: 260px;
+    padding: 9px 36px 9px 14px; /* space on RIGHT for icon */
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.datatable-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    outline: none;
+}
+
+/* Search icon on RIGHT */
+.datatable-search::after {
+    content: "\f002"; /* fa-search */
+    font-family: FontAwesome;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9aa0a6;
+    font-size: 14px;
+    pointer-events: none;
+}
+@media (max-width: 576px) {
+    .datatable-input {
+        width: 100%;
+    }
+}
+
+.datatable-input:focus + .search-icon {
+    color: #0d6efd;
+}
+
+/* FlickerDate input fix */
+input.datepicker,
+.datepicker input,
+input.datepicker-input {
+    background-color: #fff !important;
+    color: #495057 !important;
+    cursor: pointer;
+}
+
+
+
+.file-upload-card {
+    display: block;
+    border: 2px dashed #dcdcdc;
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #fafafa;
+}
+
+.file-upload-card:hover {
+    border-color: #0d6efd;
+    background: #f4f8ff;
+}
+
+.upload-content i {
+    font-size: 36px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+
+.upload-content p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.upload-content small {
+    color: #6c757d;
+}
+
+.btn i {
+    pointer-events: none;
+}
+
+.btn {
+    min-width: 34px;
+}
 

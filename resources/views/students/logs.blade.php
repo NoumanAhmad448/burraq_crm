@@ -45,9 +45,14 @@
 
 </div>
 @endsection
-<script>
-new simpleDatatables.DataTable("#studentLogs", {
-    searchable: true,
-    perPage: 10
-});
-</script>
+@section('page-js')
+    <script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable("#studentLogs", {
+                searchable: true,
+                perPage: 10
+            });
+
+        });
+    </script>
+@endsection
