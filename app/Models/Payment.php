@@ -20,4 +20,8 @@ class Payment extends Model
     {
         return $this->belongsTo(EnrolledCourse::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'payment_by');
+    }
 }
