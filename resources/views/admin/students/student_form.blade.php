@@ -18,6 +18,12 @@
                 </ul>
             </div>
         @endif
+        {{-- write a logic to display the success message --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <div class="card-body">
             <form method="POST"
@@ -62,7 +68,6 @@
                             value="@if ($is_update) {{ $student->email }}@else{{ old('email') }} @endif">
                     </div>
 
-                    
 
                     <div class="col-md-4 mt-2">
                         <label>Admission Date*</label>
@@ -169,7 +174,7 @@
                                 <td>
                                     <input type="text" name="courses[{{ $course->id }}][total_fee]"
                                         class="form-control" placeholder="Course Fee"
-                                        value="{{ $enrolledCourse?->total_fee ?? old('total_fee') }}">
+                                        value="{{ old('total_fee', $enrolledCourse?->total_fee > 0 ? (int) $enrolledCourse?->total_fee : '') }}">
                                 </td>
 
                                 {{-- Paid Amount --}}
@@ -179,9 +184,10 @@
                                             value="{{ $enrolledCourse->payments->first()->id }}">
                                     @endif
 
+                                    {{-- {{dump(($enrolledCourse?->payments?->first()?->paid_amount ))}} --}}
                                     <input type="text" name="courses[{{ $course->id }}][paid_amount]"
                                         class="form-control" placeholder="Paid"
-                                        value="{{ (int) ($enrolledCourse?->payments?->first()?->paid_amount ?? old('paid_amount')) }}">
+                                        value="{{ old('paid_amount',  $enrolledCourse?->payments?->first()?->paid_amount > 0 ? (int) $enrolledCourse?->payments?->first()?->paid_amount : '' ) }}">
                                 </td>
                             </tr>
                         @endforeach

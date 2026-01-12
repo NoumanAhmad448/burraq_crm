@@ -43,13 +43,13 @@
                                     {{ (int) $student->remaining_fee }}
                                 </td>
                                 <td>
-
+                                @if($student->enrolledCourses->isNotEmpty() && $student->enrolledCourses->first())
                                     @foreach ($student->enrolledCourses as $id => $enrolled)
                                         <a href="#" class="text-decoration-none ">
                                             {{$id + 1}} - {{ \Str::limit($enrolled->course->name, 30) }} <br/>
                                         </a>
                                     @endforeach
-
+                                @endif
                                 </td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-1 justify-content-center justify-between">
@@ -59,7 +59,7 @@
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
 
-                                        @if($enrolled)
+                                        @if(isset($enrolled))
                                                 <a href="{{ $enrolled ? route('students.course.payments', ['student_id' => $student->id, 'enrolledCourseId' => $enrolled->id]) : '#' }}"
                                                     class="btn btn-sm btn-outline-warning {{ !$enrolled ? 'disabled' : '' }}"
                                                     title="Course -> Payments"

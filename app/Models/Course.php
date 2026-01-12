@@ -12,6 +12,7 @@ class Course extends Model
         'name',
         'description',
         'fee',
+        'is_deleted',
     ];
 
     public function enrolledCourses()

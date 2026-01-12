@@ -12,7 +12,10 @@
 <div class="card mb-4 shadow-sm">
     <div class="card-header d-flex justify-content-between">
         <strong>{{ $enrolledCourse->course->name }}</strong>
-        <span>Total Fee: {{ $enrolledCourse->total_fee }}</span>
+        <span class="text-success">Total Fee: {{ $enrolledCourse->total_fee }}</span>
+        <span class="text-primary">Paid Fee: {{ $enrolledCourse?->payments()
+    ?->where('is_deleted', false)
+    ?->sum('paid_amount') }}</span>
     </div>
 
     <div class="card-body p-0">
@@ -23,15 +26,23 @@
                     <th>Paid Amount</th>
                     <th>Paid At</th>
                     <th>Payment By</th>
+                    <th>Payment Slip</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($enrolledCourse->payments as $payment)
-                    <tr>
+                    <tr @if($payment->is_deleted) class="table-danger" @endif>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $payment->paid_amount }}</td>
                         <td>{{ $payment->paid_at }}</td>
                         <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
+                        <td>
+                            @if ($payment->payment_slip_path)
+                                <a href="{{ asset(img_path($payment->payment_slip_path)) }}" target="_blank">View Slip</a>
+                            @else
+                                No Slip
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>

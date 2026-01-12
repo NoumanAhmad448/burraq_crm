@@ -4,6 +4,13 @@
       @else
           Add
       @endif Payment
+      @if ($is_update)
+
+          <a href="{{ route('students.course.payments', ['student_id' => $student_id, 'enrolledCourseId' => $enrolled_course_id]) }}"
+              class="btn btn-sm btn-outline-success" title="Course -> Payments">
+      <i class="fa fa-credit-card"></i> Check Previous Payments
+      </a>
+      @endif
   </h3>
 
   @if (session('success'))
@@ -24,7 +31,7 @@
 
       <div class="form-group">
           <hr />
-          <h3>Enrolled Course</h3>
+          <h3>Enrolled Course -- {{ $enrolledCourse?->total_fee }}</h3>
           <p> {{ $enrolledCourse->course->name ?? 'N/A' }} </p>
           <hr />
           <input type="hidden" name="enrolled_course_id" class="form-control"
@@ -40,10 +47,12 @@
                       {{ $student->name }}</option>
               @endforeach
           </select>
-          @if ($is_update)
-              <input type="hidden" name="payment_id" value="{{ $payment->id }}">
-          @endif
+          {{-- {{dd($is_update)}} --}}
       </div>
+
+      @if ($is_update)
+          <input type="hidden" name="payment_id" value="{{ $payment->id }}">
+      @endif
 
 
       <div class="form-group">

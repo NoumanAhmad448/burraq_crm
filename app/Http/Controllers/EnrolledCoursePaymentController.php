@@ -50,6 +50,7 @@ class EnrolledCoursePaymentController extends Controller
 
     public function store(StoreCoursePaymentRequest $request)
     {
+        // dd($request->all());
         $data = $request->validated();
 
         // dd($data);
@@ -84,9 +85,10 @@ class EnrolledCoursePaymentController extends Controller
                 "enrolled_course_id" => $enrolledCourse->id,
             ];
 
+        // dd($request->payment_id);
         // Create or update payment
-        if(array_key_exists("payment_id", $data)){
-            $payment = EnrolledCoursePayment::find($data['payment_id']);
+        if($request?->payment_id){
+            $payment = EnrolledCoursePayment::find($request->payment_id);
             $payment->update($data);
         }else{
             EnrolledCoursePayment::create($data);
