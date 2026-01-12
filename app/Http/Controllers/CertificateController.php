@@ -22,13 +22,14 @@ class CertificateController extends Controller
                 'course',
                 'certificate',
             ])
+            ->orderby('created_at', 'desc')
             ->get()
             ->map(function ($enrolledCourse) {
 
                 $totalPaid = EnrolledCoursePayment::where(
                     'enrolled_course_id',
                     $enrolledCourse->id
-                )->sum('paid_amount');
+                )->where("is_deleted", 0)->sum('paid_amount');
 
                 return [
                     'enrolled_course' => $enrolledCourse,

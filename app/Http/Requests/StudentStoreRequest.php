@@ -13,6 +13,8 @@ class StudentStoreRequest extends FormRequest
 
     public function rules()
     {
+        // email should not be duplicate except for the current student being edited
+        // what would be the logic?
         return [
             'name'          => 'required|string|max:255',
             'father_name'   => 'required|string|max:255',
@@ -42,6 +44,7 @@ class StudentStoreRequest extends FormRequest
         return [
             'paid_fee.lte' => 'Paid fee cannot be greater than total fee.',
             'due_date.after_or_equal' => 'Due date must be after admission date.',
+            'email.unique' => 'This email is already registered with another student.',
         ];
     }
 }

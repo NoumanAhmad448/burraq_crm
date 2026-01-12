@@ -24,7 +24,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::where('is_deleted', 0)
-            ->with('enrolledCourses.course')
+            ->with('enrolledCourses.course', 'enrolledCourses.payments')
             ->latest()
             ->get();
 
@@ -87,7 +87,7 @@ class StudentController extends Controller
         try {
 
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
-            $courses = Course::where('is_deleted', 0)->get();
+            // $courses = Course::where('is_deleted', 0)->get();
             $student = $this->studentForm($request);
 
             /* ---------- STUDENT CREATE ---------- */
@@ -96,29 +96,8 @@ class StudentController extends Controller
             // dd($student);
             // dd($request->courses);
             /* ---------- ENROLL COURSES ---------- */
-            if ($request->has('courses')) {
-                foreach ($request->courses as $courseId => $courseData) {
+            $this->updateEnrolledCourses($request, $student);
 
-                    if (array_key_exists("selected", $courseData) && $courseData['selected']) {
-                        $enrolled = EnrolledCourse::create([
-                            'student_id' => $student->id,
-                            'course_id'  => $courseId,
-                            'total_fee'  => $courseData['total_fee'],
-                        ]);
-
-                        /* ---------- PAYMENT AGAINST ENROLLED COURSE ---------- */
-                        if (!empty($courseData['paid_amount']) && $courseData['paid_amount'] > 0) {
-                            EnrolledCoursePayment::create([
-                                'enrolled_course_id' => $enrolled->id,
-                                'paid_amount'        => $courseData['paid_amount'],
-                                'paid_at'       => now(),
-                                'payment_by'         => auth()->user()->id,
-                                'payment_slip_path'  => $student->payment_slip_path,
-                            ]);
-                        }
-                    }
-                }
-            }
 
             DB::commit();
 
@@ -150,7 +129,7 @@ class StudentController extends Controller
     {
         $student = Student::with('enrolledCourses.course', 'enrolledCourses.payments')
             ->findOrFail($id);
-
+        // dd("here");
         return view('admin.students.partials.student_detail', compact('student'));
     }
 
@@ -171,21 +150,20 @@ class StudentController extends Controller
         return view('admin.students.edit', compact('student', 'courses'));
     }
 
-    /**
-     * Update student
-     */
-    public function update(StudentStoreRequest $request, $id)
+    private function updateEnrolledCourses($request, $student)
     {
-        $student = Student::findOrFail($id);
-        $this->studentForm($request, true, $student);
 
+        // Logic to update enrolled courses can be added here
         if ($request->has('courses')) {
             // dd($request->courses);
             foreach ($request->courses as $courseId => $courseData) {
 
                 if (array_key_exists("selected", $courseData) && $courseData['selected']) {
                     // dd($courseData);
-                    $enrolled_course = EnrolledCourse::find($courseData['CEId']);
+                    $enrolled_course = null;
+                    if (array_key_exists("CEId", $courseData) && $courseData['CEId']) {
+                        $enrolled_course = EnrolledCourse::find($courseData['CEId']);
+                    }
                     if ($enrolled_course) {
                         $enrolled_course?->update([
                             'student_id' => $student->id,
@@ -208,6 +186,7 @@ class StudentController extends Controller
                                     'paid_amount' => $courseData['paid_amount'],
                                     'paid_at' => now(),
                                     'payment_by' => auth()->user()->id,
+                                    'payment_slip_path'  => $student->payment_slip_path,
                                 ]
                             );
                         } else {
@@ -216,7 +195,7 @@ class StudentController extends Controller
                                 'paid_amount'        => $courseData['paid_amount'],
                                 'paid_at'            => LyskillsCarbon::now(),
                                 'payment_by'         => auth()->user()->id,
-                                    'payment_slip_path'  => $student->payment_slip_path,
+                                'payment_slip_path'  => $student->payment_slip_path,
 
                             ]);
                         }
@@ -224,7 +203,20 @@ class StudentController extends Controller
                 }
             }
         }
+    }
+    /**
+     * Update student
+     */
+    public function update(StudentStoreRequest $request, $id)
+    {
+         DB::beginTransaction();
 
+        $student = Student::findOrFail($id);
+        $this->studentForm($request, true, $student);
+
+        $this->updateEnrolledCourses($request, $student);
+
+        DB::commit();
 
         if ($request->print) {
             return redirect()
