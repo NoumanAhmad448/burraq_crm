@@ -93,29 +93,13 @@
                     <div class="col-md-4 mt-2">
                         <label>Photo</label>
                         {{-- <input type="file" name="photo" class="form-control" value="{{ old('photo') }}"> --}}
-                        <label class="file-upload-card">
-                            <input type="file" name="photo" hidden>
-                            <div class="upload-content">
-                                <i class="fa fa-cloud-upload"></i>
-                                <p>Click to upload</p>
-                                <small>PDF, JPG, PNG (Max 5MB)</small>
-                            </div>
-                        </label>
-
+                        @include('file', ['name' => 'photo'])
                     </div>
                     <div class="col-md-4 mt-2">
                         <label>Payment Slip</label>
                         {{-- <input type="file" name="payment_slip_path" class="form-control"
                             value="{{ old('payment_slip_path') }}"> --}}
-                        <label class="file-upload-card">
-                            <input type="file" name="payment_slip_path" hidden>
-                            <div class="upload-content">
-                                <i class="fa fa-cloud-upload"></i>
-                                <p>Click to upload</p>
-                                <small>PDF, JPG, PNG (Max 5MB)</small>
-                            </div>
-                        </label>
-
+                        @include('file', ['name' => 'payment_slip_path'])
                         <br />
                         @if ($is_update && $student->payment_slip_path)
                             <a href="{{ asset(img_path($student->payment_slip_path)) }}" target="_blank">View Current

@@ -23,7 +23,7 @@ class StudentStoreRequest extends FormRequest
             'email'         => 'nullable|email|max:255',
             'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            'admission_date'=> 'required|date',
+            'admission_date' => 'required|date',
             'due_date'      => 'required|date|after_or_equal:admission_date',
 
             'total_fee'     => 'required|numeric|min:0',
@@ -33,9 +33,9 @@ class StudentStoreRequest extends FormRequest
 
             // Course enrollment (dynamic)
             'courses'                       => 'nullable|array',
-            'courses.*.selected'            => 'nullable',
-            'courses.*.total_fee'           => 'nullable|numeric|min:0',
-            'courses.*.paid_amount'         => 'nullable|numeric|min:0',
+            'courses.*.selected'    => 'nullable',
+            // 'courses.*.total_fee'    => 'required_with:courses.*.selected|numeric|min:0',
+            // 'courses.*.paid_amount'  => 'required_with:courses.*.selected|numeric|min:0',
         ];
     }
 
@@ -46,5 +46,48 @@ class StudentStoreRequest extends FormRequest
             'due_date.after_or_equal' => 'Due date must be after admission date.',
             'email.unique' => 'This email is already registered with another student.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            if (!is_array($this->courses)) {
+                return;
+            }
+
+            foreach ($this->courses as $index => $course) {
+
+                // 🚫 Skip completely if not selected
+                if (empty($course['selected'])) {
+                    continue;
+                }
+
+                // ✅ Now validate ONLY selected rows
+                if (!isset($course['total_fee']) || !is_numeric($course['total_fee'])) {
+                    $validator->errors()->add(
+                        "courses.$index.total_fee",
+                        "Total fee is required and must be numeric."
+                    );
+                }
+
+                if (!isset($course['paid_amount']) || !is_numeric($course['paid_amount'])) {
+                    $validator->errors()->add(
+                        "courses.$index.paid_amount",
+                        "Paid amount is required and must be numeric."
+                    );
+                }
+
+                if (
+                    isset($course['total_fee'], $course['paid_amount']) &&
+                    $course['paid_amount'] > $course['total_fee']
+                ) {
+                    $validator->errors()->add(
+                        "courses.$index.paid_amount",
+                        "Paid amount cannot exceed total fee."
+                    );
+                }
+            }
+        });
     }
 }

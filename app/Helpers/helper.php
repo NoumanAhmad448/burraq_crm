@@ -290,12 +290,10 @@ if (! function_exists('throw_exception')) {
     {
 
         $f_name = $img->getClientOriginalName();
-        $manager = new ImageManager();
-        $image = $manager->make($img)->resize(500, 500);
 
         $uploadData = new \App\Helpers\UploadData();
         return $uploadData->upload(
-            $image->stream()->__toString(),
+            $img,
             $f_name
         );
     }

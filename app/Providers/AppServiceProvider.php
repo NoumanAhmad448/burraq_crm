@@ -14,7 +14,11 @@ use App\Observers\CrmStudentObserver;
 use App\Models\EnrolledCourse;
 use App\Observers\EnrolledCourseObserver;
 use App\Models\Inquiry;
+use App\Models\Profile;
+use App\Models\User;
 use App\Observers\InquiryObserver;
+use App\Observers\ProfileObserver;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
         CrmStudent::observe(CrmStudentObserver::class);
         EnrolledCourse::observe(EnrolledCourseObserver::class);
         Inquiry::observe(InquiryObserver::class);
+        Profile::observe(ProfileObserver::class);
+        // User::observe(UserObserver::class);
+
 
         try {
             DB::connection()->getPdo();  // Try to connect to the database

@@ -20,6 +20,11 @@
             "title" => "Certificates",
             "icon" => "fa-certificate",
             "route" => route('certificates.index'),
+        ],
+        [
+            "title" => "HR",
+            "icon"  => "fa-user-circle",
+            "route" => route('hr.index'),
         ]
     ];
 

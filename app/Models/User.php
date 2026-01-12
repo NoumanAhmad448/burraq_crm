@@ -39,6 +39,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_role',
         "role",
         "language",
+        "role",
+        "profile_photo_path",
+        "is_deleted"
     ];
 
     /**

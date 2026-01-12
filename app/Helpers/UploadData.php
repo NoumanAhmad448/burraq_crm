@@ -44,7 +44,7 @@ class UploadData implements UploadDataInterface{
         return $this;
     }
 
-    public function upload($object, $file_name, $params=["width" => 300, "height" => 200])
+    public function upload($object, $file_name, $params=["width" => 500, "height" => 500])
     {
 
         // $this->createDirectory();
@@ -58,7 +58,8 @@ class UploadData implements UploadDataInterface{
                 $this->default_setting['imageStoragePath'];
             }
             $path = $this->default_setting['imageStoragePath'].$path_creator;
-            if($object instanceof UploadedFile && in_array(strtolower($object->getClientOriginalExtension()), ['jpg', 'png', 'gif', 'bmp', 'webp',"pdf"])){
+            $is_image = $object instanceof UploadedFile && in_array(strtolower($object->getClientOriginalExtension()), ['jpg', 'png', 'gif', 'bmp', 'webp']);
+            if($is_image){
                 $object = $this?->manager?->make($object)->resize($params["width"], $params["height"])
                             ->stream()->__toString();
             }
@@ -85,7 +86,7 @@ class UploadData implements UploadDataInterface{
 
         debug_logs($response);
         // dd($response);
-        if($this->default_setting['isVideo']){
+        if(!$is_image){
             debug_logs("Video path ". $path);
             $path = $response;
         }
