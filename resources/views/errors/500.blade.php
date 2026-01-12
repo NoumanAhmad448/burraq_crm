@@ -1,24 +1,30 @@
 @extends('errors::minimal')
 
-@section('title', __('500 Server Error'))
-@section('img')
-    <img src="{{ asset('img/500.jpg') }}" alt="lyskills" class="img-fluid w-50" />
-@endsection
+@section('title', __('500 Internal Server Error'))
 @section('code')
-    <div class="display-3"> Server Error </div>
-@endsection
-@section('message')
-    <div class="mt-3">
-        We are sorry to see you at this page. Do not worry, this is not a problem from you side. There is some problem
-        in our website, we are working on it. Meanwhile, if you have anything to inform us further, please feel free to
-        contact us.
+    <div class="display-3 font-weight-bold text-secondary">
+        500
     </div>
-    <section class="d-flex justify-content-center mt-3">
-        <a href="{{ route('index') }}" class="btn btn-primary"> Home Page </a>
-        <form action="{{ route('back') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-secondary ml-3"> Go Back </button>
-        </form>
-    </section>
+@endsection
 
+@section('img')
+    <img src="{{ asset('img/500.svg') }}"
+         alt="500 Server Error"
+         class="img-fluid mb-4"
+         style="max-width: 420px;">
+@endsection
+
+@section('message')
+    <h4 class="font-weight-semibold text-dark mb-3">
+        Internal Server Error
+    </h4>
+
+    <p class="text-muted mb-4">
+        Oops! Something went wrong on our end. Our team has been notified,
+        and we’re working to fix it. Please try again later.
+    </p>
+
+    <a href="{{ route('index') }}" class="btn btn-primary px-4">
+        <i class="fa fa-home mr-1"></i> Back to Home
+    </a>
 @endsection

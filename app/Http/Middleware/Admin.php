@@ -19,7 +19,9 @@ class Admin
     {
         $user = Auth::user();
         if (!$user || !$user->is_admin) {
-            return redirect()->route('index');
+            // return redirect()->route('index');
+            // show 403 page
+            abort(403, 'Unauthorized action.');
         }
         return $next($request);
     }

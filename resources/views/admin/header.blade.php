@@ -23,27 +23,34 @@
 </head>
 
 <body class="d-flex flex-column" style="min-height: 90%">
-    <nav class="navbar bg-website">
-        @if (config('setting.show_site_log'))
-            <a class="navbar-brand text-white" href="{{ route('index') }}">
-                CRM
-            </a>
-        @endif
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('index') }}" target="_blank">
-                    <i class="fa fa-home" aria-hidden="true"></i> Home </a>
+    <nav class="navbar navbar-expand bg-website">
+    {{-- Left side --}}
+    @if (config('setting.show_site_log'))
+        <a class="navbar-brand text-white" href="{{ route('index') }}">
+            CRM
+        </a>
+    @endif
+
+    {{-- Right side --}}
+    @auth
+        <ul class="navbar-nav ml-auto align-items-center">
+            <li class="nav-item mr-3">
+                <span class="navbar-text text-white">
+                    Welcome, {{ ucfirst(auth()->user()->name) }}
+                </span>
             </li>
-        </ul>
-        @if (config('setting.login_profile'))
-            <ul class="navbar-nav ml-auto">
+
+            @if (config('setting.login_profile'))
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('logout_user') }}">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
+                        <i class="fa fa-sign-out"></i> Logout
+                    </a>
                 </li>
-            </ul>
-        @endif
-    </nav>
+            @endif
+        </ul>
+    @endauth
+</nav>
+
     <div class="container-fluid mt-3">
         <div class="row no-gutters">
 

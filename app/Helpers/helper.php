@@ -301,3 +301,7 @@ if (! function_exists('throw_exception')) {
 function img_path($img_path){
     return UploadData::$img_path . $img_path;
 }
+
+function show_payment($amount){
+    return "Rs " . number_format($amount);
+}
