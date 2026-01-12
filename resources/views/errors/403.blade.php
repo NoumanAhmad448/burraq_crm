@@ -1,17 +1,30 @@
 @extends('errors::minimal')
 
-@section('title', __('Forbidden'))
-@section('img')
-    <img src="{{ asset('img/403.jpg') }}" alt="lyskills-403 forbidden" class="img-fluid w-50" />
+@section('title', __('403 Forbidden'))
+@section('code')
+    <div class="display-3 font-weight-bold text-secondary">
+        403
+    </div>
 @endsection
 
-@section('code')
-    <div class="display-3"> 403 forbidden request </div>
+@section('img')
+    <img src="{{ asset('img/403.svg') }}"
+         alt="403 Forbidden"
+         class="img-fluid mb-4"
+         style="max-width: 420px;">
 @endsection
 
 @section('message')
-    <div class="mt-3"> You are not allowed to visit this URL or perform this action. Please contact with us, if you think
-        you are here because of any mistake.
-    </div>
-    <a href="{{ route('index') }}" class="btn btn-primary my-3"> Home Page </a>
+    <h4 class="font-weight-semibold text-dark mb-3">
+        Access Denied
+    </h4>
+
+    <p class="text-muted mb-4">
+        You do not have permission to view this page. Please check your access rights
+        or contact support if you believe this is an error.
+    </p>
+
+    <a href="{{ route('index') }}" class="btn btn-primary px-4">
+        <i class="fa fa-home mr-1"></i> Go to Home
+    </a>
 @endsection

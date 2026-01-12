@@ -1,5 +1,7 @@
 @extends('admin.admin_main')
-
+@section('page-css')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@endsection
 @section('content')
     @php
 
@@ -34,6 +36,34 @@
                 'icon' => 'fa fa-check-circle fa-2x',
                 'route' => 'students.index',
             ],
+            [
+                'title' => 'Students (This Month)',
+                'count' => $studentsThisMonth->sum('total'),
+                'icon' => 'fa fa-users',
+                'bg' => 'bg-primary',
+                'route' => 'students.index',
+            ],
+            [
+                'title' => 'Payments This Month',
+                'count' => show_payment($paymentsThisMonth),
+                'icon' => 'fa fa-money',
+                'bg' => 'bg-success',
+                'route' => null,
+            ],
+            [
+                'title' => 'Total Paid',
+                'count' => show_payment($totalPaid),
+                'icon' => 'fa fa-check-circle',
+                'bg' => 'bg-info',
+                'route' => null,
+            ],
+            [
+                'title' => 'Pending Amount',
+                'count' => show_payment($pending),
+                'icon' => 'fa fa-exclamation-circle',
+                'bg' => 'bg-danger',
+                'route' => null,
+            ],
         ];
 
     @endphp
@@ -42,7 +72,7 @@
         @foreach ($info as $data)
             <div class="col-xl-3 col-md-4 col-sm-6 my-2" data-aos="fade-up">
 
-                @if (!empty($data['route']))
+                @if (!empty($data['route']) && $data['route'] != null)
                     <a href="{{ route($data['route']) }}" class="stat-card-link">
                 @endif
 
@@ -69,12 +99,122 @@
             </div>
         @endforeach
     </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="studentsMonthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="studentsYearChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="annualPaymentsChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="paymentStatusChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
-@section('script')
-    @if (config('setting.aos_js'))
-        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-        <script>
-            AOS.init();
-        </script>
-    @endif
+@section('page-js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        /* ---------- Students This Month ---------- */
+        new Chart(document.getElementById('studentsMonthChart'), {
+            type: 'bar',
+            data: {
+                labels: @json($studentsThisMonth->pluck('date')),
+                datasets: [{
+                    label: 'Students Registered',
+                    data: @json($studentsThisMonth->pluck('total')),
+                    backgroundColor: '#0d6efd',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        /* ---------- Students Yearly ---------- */
+        new Chart(document.getElementById('studentsYearChart'), {
+            type: 'line',
+            data: {
+                labels: @json($studentsYearly->pluck('month')->map(fn($m) => Carbon\Carbon::create()->month($m)->format('M'))),
+                datasets: [{
+                    label: 'Students (Yearly)',
+                    data: @json($studentsYearly->pluck('total')),
+                    fill: false,
+                    tension: 0.3,
+                    backgroundColor: '#0d6efd',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        /* ---------- Annual Payments ---------- */
+        new Chart(document.getElementById('annualPaymentsChart'), {
+            type: 'line',
+            data: {
+                labels: @json($annualPayments->pluck('month')->map(fn($m) => Carbon\Carbon::create()->month($m)->format('M'))),
+                datasets: [{
+                    label: 'Payments (Yearly)',
+                    data: @json($annualPayments->pluck('total')),
+                    fill: false,
+                    tension: 0.3,
+                    backgroundColor: '#0d6efd',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        //* ---------- Paid vs Pending ---------- */
+        new Chart(document.getElementById('paymentStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Paid', 'Pending'],
+                datasets: [{
+                    data: [{{ $totalPaid }}, {{ $pending }}],
+                    backgroundColor: [
+                        '#0d6efd', // Paid (Blue)
+                        '#dc3545' // Pending (Red)
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

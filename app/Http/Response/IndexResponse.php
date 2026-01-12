@@ -15,8 +15,10 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Student;
 use App\Models\Course;
-use App\Models\User;
+use App\Models\Student as CRMStudent;
 use App\Models\EnrolledCourse;
+use App\Models\EnrolledCoursePayment;
+use Carbon\Carbon;
 
 class IndexResponse implements IndexContracts
 {
@@ -32,6 +34,40 @@ class IndexResponse implements IndexContracts
             // $post = Cache::has(PostCache::FIRST_POST) ? Cache::get(PostCache::FIRST_POST) : PostCache::setFristPost();
             // $faq = Cache::has(FaqCache::FAQS) ? Cache::get(FaqCache::FAQS) : FaqCache::setFaqs();
             // $courses = Cache::has(CourseCache::COURSES) ? Cache::get(CourseCache::COURSES) : CourseCache::setCourses();
+
+                /* ---------- Students This Month ---------- */
+                $studentsThisMonth = CRMStudent::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)
+                    ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get();
+
+                /* ---------- Students Yearly ---------- */
+                $studentsYearly = CRMStudent::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                    ->whereYear('created_at', now()->year)
+                    ->groupBy('month')
+                    ->orderBy('month')
+                    ->get();
+
+                /* ---------- Payments This Month ---------- */
+                $paymentsThisMonth = EnrolledCoursePayment::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)
+                    ->where("is_deleted", 0)
+                    ->sum('paid_amount');
+
+                /* ---------- Annual Payments ---------- */
+                $annualPayments = EnrolledCoursePayment::selectRaw('MONTH(created_at) as month, SUM(paid_amount) as total')
+                    ->whereYear('created_at', now()->year)
+                    ->where("is_deleted", 0)
+                    ->groupBy('month')
+                    ->orderBy('month')
+                    ->get();
+
+                /* ---------- Paid vs Pending ---------- */
+                $totalFee  = EnrolledCourse::sum('total_fee');
+                $totalPaid = EnrolledCoursePayment::where("is_deleted", 0)->sum('paid_amount');
+                $pending   = max($totalFee - $totalPaid, 0);
 
             $totalStudents = Student::count();
             $activeStudents = Student::where('is_deleted', 0)->count();
@@ -50,7 +86,7 @@ class IndexResponse implements IndexContracts
             // $totalUsers = User::count();
 
             // $activeUsers = User::where('is_active', 1)->count(); // or last_login_at != null
-
+            // dd('here');
             return $request->wantsJson()
                 ? response()->json([
                     // ResponseKeys::TITLE => $title,
@@ -71,6 +107,13 @@ class IndexResponse implements IndexContracts
                         'totalCourses',
                         'activeCourses',
                         'activeEnrolledStudents',
+                        'studentsThisMonth',
+                        'studentsYearly',
+                        'paymentsThisMonth',
+                        'annualPayments',
+                        'totalFee',
+                        'totalPaid',
+                        'pending'
                     )
                 );
 

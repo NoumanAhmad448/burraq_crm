@@ -15,11 +15,15 @@ class ProfileObserver
             'id',
             'password',
             "is_admin",
+            "resume_path",
+            "cnic_photo_path",
+            "other_document_path",
+            "profile_photo_path",
         ])->toArray();
     }
     public function created(Profile $profile)
     {
-  
+
         UserLog::create([
             'user_id'      => $profile->user_id,
             'performed_by' => auth()->id(),

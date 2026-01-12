@@ -1,21 +1,31 @@
 @extends('errors::minimal')
 
-@section('title', __('404 Not Found'))
-@section('code')
-    <div class="display-2"> 404 page not found </div>
+@section('title', __('Page Not Found'))
 
+@section('code')
+    <div class="display-3 font-weight-bold text-secondary">
+        404
+    </div>
 @endsection
 
 @section('img')
-    <img src="{{ asset('img/404.jpg') }}" alt="404" class="img-fluid w-70" />
+    <img src="{{ asset('img/404.svg') }}"
+         alt="Page not found"
+         class="img-fluid mb-4"
+         style="max-width: 420px;">
 @endsection
+
 @section('message')
+    <h4 class="font-weight-semibold text-dark mb-3">
+        Page Not Found
+    </h4>
 
-    <div class="mt-3"> we cannot find this page on our website. Please check the spelling in the URL. This might be
-        possible,
-        this page has been removed due to some reason so please try visiting other URL, if this page does not show
-        you now
-    </div>
-    <a href="{{ route('index') }}" class="btn btn-primary mt-3"> Home Page </a>
+    <p class="text-muted mb-4">
+        The page you are looking for might have been removed, had its name changed,
+        or is temporarily unavailable. Please verify the URL or return to the dashboard.
+    </p>
 
+    <a href="{{ route('index') }}" class="btn btn-primary px-4">
+        <i class="fa fa-home mr-1"></i> Back to Home
+    </a>
 @endsection
