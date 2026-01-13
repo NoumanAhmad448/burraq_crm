@@ -1,3 +1,9 @@
+# Remeber to use the guide on server_debugging repo for deployment
+# Remeber to use the guide on server_debugging repo for deployment
+# Remeber to use the guide on server_debugging repo for deployment
+# Remeber to use the guide on server_debugging repo for deployment
+# Remeber to use the guide on server_debugging repo for deployment
+
 <h3 align="center">
 Burraq CRM
 </h3>

@@ -34,7 +34,7 @@
                     <tbody>
                         {{-- {{dd($students)}} --}}
                         @foreach ($students as $student)
-                            <tr>
+                            <tr @if($student->is_deleted == 1) class="table-danger" @endif>
                                 <td>{{ $student->name }}</td>
                                 <td>{{ $student->father_name }}</td>
                                 <td>{{ (int)$student->total_fee }}</td>
