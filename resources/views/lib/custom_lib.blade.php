@@ -35,6 +35,19 @@
 {{-- <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
 <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script> --}}
 
+<!-- Then DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css">
+{{-- <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.5/css/searchPanes.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/3.1.3/css/select.dataTables.css"> --}}
+
+
+{{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> --}}
+<script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+{{-- <script src="https://cdn.datatables.net/searchpanes/2.3.5/js/dataTables.searchPanes.js"></script> --}}
+{{-- <script src="https://cdn.datatables.net/select/3.1.3/js/dataTables.select.js"></script> --}}
+
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 

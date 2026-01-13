@@ -6,6 +6,9 @@
 
 @section('content')
     <div class="container-fluid">
+        <a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
     @if(session('msg'))
         <div class="alert alert-success">
             {{ session('msg') }}
@@ -14,7 +17,9 @@
         @include('admin.students.student_form', [
             'is_update' => true,
         ])
-
+<a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
     </div>
 @endsection
 

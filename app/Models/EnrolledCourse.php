@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\LyskillsCarbon;
 use Illuminate\Database\Eloquent\Model;
 
 class EnrolledCourse extends Model
@@ -12,6 +13,8 @@ class EnrolledCourse extends Model
         'student_id',
         'course_id',
         'total_fee',
+        'admission_date',
+        'due_date',
     ];
 
     public function course()
@@ -42,5 +45,19 @@ class EnrolledCourse extends Model
     public function certificate()
     {
         return $this->hasMany(Certificate::class, 'enrolled_course_id');
+    }
+
+     // Format admission date using LyskillsCarbon
+    public function getFormattedAdmissionDateAttribute()
+    {
+        if (!$this->admission_date) return null;
+        return LyskillsCarbon::parse($this->admission_date)->format('d-m-Y');
+    }
+
+    // Format due date using LyskillsCarbon
+    public function getFormattedDueDateAttribute()
+    {
+        if (!$this->due_date) return null;
+        return LyskillsCarbon::parse($this->due_date)->format('d-m-Y');
     }
 }

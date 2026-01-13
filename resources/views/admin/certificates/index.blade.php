@@ -24,6 +24,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th>#</th>
+                        <th>Cert. No</th>
                         <th>Student</th>
                         <th>Course</th>
                         <th>Total Fee</th>
@@ -36,9 +37,15 @@
 
                 <tbody>
                     @forelse($enrolledCourses as $index => $row)
-                                @if($row['is_paid'])
+                    {{-- {{dd($row)}} --}}
+                    @if($row['is_paid'])
                         <tr>
                             <td>{{ $index + 1 }}</td>
+                            @php
+                            $certificate = \App\Models\Certificate::where("enrolled_course_id", $row["enrolled_course"]->id)->where("student_id", $row["student"]->id)->latest()->first();
+                            // dd($certificate);
+                            @endphp
+                            <td>@if($certificate?->id) BES{{ 3000 + ($certificate?->id ?  : 0) + 1 }} @endif</td>
 
                             <td>
                                 {{ $row['student']->name ?? 'Unknown' }}

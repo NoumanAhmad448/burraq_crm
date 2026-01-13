@@ -53,14 +53,31 @@ class StudentStoreRequest extends FormRequest
         $validator->after(function ($validator) {
 
             if (!is_array($this->courses)) {
-                return;
+                $validator->errors()->add(
+                        "courses",
+                        "Student must be enrolled in atleast one course."
+                    );
+            }
+            // dd(count($this->courses));
+            // dd($this->courses);
+            if (is_array($this->courses) && count($this->courses) == 0) {
+                $validator->errors()->add(
+                        "courses",
+                        "Student must be enrolled in atleast one course."
+                    );
             }
 
+            $selected_count = 0;
             foreach ($this->courses as $index => $course) {
+
 
                 // 🚫 Skip completely if not selected
                 if (empty($course['selected'])) {
                     continue;
+                }
+
+                if(!empty($course['selected'])){
+                    $selected_count++;
                 }
 
                 // ✅ Now validate ONLY selected rows
@@ -78,6 +95,30 @@ class StudentStoreRequest extends FormRequest
                     );
                 }
 
+                if (!isset($course['admission_date']) || empty($course['admission_date'])) {
+                        $validator->errors()->add(
+                            "courses.$index.admission_date",
+                            "Course Admission date is required."
+                        );
+                    }
+
+                    // if (!isset($course['due_date']) || empty($course['due_date'])) {
+                    //     $validator->errors()->add(
+                    //         "courses.$index.due_date",
+                    //         "Course Due date is required."
+                    //     );
+                    // }
+
+                    // Additional validation for date logic
+                    if (isset($course['admission_date']) && isset($course['due_date'])) {
+                        if (strtotime($course['due_date']) < strtotime($course['admission_date'])) {
+                            $validator->errors()->add(
+                                "courses.$index.due_date",
+                                "Course Due date must be on or after Course Admission date."
+                            );
+                        }
+                    }
+
                 if (
                     isset($course['total_fee'], $course['paid_amount']) &&
                     $course['paid_amount'] > $course['total_fee']
@@ -87,6 +128,11 @@ class StudentStoreRequest extends FormRequest
                         "Paid amount cannot exceed total fee."
                     );
                 }
+            }
+
+            if($selected_count == 0){
+                $validator->errors()->add('base', 'At least one course needs to be selected and must have all fee details filled.');
+
             }
         });
     }
