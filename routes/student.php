@@ -23,7 +23,7 @@ Route::middleware(config('middlewares.auth'))->group(function () {
     Route::post('students/{id}/update', [StudentController::class, 'update'])
         ->name('students.update');
 
-    Route::delete('students/{id}', [StudentController::class, 'delete'])
+    Route::get('students/{id}/delete', [StudentController::class, 'delete'])
         ->name('students.delete');
 
     // Print / Receipt

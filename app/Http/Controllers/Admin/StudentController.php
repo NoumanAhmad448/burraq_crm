@@ -23,8 +23,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::where('is_deleted', 0)
-            ->with('enrolledCourses.course', 'enrolledCourses.payments')
+        $students = Student::with('enrolledCourses.course', 'enrolledCourses.payments')
             ->latest()
             ->get();
 
@@ -232,11 +231,13 @@ class StudentController extends Controller
      */
     public function delete($id)
     {
+        // dd("here");
         if (!auth()->user()->is_admin) {
             abort(403);
         }
 
         Student::where('id', $id)->update(['is_deleted' => 1]);
+        // dd(Student::where('id', $id)->first());
 
         return redirect()->back()->with('success', 'Student deleted successfully');
     }
