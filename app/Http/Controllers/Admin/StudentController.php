@@ -23,13 +23,13 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with('enrolledCourses.course', 'enrolledCourses.payments')
+        $enrolledCourses = EnrolledCourse::with('student', 'payments')
             ->latest()
             ->get();
 
         $courses = Course::where('is_deleted', 0)->get();
 
-        return view('admin.students.index', compact('students', 'courses'));
+        return view('admin.students.index', compact('enrolledCourses', 'courses'));
     }
 
     private function studentForm($request, $is_update = false, $student = null)
@@ -168,12 +168,16 @@ class StudentController extends Controller
                             'student_id' => $student->id,
                             'course_id'  => $courseId,
                             'total_fee'  => $courseData['total_fee'],
+                            'admission_date' => $courseData['admission_date'],
+                            'due_date' => $courseData['due_date'],
                         ]);
                     } else {
                         $enrolled_course = EnrolledCourse::create([
                             'student_id' => $student->id,
                             'course_id'  => $courseId,
                             'total_fee'  => $courseData['total_fee'],
+                            'admission_date' => $courseData['admission_date'],
+                            'due_date' => $courseData['due_date'],
                         ]);
                     }
                     // dd($enrolled_course);

@@ -198,6 +198,8 @@ if (!function_exists('dateFormat')) {
 
     function dateFormat($value)
     {
+        // dump("here");
+        if($value == null){            return;        }
         return LyskillsCarbon::dateFormat($value);
     }
 }

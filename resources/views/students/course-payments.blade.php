@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container">
-
+<a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
 <h4 class="mb-4">
     {{ $student->name }} — Enrolled Courses & Payments
 </h4>
@@ -57,7 +59,9 @@
 </div>
 
 @endforeach
-
+<a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
 </div>
 @endsection
 

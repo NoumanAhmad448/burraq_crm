@@ -1,3 +1,4 @@
+
 {{-- ================= CREATE STUDENT FORM ================= --}}
 <div class="card mb-4">
     <div class="card-header">
@@ -72,12 +73,12 @@
                 <div class="col-md-4 mt-2">
                     <label>Admission Date*</label>
                     <input type="text" name="admission_date" class="form-control datepicker"
-                        value="@if ($is_update) {{ $student?->admission_date }}@else{{ old('admission_date') }} @endif">
+                        value="@if($is_update){{ old('admission_date', $student?->admission_date)}}@endif">
                 </div>
                 <div class="col-md-4 mt-2">
                     <label>Due Date *</label>
                     <input type="text" name="due_date" class="form-control datepicker"
-                        value="@if ($is_update) {{ dateFormat($student->admission_date) }}@else{{ old('due_date') }} @endif">
+                        value="@if($is_update){{ old('due_date', dateFormat($student->admission_date))}}@endif">
                 </div>
 
                 <div class="col-md-4 mt-2">
@@ -115,10 +116,13 @@
             <table class="table table-bordered mt-2 courses">
                 <thead class="thead-light">
                     <tr>
-                        <th style="width:5%">Select</th>
-                        <th style="width:35%">Course</th>
-                        <th style="width:30%">Total Fee</th>
-                        <th style="width:30%">Paid Amount</th>
+                        <th>Select</th>
+                        <th >Course</th>
+                        <th >Total Fee</th>
+                        <th >Paid Amount</th>
+                        <th >Admission Date</th>
+                        <th >Due Date</th>
+
                     </tr>
                 </thead>
 
@@ -126,6 +130,12 @@
                     @foreach ($courses as $course)
                         @php
                             $enrolledCourse = null;
+                            if($course?->due_date){
+                                $course->due_date = dateFormat($course->due_date);
+                            }
+                            if($course->admission_date){
+                                $course->admission_date = dateFormat($course->admission_date);
+                            }
                             if ($is_update) {
                                 $enrolledCourse = $student?->enrolledCourses
                                     ->where('course_id', $course->id)
@@ -134,7 +144,7 @@
                             }
                         @endphp
 
-                        <tr>
+                        <tr class="course-row">
                             {{-- Select --}}
                             <td class="text-center">
                                 <input type="checkbox" name="courses[{{ $course->id }}][selected]"
@@ -157,21 +167,29 @@
                             {{-- Total Fee --}}
                             <td>
                                 <input type="text" name="courses[{{ $course->id }}][total_fee]"
-                                    class="form-control" placeholder="Course Fee"
-                                    value="{{ old('total_fee', $enrolledCourse?->total_fee > 0 ? (int) $enrolledCourse?->total_fee : '') }}">
+                                    class="form-control total-fee" placeholder="Course Fee"
+                                    value="{{ old('courses['.$course->id.'][total_fee]', $course?->total_fee > 0 ? (int) $course?->total_fee : '') }}">
                             </td>
 
                             {{-- Paid Amount --}}
                             <td>
                                 @if ($is_update && $enrolledCourse?->payments?->first())
                                     <input type="hidden" name="courses[{{ $course->id }}][payId]"
-                                        value="{{ $enrolledCourse->payments->first()->id }}">
+                                        value="{{ $course->id }}">
                                 @endif
-
-                                {{-- {{dump(($enrolledCourse?->payments?->first()?->paid_amount ))}} --}}
+{{-- {{dump(dateFormat($course?->admission_date))}} --}}
                                 <input type="text" name="courses[{{ $course->id }}][paid_amount]"
-                                    class="form-control" placeholder="Paid"
-                                    value="{{ old('paid_amount', $enrolledCourse?->payments?->first()?->paid_amount > 0 ? (int) $enrolledCourse?->payments?->first()?->paid_amount : '') }}">
+                                    class="form-control paid-amount" placeholder="Paid"
+                                    value="{{ old('courses['.$course->id.'][paid_amount]', $course?->payments?->paid_amount) }}">
+                            </td>
+                            <td>
+                                <input type="text" name="courses[{{ $course->id }}][admission_date]" class="form-control datepicker"
+                                    value="{{ old('courses['.$course->id.'][admission_date]', $course?->admission_date) }}">
+
+                            </td>
+                            <td>
+                                <input type="text" name="courses[{{ $course->id }}][due_date]" class="form-control datepicker"
+                                    value="{{old('courses['.$course->id.'][due_date]', $course?->due_date) }}">
                             </td>
                         </tr>
                     @endforeach
@@ -209,92 +227,47 @@
     </div>
 </div>
 
+
 <script>
-    const dataTable = new simpleDatatables.DataTable(".courses", {
-    searchable: true,
-    perPage: 5
+$(document).ready(function() {
+    new DataTable('.courses', {
+    pageLength: 5,
+    columnDefs: [
+        { targets: 0, width: '5%' },   // first column (e.g., checkbox)
+        { targets: 1, width: '15%' },  // second column
+        { targets: 2, width: '15%' },   // third column
+        { targets: 3, width: '15%' },   // fourth column
+        { targets: 4, width: '15%' },   // fifth column
+        { targets: 5, width: '15%' },   // sixth column
+        // other columns can auto-size
+    ],
+    // initComplete: function () {
+    //     this.api()
+    //         .columns()
+    //         .every(function () {
+    //             var column = this;
+    //             var title = column.footer().textContent;
+    //             // Create input element and add event listener
+    //             $('<input type="text" placeholder="Search ' + title + '" />')
+    //                 .appendTo($(column.footer()).empty())
+    //                 .on('keyup change clear', function () {
+    //                     if (column.search() !== this.value) {
+    //                         column.search(this.value).draw();
+    //                     }
+    //                 });
+    //         });
+    // }
 });
 
-// Store user selections
-const userSelections = new Set();
-
-// Clear ALL checkboxes immediately when page changes
-function clearAutoSelectedCheckboxes() {
-    // Immediately uncheck all checkboxes on page load/change
-    document.querySelectorAll('input[name^="courses["][name$="[selected]"]').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-    
-    // Also clear any select-all
-    const selectAll = document.getElementById('select-all');
-    if (selectAll) {
-        selectAll.checked = false;
-        selectAll.indeterminate = false;
-    }
-}
-
-// Restore user selections after delay
-function restoreUserSelections() {
-    // Clear timeout if exists
-    if (window.restoreSelectionTimeout) {
-        clearTimeout(window.restoreSelectionTimeout);
-    }
-    
-    // Step 1: Immediately clear all auto-selected checkboxes
-    clearAutoSelectedCheckboxes();
-    
-    // Step 2: Wait 1 second and restore user's selections
-    window.restoreSelectionTimeout = setTimeout(() => {
-        console.log('Restoring user selections...');
-        
-        document.querySelectorAll('input[name^="courses["][name$="[selected]"]').forEach(checkbox => {
-            const key = `${checkbox.name}|${checkbox.value}`;
-            
-            // Only check if user previously selected it
-            if (userSelections.has(key)) {
-                checkbox.checked = true;
-            }
-        });
-        
-        updateSelectAllState();
-        
-    }, 1000); // 1 second delay
-}
-
-// Track user checkbox selections
-document.addEventListener('change', function(e) {
-    if (e.target.name && e.target.name.startsWith('courses[')) {
-        const key = `${e.target.name}|${e.target.value}`;
-        
-        if (e.target.checked) {
-            userSelections.add(key);
-            console.log('User selected:', key);
-        } else {
-            userSelections.delete(key);
-            console.log('User deselected:', key);
-        }
-        
-        // Save to storage
-        localStorage.setItem('userCourseSelections', JSON.stringify(Array.from(userSelections)));
-    }
 });
-
-// Load saved selections
-const saved = localStorage.getItem('userCourseSelections');
-if (saved) {
-    JSON.parse(saved).forEach(key => userSelections.add(key));
-}
-
-// Setup event listeners
-dataTable.on('datatable.page', function() {
-    console.log('Page changed, clearing auto-selections...');
-    restoreUserSelections();
-});
-
-dataTable.on('datatable.init', restoreUserSelections);
-dataTable.on('datatable.sort', restoreUserSelections);
-dataTable.on('datatable.search', restoreUserSelections);
-
-// Initial restoration
-setTimeout(restoreUserSelections, 500);
 </script>
+<script>
+    $(document).ready(function() {
+
+        setTimeout(function() {
+            console.log($(".dtsp-emptyMessage").first());
+            $(".dtsp-emptyMessage").first().hide(); // Hide 'No panes to display' message
+        }, 5000);
+    });
+</script>
+{{-- ================= END CREATE STUDENT FORM ================= --}}

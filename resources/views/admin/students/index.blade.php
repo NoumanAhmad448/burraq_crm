@@ -22,67 +22,90 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Email</th>
+                            <th>Cnic</th>
                             <th>Father Name</th>
                             <th>Total Fee</th>
                             <th>Payed Fee</th>
                             <th>Remaining Fee</th>
+                            <th>Status</th>
                             <th>Courses(Payments)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {{-- {{dd($students)}} --}}
-                        @foreach ($students as $student)
-                            <tr @if($student->is_deleted == 1) class="table-danger" @endif>
-                                <td>{{ $student->name }}</td>
-                                <td>{{ $student->father_name }}</td>
-                                <td>{{ (int)$student->total_fee }}</td>
-                                <td>{{ (int) $student->paid_fee }}</td>
+                        {{-- {{dd($enrolledCourses)}} --}}
+                        @foreach ($enrolledCourses as $course)
+                            <tr @if($course->student->is_deleted == 1) class="table-danger" title="Student Deleted"
+                                @elseif(\App\Models\Certificate::where('student_id', $course->student->id)->where('enrolled_course_id', $course->id)->exists()) class="table-success" title="Certificate Issued"
+                                @endif>
+                                <td>{{ $course->student->name }}</td>
+                                <td>{{ $course->student->email }}</td>
+                                <td>{{ $course->student->cnic }}</td>
+                                <td>{{ $course->student->father_name }}</td>
+                                <td>{{ show_payment($course?->total_fee) }}</td>
+                                @php
+                                $paid_payment = $course?->payments()?->where("is_deleted", 0)?->sum("paid_amount")
+                                @endphp
+                                <td>{{ show_payment($paid_payment) }}</td>
                                 <td>
-                                    {{ (int) $student->remaining_fee }}
+                                    {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
                                 <td>
-                                @if($student->enrolledCourses->isNotEmpty() && $student->enrolledCourses->first())
-                                    @foreach ($student->enrolledCourses as $id => $enrolled)
-                                        <a href="{{ route('students.course.payments', ['student_id' => $student->id, 'enrolledCourseId' => $enrolled->id]) }}"
+                                    <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
+                                    @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0) class="btn btn-warning"
+                                    @else class="btn btn-danger" @endif>
+
+                                    @if($course->total_fee - $paid_payment <= 0)
+                                        Paid
+                                    @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0)
+                                        Unpaid
+                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)))
+                                        Overdue
+                                    @endif
+                                    </small>
+                                </td>
+                                <td>
+                                @if($course)
+                                        <a href="{{ route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) }}"
                                             class="underscore text-primary">
-                                            {{$id + 1}} - {{ \Str::limit($enrolled->course->name, 30) }} <br/>
+                                            {{ \Str::limit($course->course->name, 30) }} <br/>
                                         </a>
-                                    @endforeach
-                                @endif
+                                    @endif
                                 </td>
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1 justify-content-center justify-between">
-                                        <a href="{{ route('students.edit', $student->id) }}"
+                                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                        <a href="{{ route('students.edit', $course->student->id) }}"
                                         class="btn btn-sm btn-info"
                                         title="Edit">
                                             <i class="fa fa-pencil"></i> Edit
                                         </a>
 
-                                        @if(isset($enrolled))
-                                            <a href="{{ $enrolled ? route('students.course.payments', ['student_id' => $student->id, 'enrolledCourseId' => $enrolled->id]) : '#' }}"
-                                                class="btn btn-sm btn-warning {{ !$enrolled ? 'disabled' : '' }}"
-                                                title="Course -> Payments"
-                                                @if(!$enrolled) onclick="return false;" @endif>
-                                                    <i class="fa fa-credit-card"></i> Payments
+                                        @if(isset($course))
+                                            <a href="{{ $course ? route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) : '#' }}"
+                                            class="btn btn-sm btn-warning ml-1 {{ !$course ? 'disabled' : '' }}"
+                                            title="Course -> Payments"
+                                            @if(!$course) onclick="return false;" @endif>
+                                                <i class="fa fa-credit-card"></i> Payments
                                             </a>
                                         @endif
+
                                         @if (auth()->user()->is_admin)
-                                            <a href="{{ route('students.logs', $student->id) }}"
-                                            class="btn btn-sm btn-primary"
+                                            <a href="{{ route('students.logs', $course->student->id) }}"
+                                            class="btn btn-sm btn-primary mt-1 ml-1"
                                             title="View Logs">
                                                 <i class="fa fa-history"></i> Student Logs
                                             </a>
 
-                                            <a href="{{ route('students.course.payments_logs', $student->id) }}"
-                                            class="ml-3 mt-2 btn btn-sm btn-secondary"
-                                            title="Course & Payments Logs"> Payments Logs
-                                                <i class="fa fa-credit-card"></i>
+                                            <a href="{{ route('students.course.payments_logs', $course->student->id) }}"
+                                            class="btn btn-sm btn-secondary mt-1 ml-1"
+                                            title="Course & Payments Logs">
+                                                Payments Logs <i class="fa fa-credit-card"></i>
                                             </a>
 
-                                            <a href="{{ route('students.delete', $student->id) }}"
-                                            class="ml-3 mt-2 btn btn-sm btn-danger"
+                                            <a href="{{ route('students.delete', $course->student->id) }}"
+                                            class="btn btn-sm btn-danger mt-1"
                                             title="Delete"
                                             onclick="return confirm('Are you sure?')">
                                                 <i class="fa fa-trash"></i>
@@ -90,6 +113,7 @@
                                         @endif
                                     </div>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>

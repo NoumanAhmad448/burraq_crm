@@ -37,15 +37,22 @@
 
 @foreach ($menuItems as $index => $item)
     @if (in_array(auth()->user()->role, $item['access_roles']) || auth()->user()->is_admin)
-        <li class="nav-item">
-            <div class="text-center py-4 menu-loader{{ $index }}">
-                <div class="spinner-border text-primary" role="status"></div>
-                <div class="small text-muted mt-2">Loading, please wait…</div>
+        <li class="nav-item text-center px-3">
+            <!-- Loader -->
+            <div class="py-3 menu-loader{{ $index }}">
+                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                <div class="medium text-muted mt-1">Loading…</div>
             </div>
-            <a class="nav-link text-dark d-none menu-item" href="{{ $item['route'] }}" index="{{ $index }}">
-                <i class="fa {{ $item['icon'] }} mr-2"></i>
-                {{ $item['title'] }}
+
+            <!-- Menu Link -->
+            {{-- <a class="nav-link navbar-text text-white d-none menu-item" --}}
+            <a class="navbar-text text-white d-none menu-item"
+               href="{{ $item['route'] }}"
+               data-index="{{ $index }}">
+                <i class="fa {{ $item['icon'] }} d-block mb-1"></i>
+                <small>{{ $item['title'] }}</small>
             </a>
         </li>
     @endif
 @endforeach
+

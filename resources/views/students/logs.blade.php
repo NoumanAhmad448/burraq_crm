@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="container">
+    <a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
 
     <h4 class="mb-4">
         Logs for: {{ $student->name }} (ID: {{ $student->id }})
@@ -42,7 +45,9 @@
             @endforeach
         </tbody>
     </table>
-
+<a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+    <i class="fa fa-arrow-left"></i> Back to Students
+</a>
 </div>
 @endsection
 @section('page-js')

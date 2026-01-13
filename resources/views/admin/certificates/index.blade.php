@@ -38,7 +38,7 @@
                     @forelse($enrolledCourses as $index => $row)
                                 @if($row['is_paid'])
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>BES{{ 3000 + $index + 1 }}</td>
 
                             <td>
                                 {{ $row['student']->name ?? 'Unknown' }}

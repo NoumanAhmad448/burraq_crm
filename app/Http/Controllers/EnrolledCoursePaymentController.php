@@ -66,6 +66,7 @@ class EnrolledCoursePaymentController extends Controller
         $enrolledCourse = null;
         if (!empty($data['enrolled_course_id'])) {
             $enrolledCourse = EnrolledCourse::find($data['enrolled_course_id']);
+            // dd($enrolledCourse);
         } else {
             // If no enrolled course, create one
             $enrolledCourse = EnrolledCourse::firstOrCreate(
