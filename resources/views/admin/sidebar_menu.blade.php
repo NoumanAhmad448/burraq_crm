@@ -26,6 +26,12 @@
             'access_roles' => ['admin', 'hr'],
         ],
         [
+            'title' => 'Generated Certificates',
+            'icon' => 'fa-check-circle',
+            'route' => route('certificates.index', ["type" => "paid"]),
+            'access_roles' => ['admin', 'hr'],
+        ],
+        [
             'title' => 'HR',
             'icon' => 'fa-user-circle',
             'route' => route('hr.index'),

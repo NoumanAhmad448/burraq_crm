@@ -99,6 +99,20 @@ $totalOverdue = EnrolledCourse::with('payments', 'student')
         return max($course->total_fee - $totalPaid, 0);
     });
 
+            $cert_count = EnrolledCourse::with([
+                'student',
+                'course',
+                'certificate',
+            ])
+                ->whereHas("certificate")
+                ->whereHas("student", function($query){
+                    $query->where("is_deleted", 0);
+                })
+                ->orderby('created_at', 'desc')
+                ->count();
+
+
+                // dd($cert_count);
             // Users
             // $totalUsers = User::count();
 
@@ -132,6 +146,7 @@ $totalOverdue = EnrolledCourse::with('payments', 'student')
                         'totalPaid',
                         'totalOverdue',
                         'totalUnpaid',
+                        'cert_count',
                         'pending'
                     )
                 );

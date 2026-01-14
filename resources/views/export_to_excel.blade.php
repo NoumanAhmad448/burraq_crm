@@ -33,6 +33,7 @@
     <script>
         $(document).ready(function() {
             new DataTable('{{$id}}', {
+                "order": [], // disables initial order
                 language: {
                     search: '',
                     searchPlaceholder: 'Search Student ...'
