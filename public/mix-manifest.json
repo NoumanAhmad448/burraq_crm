@@ -1,11 +1,11 @@
 {
-    "/js/app.js": "/js/app.js?id=938f85e9c72c258e675d79b099812dec",
+    "/js/app.js": "/js/app.js?id=18a0f43409eb003f14202b60fb31ada9",
     "/js/bootstrap.js": "/js/bootstrap.js?id=4395ea41fc78bac9838b5e0a0e7292f8",
     "/js/course_category.js": "/js/course_category.js?id=f2846fccfbee95a6a8f750cffdeceeb9",
     "/js/course_instruction.js": "/js/course_instruction.js?id=de9298b38789a7b274ae30177e94881d",
     "/js/course_time_selection.js": "/js/course_time_selection.js?id=c4f8a0b4ed88971fa8bbcd4400986f6d",
     "/js/course_title.js": "/js/course_title.js?id=3396fbbd46538a4f67d216ec890722e9",
-    "/js/main.js": "/js/main.js?id=5f7cac2fa2f7a31a6675c040f9c9f9f8",
+    "/js/main.js": "/js/main.js?id=a81d04716f7e298209ebce36eb4c707a",
     "/js/users.js": "/js/users.js?id=58c6099d67a7dceb6f4d95e431af041f",
     "/js/edit_user.js": "/js/edit_user.js?id=d0d16e0d2c8a20aae16422ca2fda93d1",
     "/js/fade_out_msg.js": "/js/fade_out_msg.js?id=d087c505da23f4b53a026ddef6caf61d",
@@ -21,7 +21,8 @@
     "/js/course/show-course.js": "/js/course/show-course.js?id=44ad8baa21429714f0e5ea1a5cd430ab",
     "/js/course/course_curriculum.js": "/js/course/course_curriculum.js?id=db26c9824062490431ea106367bb85d8",
     "/js/profile.js": "/js/profile.js?id=4d48f24aafe68ed5a2efb4603e51b227",
-    "/css/text.css": "/css/text.css?id=e48fea2968cf8a06b91c8967c1523d21",
+    "/css/datatable_custom.css": "/css/datatable_custom.css?id=68b329da9893e34099c7d8ad5cb9c940",
+    "/css/text.css": "/css/text.css?id=4b82b8ab1ced37e62557a15ae33a37cc",
     "/css/course_instruction.css": "/css/course_instruction.css?id=26f71e3f210d696d9af12eabaf67c0e3",
     "/css/app.css": "/css/app.css?id=41c18b2592a7b9fa0ef1cfe8a118850f",
     "/css/responsive.css": "/css/responsive.css?id=989f3b137d83f35b496f14542273ba32"

@@ -11,7 +11,6 @@ use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Models\EnrolledCoursePayment;
 use App\Models\Payment;
-use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
@@ -21,12 +20,78 @@ class StudentController extends Controller
     /**
      * Show create form + students list
      */
-    public function index()
+    public function index(Request $request)
     {
-        $enrolledCourses = EnrolledCourse::with('student', 'payments')
+        // dd($request->all());
+        $type = $request->get('type');
+        if ($type == 'deleted') {
+            $enrolledCourses = EnrolledCourse::with('student', 'payments')
+                ->whereHas('student', function ($query) {
+                    $query->where('is_deleted', 1);
+                })
+                ->latest()
+                ->get();
+        }
+        else if ($type == 'unpaid') {
+
+            $enrolledCourses = EnrolledCourse::with('student', 'payments')
+                ->whereHas('student', function ($query) {
+                    $query->where('is_deleted', 0);
+                })
+                ->get()
+                ->filter(function ($enrolledCourse) {
+                    $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
+                    return $totalPaid < $enrolledCourse->total_fee;
+                })
+                ->sortByDesc('created_at')
+                ->values();
+
+        }
+        else if ($type == 'paid') {
+
+            $enrolledCourses = EnrolledCourse::with('student', 'payments')
+                ->whereHas('student', function ($query) {
+                    $query->where('is_deleted', 0);
+                })
+                ->get()
+                ->filter(function ($enrolledCourse) {
+                    $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
+                    return $totalPaid >= $enrolledCourse->total_fee;
+                })
+                ->sortByDesc('created_at')
+                ->values();
+
+        }
+        else if ($type == 'overdue') {
+            $enrolledCourses = EnrolledCourse::where("due_date", "<", now())->with('student', 'payments')
+             ->whereHas('student', function ($query) {
+                    $query->where('is_deleted', 0);
+                })
+             ->latest()
+            ->get();
+        }
+        else if ($type === 'certificate_issued') {
+           $enrolledCourses = EnrolledCourse::with([
+                'student',
+                'payments',
+                'certificate' => fn ($q) => $q->where('generated_count', '>', 0)
+            ])
+            ->whereHas('certificate', fn ($q) =>
+                $q->whereNotNull('generated_count')
+                ->where('generated_count', '>', 0)
+            )
+            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
             ->latest()
             ->get();
 
+        }
+        else {
+        $enrolledCourses = EnrolledCourse::with('student', 'payments')
+            ->latest()
+            ->get();
+        }
+
+        // dd($enrolledCourses);
         $courses = Course::where('is_deleted', 0)->get();
 
         return view('admin.students.index', compact('enrolledCourses', 'courses'));
@@ -143,6 +208,7 @@ class StudentController extends Controller
             ])
             ->findOrFail($id);
 
+        // dd($student);
         $courses = Course::all();
 
         // dd($student);
@@ -155,6 +221,8 @@ class StudentController extends Controller
         // Logic to update enrolled courses can be added here
         if ($request->has('courses')) {
             // dd($request->courses);
+            $currentEnrolledCourseIds = [];
+
             foreach ($request->courses as $courseId => $courseData) {
 
                 if (array_key_exists("selected", $courseData) && $courseData['selected']) {
@@ -204,7 +272,14 @@ class StudentController extends Controller
                         }
                     }
                 }
+                /* Keep track of valid courses */
+                $currentEnrolledCourseIds[] = $enrolled_course->id;
             }
+
+            // EnrolledCourse::where('student_id', $student->id)
+            //     ->whereNotIn('id', $currentEnrolledCourseIds)
+            //     ->delete();
+
         }
     }
     /**

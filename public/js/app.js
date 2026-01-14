@@ -17239,6 +17239,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/css/datatable_custom.css":
+/*!********************************************!*\
+  !*** ./resources/css/datatable_custom.css ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./resources/css/text.css":
 /*!********************************!*\
   !*** ./resources/css/text.css ***!
@@ -17423,6 +17436,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/app": 0,
+/******/ 			"css/datatable_custom": 0,
 /******/ 			"css/text": 0,
 /******/ 			"css/course_instruction": 0,
 /******/ 			"css/app": 0,
@@ -17476,11 +17490,12 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/sass/responsive.scss")))
-/******/ 	__webpack_require__.O(undefined, ["css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/app.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/course_instruction.css")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/text.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/sass/responsive.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/app.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/course_instruction.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/text.css")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/datatable_custom","css/text","css/course_instruction","css/app","css/responsive"], () => (__webpack_require__("./resources/css/datatable_custom.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

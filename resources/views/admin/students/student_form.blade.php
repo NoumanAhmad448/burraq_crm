@@ -130,17 +130,18 @@
                     @foreach ($courses as $course)
                         @php
                             $enrolledCourse = null;
-                            if($course?->due_date){
-                                $course->due_date = dateFormat($course->due_date);
-                            }
-                            if($course->admission_date){
-                                $course->admission_date = dateFormat($course->admission_date);
-                            }
+
                             if ($is_update) {
                                 $enrolledCourse = $student?->enrolledCourses
                                     ->where('course_id', $course->id)
                                     ->where('student_id', $student?->id)
                                     ->first();
+                            }
+                            if($enrolledCourse && $enrolledCourse?->due_date){
+                                $enrolledCourse->due_date = dateFormat($enrolledCourse->due_date);
+                            }
+                            if($enrolledCourse && $enrolledCourse?->admission_date){
+                                $enrolledCourse->admission_date = dateFormat($enrolledCourse->admission_date);
                             }
                         @endphp
 
@@ -168,28 +169,27 @@
                             <td>
                                 <input type="text" name="courses[{{ $course->id }}][total_fee]"
                                     class="form-control total-fee" placeholder="Course Fee"
-                                    value="{{ old('courses['.$course->id.'][total_fee]', $course?->total_fee > 0 ? (int) $course?->total_fee : '') }}">
+                                    value="{{ old('courses['.$course->id.'][total_fee]', $enrolledCourse?->total_fee > 0 ? (int) $enrolledCourse?->total_fee : '') }}">
                             </td>
 
                             {{-- Paid Amount --}}
                             <td>
                                 @if ($is_update && $enrolledCourse?->payments?->first())
                                     <input type="hidden" name="courses[{{ $course->id }}][payId]"
-                                        value="{{ $course->id }}">
+                                        value="{{ $enrolledCourse?->payments?->first()->id }}">
                                 @endif
 {{-- {{dump(dateFormat($course?->admission_date))}} --}}
                                 <input type="text" name="courses[{{ $course->id }}][paid_amount]"
                                     class="form-control paid-amount" placeholder="Paid"
-                                    value="{{ old('courses['.$course->id.'][paid_amount]', $course?->payments?->paid_amount) }}">
+                                    value="{{ (int) old('courses['.$course->id.'][paid_amount]', $enrolledCourse?->payments?->first()->paid_amount) }}">
                             </td>
                             <td>
                                 <input type="text" name="courses[{{ $course->id }}][admission_date]" class="form-control datepicker"
-                                    value="{{ old('courses['.$course->id.'][admission_date]', $course?->admission_date) }}">
-
+                                    value="{{ old('courses['.$course->id.'][admission_date]', $enrolledCourse?->admission_date) }}">
                             </td>
                             <td>
                                 <input type="text" name="courses[{{ $course->id }}][due_date]" class="form-control datepicker"
-                                    value="{{old('courses['.$course->id.'][due_date]', $course?->due_date) }}">
+                                    value="{{old('courses['.$course->id.'][due_date]', $enrolledCourse?->due_date) }}">
                             </td>
                         </tr>
                     @endforeach
@@ -231,6 +231,10 @@
 <script>
 $(document).ready(function() {
     new DataTable('.courses', {
+        language: {
+                    search: '',
+                    searchPlaceholder: 'Search Courses ...'
+                },
     pageLength: 5,
     columnDefs: [
         { targets: 0, width: '5%' },   // first column (e.g., checkbox)
@@ -241,22 +245,6 @@ $(document).ready(function() {
         { targets: 5, width: '15%' },   // sixth column
         // other columns can auto-size
     ],
-    // initComplete: function () {
-    //     this.api()
-    //         .columns()
-    //         .every(function () {
-    //             var column = this;
-    //             var title = column.footer().textContent;
-    //             // Create input element and add event listener
-    //             $('<input type="text" placeholder="Search ' + title + '" />')
-    //                 .appendTo($(column.footer()).empty())
-    //                 .on('keyup change clear', function () {
-    //                     if (column.search() !== this.value) {
-    //                         column.search(this.value).draw();
-    //                     }
-    //                 });
-    //         });
-    // }
 });
 
 });
