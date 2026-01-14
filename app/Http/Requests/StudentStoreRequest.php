@@ -23,11 +23,11 @@ class StudentStoreRequest extends FormRequest
             'email'         => 'nullable|email|max:255',
             'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            'admission_date' => 'required|date',
-            'due_date'      => 'required|date|after_or_equal:admission_date',
+            'admission_date' => 'nullable|date',
+            'due_date'      => 'nullable|date|after_or_equal:admission_date',
 
-            'total_fee'     => 'required|numeric|min:0',
-            'paid_fee'      => 'required|numeric|min:0|lte:total_fee',
+            'total_fee'     => 'nullable|numeric|min:0',
+            'paid_fee'      => 'nullable|numeric|min:0|lte:total_fee',
 
             // 'role'          => 'required|in:employee,hr',
 

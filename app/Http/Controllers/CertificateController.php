@@ -17,6 +17,7 @@ class CertificateController extends Controller
      */
    public function index()
     {
+        dd("here");
         $enrolledCourses = EnrolledCourse::with([
                 'student',
                 'course',

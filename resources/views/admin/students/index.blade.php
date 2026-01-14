@@ -50,8 +50,8 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Cnic</th>
+                            <th>Mobile No</th>
+                            {{-- <th>Cnic</th> --}}
                             <th>Father Name</th>
                             <th>Total Fee</th>
                             <th>Payed Fee</th>
@@ -59,7 +59,7 @@
                             <th>Admission Date</th>
                             <th>Due Date</th>
                             <th>Status</th>
-                            <th>Courses(Payments)</th>
+                            {{-- <th>Courses(Payments)</th> --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -71,8 +71,8 @@
                                 @elseif(\App\Models\Certificate::where('student_id', $course->student->id)->where('enrolled_course_id', $course->id)->exists()) class="table-success" title="Certificate Issued"
                                 @endif>
                                 <td>{{ $course->student->name }}</td>
-                                <td>{{ $course->student->email }}</td>
-                                <td>{{ $course->student->cnic }}</td>
+                                <td>{{ $course->student->mobile }}</td>
+                                {{-- <td>{{ $course->student->cnic }}</td> --}}
                                 <td>{{ $course->student->father_name }}</td>
                                 <td>{{ show_payment($course?->total_fee) }}</td>
                                 @php
@@ -99,14 +99,14 @@
                                     @endif
                                     </small>
                                 </td>
-                                <td>
+                                {{-- <td>
                                 @if($course)
                                         <a href="{{ route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) }}"
                                             class="underscore text-primary">
                                             {{ \Str::limit($course->course->name, 30) }} <br/>
                                         </a>
                                     @endif
-                                </td>
+                                </td> --}}
                                 <td>
                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
                                         <a href="{{ route('students.edit', $course->student->id) }}"
@@ -138,7 +138,7 @@
                                             </a>
 
                                             <a href="{{ route('students.delete', $course->student->id) }}"
-                                            class="btn btn-sm btn-danger mt-1"
+                                            class="ml-1 btn btn-sm btn-danger mt-1"
                                             title="Delete the student permanently"
                                             onclick="return confirm('Are you sure?')">
                                                 <i class="fa fa-trash"></i>

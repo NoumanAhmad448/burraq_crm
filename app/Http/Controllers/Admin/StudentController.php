@@ -43,7 +43,7 @@ class StudentController extends Controller
                     $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
                     return $totalPaid < $enrolledCourse->total_fee;
                 })
-                ->sortByDesc('created_at')
+                ->latest()
                 ->values();
 
         }
@@ -58,7 +58,7 @@ class StudentController extends Controller
                     $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
                     return $totalPaid >= $enrolledCourse->total_fee;
                 })
-                ->sortByDesc('created_at')
+                ->latest()
                 ->values();
 
         }
@@ -87,6 +87,7 @@ class StudentController extends Controller
         }
         else {
         $enrolledCourses = EnrolledCourse::with('student', 'payments')
+            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
             ->latest()
             ->get();
         }
