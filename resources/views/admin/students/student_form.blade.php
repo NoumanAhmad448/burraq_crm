@@ -181,7 +181,7 @@
 {{-- {{dump(dateFormat($course?->admission_date))}} --}}
                                 <input type="text" name="courses[{{ $course->id }}][paid_amount]"
                                     class="form-control paid-amount" placeholder="Paid"
-                                    value="{{ (int) old('courses['.$course->id.'][paid_amount]', $enrolledCourse?->payments?->first()->paid_amount) }}">
+                                    value="{{ old('courses['.$course->id.'][paid_amount]', $enrolledCourse?->payments?->first()->paid_amount > 0 ? (int) $enrolledCourse?->payments?->first()->paid_amount : '') }}">
                             </td>
                             <td>
                                 <input type="text" name="courses[{{ $course->id }}][admission_date]" class="form-control datepicker"
