@@ -33,12 +33,21 @@
     <script>
         $(document).ready(function() {
             new DataTable('{{$id}}', {
+                language: {
+                    search: '',
+                    searchPlaceholder: 'Search Student ...'
+                },
                 pageLength: 10,
+                scrollX: true,
                 layout: {
                     topStart: {
                         buttons: ['excel']
                     }
-                }
+                },
+                columnDefs: [
+                    { targets: -1, width: '30%' }    // ✅ LAST column (actions / buttons)
+                ],
+                autoWidth: false,
             });
         });
     </script>

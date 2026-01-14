@@ -56,6 +56,8 @@
                             <th>Total Fee</th>
                             <th>Payed Fee</th>
                             <th>Remaining Fee</th>
+                            <th>Admission Date</th>
+                            <th>Due Date</th>
                             <th>Status</th>
                             <th>Courses(Payments)</th>
                             <th>Actions</th>
@@ -80,6 +82,8 @@
                                 <td>
                                     {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
+                                <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td>
+                                <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td>
                                 <td>
                                     <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
                                     @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0) class="btn btn-danger btn-rounded"
@@ -107,35 +111,35 @@
                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
                                         <a href="{{ route('students.edit', $course->student->id) }}"
                                         class="btn btn-sm btn-info"
-                                        title="Edit">
-                                            <i class="fa fa-pencil"></i> Edit
+                                        title="Edit the Student and his course info">
+                                            <i class="fa fa-pencil"></i>
                                         </a>
 
                                         @if(isset($course))
                                             <a href="{{ $course ? route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) : '#' }}"
                                             class="btn btn-sm btn-warning ml-1 {{ !$course ? 'disabled' : '' }}"
-                                            title="Course -> Payments"
+                                            title="All Course Payments"
                                             @if(!$course) onclick="return false;" @endif>
-                                                <i class="fa fa-credit-card"></i> Payments
+                                                <i class="fa fa-credit-card"></i>
                                             </a>
                                         @endif
 
                                         @if (auth()->user()->is_admin)
                                             <a href="{{ route('students.logs', $course->student->id) }}"
                                             class="btn btn-sm btn-primary mt-1 ml-1"
-                                            title="View Logs">
-                                                <i class="fa fa-history"></i> Student Logs
+                                            title="View Student Logs">
+                                                <i class="fa fa-history"></i>
                                             </a>
 
                                             <a href="{{ route('students.course.payments_logs', $course->student->id) }}"
                                             class="btn btn-sm btn-secondary mt-1 ml-1"
-                                            title="Course & Payments Logs">
-                                                Payments Logs <i class="fa fa-credit-card"></i>
+                                            title="Payments Logs of the course">
+                                                <i class="fa fa-credit-card"></i>
                                             </a>
 
                                             <a href="{{ route('students.delete', $course->student->id) }}"
                                             class="btn btn-sm btn-danger mt-1"
-                                            title="Delete"
+                                            title="Delete the student permanently"
                                             onclick="return confirm('Are you sure?')">
                                                 <i class="fa fa-trash"></i>
                                             </a>
@@ -154,5 +158,6 @@
 @endsection
 
 @section('page-js')
-@include("export_to_excel", ["id"=>"#crm_students"])
+@include("export_to_excel", ["id"=>"#crm_students"
+])
 @endsection

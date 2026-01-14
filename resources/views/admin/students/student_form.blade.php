@@ -231,6 +231,10 @@
 <script>
 $(document).ready(function() {
     new DataTable('.courses', {
+        language: {
+                    search: '',
+                    searchPlaceholder: 'Search Courses ...'
+                },
     pageLength: 5,
     columnDefs: [
         { targets: 0, width: '5%' },   // first column (e.g., checkbox)
