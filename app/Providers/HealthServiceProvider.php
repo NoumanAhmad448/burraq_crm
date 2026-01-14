@@ -60,7 +60,7 @@ class HealthServiceProvider extends ServiceProvider
             // $checks[] = CpuLoadCheck::new()->failWhenLoadIsHigherInTheLast15Minutes(2.0);
             $checks[] = EnvironmentCheck::new();
             $checks[] = UsedDiskSpaceCheck::new();
-            $checks[] = PingCheck::new()->url(config('app.url'))->retryTimes(config('setting.retry_time'));
+            // $checks[] = PingCheck::new()->url(config('app.url'))->retryTimes(config('setting.retry_time'));
         }
         Health::checks($checks);
     }
