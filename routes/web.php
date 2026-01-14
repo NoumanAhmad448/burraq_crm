@@ -52,23 +52,23 @@ Route::domain(config("app.url"))->post('/back', function () {
     return redirect()->route('index');
 })->name('back');
 
-if (GuestFeatures::enableVerifyEmail()) {
-    Route::domain(config("app.url"))->get(GuestRoutes::verifyEmail(), function () {
-        return view(GuestView::verifyEmailView());
-    })->middleware([config("middlewares.auth")])->name(config("names.vn"));
+// if (GuestFeatures::enableVerifyEmail()) {
+//     Route::domain(config("app.url"))->get(GuestRoutes::verifyEmail(), function () {
+//         return view(GuestView::verifyEmailView());
+//     })->middleware([config("middlewares.auth")])->name(config("names.vn"));
 
-    Route::domain(config("app.url"))->get(GuestRoutes::verifyEmailHash(), function (EmailVerificationRequest $request) {
-        $request->fulfill();
-        return redirect()->route(config("names.login"));
-    })
-        ->middleware([config("middlewares.auth"), config("middlewares.signed")])->name(config("names.vv"));
+//     Route::domain(config("app.url"))->get(GuestRoutes::verifyEmailHash(), function (EmailVerificationRequest $request) {
+//         $request->fulfill();
+//         return redirect()->route(config("names.login"));
+//     })
+//         ->middleware([config("middlewares.auth"), config("middlewares.signed")])->name(config("names.vv"));
 
-    Route::domain(config("app.url"))->post(EmailRoutes::emailNotification(), function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
+//     Route::domain(config("app.url"))->post(EmailRoutes::emailNotification(), function (Request $request) {
+//         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('status', __("messages.ven"));
-    })->middleware([config("middlewares.auth"), config("middlwares.th_1_m_6")])->name(config("names.vs"));
-}
+//         return back()->with('status', __("messages.ven"));
+//     })->middleware([config("middlewares.auth"), config("middlwares.th_1_m_6")])->name(config("names.vs"));
+// }
 
 Route::domain(config("app.url"))->middleware([config("middlewares.auth"), config("middlewares.verified")])->group(function () {
 
