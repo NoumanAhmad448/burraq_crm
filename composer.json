@@ -13,6 +13,7 @@
         "aws/aws-sdk-php": "^3.342",
         "barryvdh/laravel-dompdf": "^2.0",
         "cocur/slugify": "^4.0",
+        "doctrine/dbal": "^4.2",
         "dragon-code/laravel-migration-actions": "^2.9",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
