@@ -55,7 +55,24 @@
                 'count' => show_payment($totalPaid),
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
-                'route' => null,
+                'route' => 'students.index',
+                "route_keys" => ["type" => "paid"]
+            ],
+            [
+                'title' => 'Unpaid Payment',
+                'count' => show_payment($totalUnpaid),
+                'icon' => 'fa fa-check-circle',
+                'bg' => 'bg-info',
+                'route' => 'students.index',
+                "route_keys" => ["type" => "unpaid"]
+            ],
+            [
+                'title' => 'Overdue Payments',
+                'count' => show_payment($totalOverdue),
+                'icon' => 'fa fa-check-circle',
+                'bg' => 'bg-info',
+                'route' => 'students.index',
+                "route_keys" => ["type" => "overdue"]
             ],
             [
                 'title' => 'Pending Amount',
@@ -73,7 +90,7 @@
             <div class="col-xl-3 col-md-4 col-sm-6 my-2" data-aos="fade-up">
 
                 @if (!empty($data['route']) && $data['route'] != null)
-                    <a href="{{ route($data['route']) }}" class="stat-card-link">
+                    <a href="{{ route($data['route'],        isset($data['route_keys']) ? $data['route_keys'] : [])}}" class="stat-card-link">
                 @endif
 
                 <div class="card shadow-sm stat-card">
@@ -110,7 +127,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -120,7 +137,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -130,7 +147,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-1">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
