@@ -148,6 +148,10 @@ class StudentController extends Controller
     {
         DB::beginTransaction();
 
+         $request->validate([
+            'email' => 'required|email|unique:users,email',
+        ]);
+
         try {
 
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
