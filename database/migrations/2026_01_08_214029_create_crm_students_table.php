@@ -21,10 +21,10 @@ return new class extends Migration
     $table->string('mobile');
     $table->string('email')->nullable();
     $table->string('photo')->nullable();
-    $table->date('admission_date');
+    $table->date('admission_date')->nullable();
     $table->date('due_date')->nullable();
-    $table->decimal('total_fee', 10, 2);
-    $table->decimal('paid_fee', 10, 2)->default(0);
+    $table->decimal('total_fee', 10, 2)->nullable();
+    $table->decimal('paid_fee', 10, 2)->default(0)->nullable();
     $table->decimal('remaining_fee', 10, 2)->default(0);
     $table->boolean('is_deleted')->default(false);
     $table->timestamps();
