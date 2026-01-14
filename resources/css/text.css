@@ -491,3 +491,11 @@ table.dataTable.no-footer {
 table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
     background-color: #0d6efd;
 }
+
+
+.amount-success { color: #198754; }
+.amount-danger  { color: #dc3545; }
+.amount-warning { color: #fd7e14; }
+.amount-primary { color: #0d6efd; }
+.amount-info    { color: #0dcaf0; }
+.amount-purple  { color: #6f42c1; }

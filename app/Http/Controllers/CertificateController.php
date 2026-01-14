@@ -15,33 +15,62 @@ class CertificateController extends Controller
     /**
      * Show certificate page
      */
-   public function index()
+    public function index(Request $request)
     {
-        dd("here");
-        $enrolledCourses = EnrolledCourse::with([
+        $type = $request->get("type");
+        if ($type == "paid") {
+            $enrolledCourses = EnrolledCourse::with([
                 'student',
                 'course',
                 'certificate',
             ])
-            ->orderby('created_at', 'desc')
-            ->get()
-            ->map(function ($enrolledCourse) {
+                ->whereHas("certificate")
+                ->orderby('created_at', 'desc')
+                ->get()
+                ->map(function ($enrolledCourse) {
 
-                $totalPaid = EnrolledCoursePayment::where(
-                    'enrolled_course_id',
-                    $enrolledCourse->id
-                )->where("is_deleted", 0)->sum('paid_amount');
+                    $totalPaid = EnrolledCoursePayment::where(
+                        'enrolled_course_id',
+                        $enrolledCourse->id
+                    )->where("is_deleted", 0)->sum('paid_amount');
 
-                return [
-                    'enrolled_course' => $enrolledCourse,
-                    'student'         => $enrolledCourse->student,
-                    'course'          => $enrolledCourse->course,
-                    'total_fee'       => $enrolledCourse->total_fee,
-                    'total_paid'      => $totalPaid,
-                    'is_paid'         => ($totalPaid == $enrolledCourse->total_fee),
-                ];
-            });
-  //        dd($enrolledCourses);
+                    return [
+                        'enrolled_course' => $enrolledCourse,
+                        'student'         => $enrolledCourse->student,
+                        'course'          => $enrolledCourse->course,
+                        'total_fee'       => $enrolledCourse->total_fee,
+                        'total_paid'      => $totalPaid,
+                        'is_paid'         => ($totalPaid == $enrolledCourse->total_fee),
+                    ];
+                });
+        } else {
+            $enrolledCourses = EnrolledCourse::with([
+                'student',
+                'course',
+                'certificate',
+            ])
+                ->whereDoesntHave("certificate")
+                ->orderby('created_at', 'desc')
+                ->get()
+                ->map(function ($enrolledCourse) {
+
+                    $totalPaid = EnrolledCoursePayment::where(
+                        'enrolled_course_id',
+                        $enrolledCourse->id
+                    )->where("is_deleted", 0)->sum('paid_amount');
+
+                    return [
+                        'enrolled_course' => $enrolledCourse,
+                        'student'         => $enrolledCourse->student,
+                        'course'          => $enrolledCourse->course,
+                        'total_fee'       => $enrolledCourse->total_fee,
+                        'total_paid'      => $totalPaid,
+                        'is_paid'         => ($totalPaid == $enrolledCourse->total_fee),
+                    ];
+                });
+        }
+
+        //        dd($enrolledCourses);
         return view('admin.certificates.index', compact('enrolledCourses'));
     }
 
@@ -49,7 +78,7 @@ class CertificateController extends Controller
     /**
      * Generate certificate
      */
-    public function generate(Request $request, $studentId,$enrolledCourseId)
+    public function generate(Request $request, $studentId, $enrolledCourseId)
     {
         $student = Student::findOrFail($studentId);
 
@@ -80,8 +109,8 @@ class CertificateController extends Controller
         ]);
 
         $payments = EnrolledCoursePayment::where('enrolled_course_id', $enrolledCourse->id)
-        ->orderBy('created_at', 'asc')
-        ->get();
+            ->orderBy('created_at', 'asc')
+            ->get();
 
         $data = [
             'student'        => $student,
@@ -97,7 +126,7 @@ class CertificateController extends Controller
             ->setPaper('a4', 'landscape');
 
         return $pdf->download(
-            'certificate_'.$student->id.'_'.$enrolledCourse->id.'.pdf'
+            'certificate_' . $student->id . '_' . $enrolledCourse->id . '.pdf'
         );
     }
 

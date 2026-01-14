@@ -5,8 +5,6 @@
 @endsection
 @section('content')
     {{-- <x-jet-authentication-card> --}}
-    
-
 
     {{-- <x-jet-validation-errors class="mb-4" /> --}}
 
