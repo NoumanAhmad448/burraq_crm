@@ -82,6 +82,23 @@ class IndexResponse implements IndexContracts
 
             $activeCourses = Course::whereHas('enrolledCourses')->count();
 
+            $totalUnpaid = EnrolledCourse::with('payments', 'student')
+                ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
+                ->get()
+                ->sum(function ($course) {
+                    $totalPaid = $course->payments()->where('is_deleted', 0)->sum('paid_amount');
+                    return max($course->total_fee - $totalPaid, 0); // only positive unpaid
+                });
+
+$totalOverdue = EnrolledCourse::with('payments', 'student')
+    ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
+    ->where('due_date', '<', now()) // past due
+    ->get()
+    ->sum(function ($course) {
+        $totalPaid = $course->payments()->where('is_deleted', 0)->sum('paid_amount');
+        return max($course->total_fee - $totalPaid, 0);
+    });
+
             // Users
             // $totalUsers = User::count();
 
@@ -113,6 +130,8 @@ class IndexResponse implements IndexContracts
                         'annualPayments',
                         'totalFee',
                         'totalPaid',
+                        'totalOverdue',
+                        'totalUnpaid',
                         'pending'
                     )
                 );
