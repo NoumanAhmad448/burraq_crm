@@ -37,6 +37,10 @@ mix.js('resources/js/app.js', 'public/js')
      require('@tailwindcss/postcss'),
      require('autoprefixer'),
    ])
+   .postCss('resources/css/datatable_custom.css', 'public/css', [
+     require('@tailwindcss/postcss'),
+     require('autoprefixer'),
+   ])
 
    // SCSS files
    .sass('resources/sass/responsive.scss', 'public/css', {

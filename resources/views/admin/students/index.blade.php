@@ -17,6 +17,34 @@
                 <strong>Students List</strong>
             </div>
 
+            <div class="row mb-3 mt-3 mr-5">
+            <div class="col-md-12 d-flex justify-content-end">
+                <form method="GET" action="{{ route('students.index') }}">
+                    <select name="type"
+                                class="form-control form-control-sm"
+                                onchange="this.form.submit()">
+
+                        <option value="">-- All Statuses --</option>
+                        <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>
+                            Deleted
+                        </option>
+                        <option value="unpaid" {{ request('type') == 'unpaid' ? 'selected' : '' }}>
+                            Unpaid
+                        </option>
+                        <option value="paid" {{ request('type') == 'paid' ? 'selected' : '' }}>
+                            Paid
+                        </option>
+                        <option value="overdue" {{ request('type') == 'overdue' ? 'selected' : '' }}>
+                            Overdue
+                        </option>
+                        {{-- <option value="certificate_issued" {{ request('type') == 'certificate_issued' ? 'selected' : '' }}>
+                            Certificate Issued
+                        </option> --}}
+                    </select>
+                </form>
+            </div>
+        </div>
+
             <div class="card-body">
                 <table class="table table-bordered crm_students" id="crm_students">
                     <thead>
@@ -54,15 +82,16 @@
                                 </td>
                                 <td>
                                     <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
+                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0) class="btn btn-danger btn-rounded"
                                     @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0) class="btn btn-warning"
                                     @else class="btn btn-danger" @endif>
 
                                     @if($course->total_fee - $paid_payment <= 0)
                                         Paid
+                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0)
+                                        Overdue
                                     @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0)
                                         Unpaid
-                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)))
-                                        Overdue
                                     @endif
                                     </small>
                                 </td>
@@ -125,22 +154,5 @@
 @endsection
 
 @section('page-js')
-    <script>
-        function loadStudentDetail(id) {
-            showLoader();
-            $.get('/students/' + id, function(res) {
-                hideLoader();
-                $('#studentDetailModal').html(res).modal('show');
-            });
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            new simpleDatatables.DataTable("#crm_students", {
-                searchable: true,
-                perPage: 10
-            });
-
-        });
-    </script>
+@include("export_to_excel", ["id"=>"#crm_students"])
 @endsection

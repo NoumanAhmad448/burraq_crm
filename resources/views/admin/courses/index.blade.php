@@ -61,7 +61,6 @@
                 searchable: true,
                 perPage: 10
             });
-
         });
     </script>
 @endsection
