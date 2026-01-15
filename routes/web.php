@@ -61,7 +61,7 @@ if (GuestFeatures::enableVerifyEmail()) {
         $request->fulfill();
         return redirect()->route(config("names.login"));
     })
-        ->middleware([config("middlewares.auth"), config("middlewares.signed")])->name(config("names.vv"));
+        ->middleware([config("middlewares.auth"), config("middlewares.signed")])->name(config("names.vvm"));
 
     Route::domain(config("app.url"))->post(EmailRoutes::emailNotification(), function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
