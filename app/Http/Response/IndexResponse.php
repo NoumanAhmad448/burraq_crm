@@ -5,6 +5,7 @@ namespace App\Http\Response;
 use App\Classes\CacheKeys;
 use App\Classes\CourseCache;
 use App\Classes\FaqCache;
+use App\Classes\LyskillsCarbon;
 use App\Classes\PostCache;
 use Illuminate\Support\Facades\DB;
 use App\Http\Contracts\IndexContracts;
@@ -36,33 +37,50 @@ class IndexResponse implements IndexContracts
             // $faq = Cache::has(FaqCache::FAQS) ? Cache::get(FaqCache::FAQS) : FaqCache::setFaqs();
             // $courses = Cache::has(CourseCache::COURSES) ? Cache::get(CourseCache::COURSES) : CourseCache::setCourses();
 
+                $month = $request->get("month");
+                $year = $request->get("year");
+
+                if(!$month){
+                    $month = now()->month;
+                }else{
+                    $month = LyskillsCarbon::create()->month($month)->month;
+                }
+                if(!$year){
+                    $year = now()->year;
+                }else{
+                    $year = LyskillsCarbon::create()->year($year)->year;
+                }
+
+                // dd(now()->month);
+
                 /* ---------- Students This Month ---------- */
-                $studentsThisMonth = CRMStudent::whereMonth('created_at', now()->month)
-                    ->whereYear('created_at', now()->year)
+                $studentsThisMonth = CRMStudent::whereMonth('created_at', $month)
+                    ->whereYear('created_at', $year)
                     ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+                    ->where("is_deleted", 0)
                     ->groupBy('date')
                     ->orderBy('date')
                     ->get();
 
                 /* ---------- Students Yearly ---------- */
                 $studentsYearly = CRMStudent::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-                    ->whereYear('created_at', now()->year)
+                    ->whereYear('created_at', $year)
                     ->groupBy('month')
                     ->orderBy('month')
                     ->get();
 
                 /* ---------- Payments This Month ---------- */
-                $paymentsThisMonth = EnrolledCoursePayment::whereMonth('created_at', now()->month)
+                $paymentsThisMonth = EnrolledCoursePayment::whereMonth('created_at', $month)
                     ->whereHas("enrolledCourse.student", function($query){
                         $query->where("is_deleted",0);
                     })
-                    ->whereYear('created_at', now()->year)
+                    ->whereYear('created_at', $year)
                     ->where("is_deleted", 0)
                     ->sum('paid_amount');
 
                 /* ---------- Annual Payments ---------- */
                 $annualPayments = EnrolledCoursePayment::selectRaw('MONTH(created_at) as month, SUM(paid_amount) as total')
-                    ->whereYear('created_at', now()->year)
+                    ->whereYear('created_at', $year)
                     ->where("is_deleted", 0)
                     ->groupBy('month')
                     ->orderBy('month')

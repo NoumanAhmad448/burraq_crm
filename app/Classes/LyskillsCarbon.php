@@ -20,6 +20,10 @@ class LyskillsCarbon
         return Carbon::parse($date);
     }
 
+    public static function create(){
+        return Carbon::create();
+    }
+
 
     public static function diffInDays($date1, $date2)
     {

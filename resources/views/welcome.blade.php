@@ -6,22 +6,21 @@
     @php
 
         $info = [
-            [
-                'title' => 'Total Students',
-                'count' => $totalStudents,
-                'icon' => 'fa fa-users fa-2x',
-                'amount_color' => 'primary',      // cyan   (informational)
-
-                'route' => 'students.index',
-            ],
             // [
-            //     'title' => 'Active Students',
-            //     'count' => $activeStudents,
+            //     'title' => 'Total Students',
+            //     'count' => $totalStudents,
             //     'icon' => 'fa fa-users fa-2x',
-            //     'amount_color' => 'success',      // cyan   (informational)
+            //     'amount_color' => 'primary',      // cyan   (informational)
 
             //     'route' => 'students.index',
             // ],
+            [
+                'title' => 'Total Students',
+                'count' => $activeStudents,
+                'icon' => 'fa fa-users fa-2x',
+                'amount_color' => 'success',      // cyan   (informational)
+                'route' => 'students.index',
+            ],
             // [
             //     'title' => 'Total Courses',
             //     'count' => $totalCourses,
