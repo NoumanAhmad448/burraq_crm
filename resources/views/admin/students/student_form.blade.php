@@ -70,7 +70,7 @@
                 </div>
 
 
-                <div class="col-md-4 mt-2">
+                {{-- <div class="col-md-4 mt-2">
                     <label>Admission Date</label>
                     <input type="text" name="admission_date" class="form-control datepicker"
                         value="@if($is_update){{ old('admission_date', $student?->admission_date)}}@endif">
@@ -90,7 +90,7 @@
                     <label>Paid Fee </label>
                     <input type="text" name="paid_fee" class="form-control" required step="0.01"
                         value="@if ($is_update) {{ (int) $student->paid_fee }}@else{{ old('paid_fee') }} @endif">
-                </div>
+                </div> --}}
                 <div class="col-md-4 mt-2">
                     <label>Photo</label>
                     {{-- <input type="file" name="photo" class="form-control" value="{{ old('photo') }}"> --}}
