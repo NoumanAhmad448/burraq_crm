@@ -116,16 +116,6 @@
                 <th>Email</th>
                 <td>{{ $student?->email}}</td>
             </tr>
-            <tr>
-                <th>Admission Date</th>
-                <td>{{ $student?->enrolledCourses?->admission_date }}</td>
-            </tr>
-            @if(!empty($student?->enrolledCourses?->due_date))
-                <tr>
-                    <th>Due Date</th>
-                    <td>{{ $student?->enrolledCourses?->due_date }}</td>
-                </tr>
-            @endif
         </table>
     </div>
 
@@ -161,6 +151,8 @@
                     <tr>
                         <th>#</th>
                         <th>Course Name</th>
+                        {{-- <th>Admission Date</th> --}}
+                        {{-- <th>Due Date</th> --}}
                         <th>Total Fee</th>
                         <th>Payments</th>
                     </tr>
@@ -171,6 +163,11 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $enrolledCourse->course->name }}</td>
                             <td class="text-right">{{ number_format($enrolledCourse->total_fee, 2) }}</td>
+
+                            {{-- <td>{{ $enrolledCourses?->admission_date }}</td>
+                            @if(!empty($enrolledCourses?->due_date))
+                            <td>{{ $enrolledCourses?->due_date }}</td>
+                            @endif --}}
                             <td>
                                 @if ($enrolledCourse->payments->isNotEmpty())
                                     <table class="sub-table">
