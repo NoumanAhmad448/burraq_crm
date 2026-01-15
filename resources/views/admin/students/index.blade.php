@@ -56,10 +56,10 @@
                             <th>Total Fee</th>
                             <th>Payed Fee</th>
                             <th>Remaining Fee</th>
-                            <th>Admission Date</th>
+                            {{-- <th>Admission Date</th> --}}
                             <th>Due Date</th>
                             <th>Status</th>
-                            {{-- <th>Courses(Payments)</th> --}}
+                            <th>Courses(Payments)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -82,7 +82,7 @@
                                 <td>
                                     {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
-                                <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td>
+                                {{-- <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td> --}}
                                 <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td>
                                 <td>
                                     <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
@@ -99,14 +99,14 @@
                                     @endif
                                     </small>
                                 </td>
-                                {{-- <td>
+                                <td>
                                 @if($course)
                                         <a href="{{ route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) }}"
                                             class="underscore text-primary">
                                             {{ \Str::limit($course->course->name, 30) }} <br/>
                                         </a>
                                     @endif
-                                </td> --}}
+                                </td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
                                         <a href="{{ route('students.edit', $course->student->id) }}"

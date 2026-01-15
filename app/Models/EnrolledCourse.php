@@ -15,6 +15,9 @@ class EnrolledCourse extends Model
         'total_fee',
         'admission_date',
         'due_date',
+        'is_deleted',
+        'deleted_by',
+        'deleted_at',
     ];
 
     public function course()
