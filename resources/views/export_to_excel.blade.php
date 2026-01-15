@@ -33,22 +33,37 @@
     <script>
         $(document).ready(function() {
             new DataTable('{{$id}}', {
+                dom:
+                "<'card-header bg-white border-0 px-0'<'row align-items-center'<'col-md-6 d-flex align-items-center gap-2'lB><'col-md-6 d-flex justify-content-end'f>>>" +
+                "<'table-responsive'tr>" +
+                "<'card-footer bg-white border-0 px-0'<'row align-items-center'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>>",
                 "order": [], // disables initial order
+                pageLength: 10,
                 language: {
                     search: '',
                     searchPlaceholder: 'Search Student ...'
                 },
-                pageLength: 10,
                 scrollX: true,
-                layout: {
-                    topStart: {
-                        buttons: ['excel']
+                // dom: 'lBfrtip',   // 👈 l is REQUIRED
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="fa fa-file-text-o"></i> Excel',
+                        className: 'bg-website ml-3'
                     }
-                },
+                ],
+                // layout: {
+                //     topStart: {
+                //         buttons: ['excel']
+                //     }
+                // },
                 columnDefs: [
                     { targets: -1, width: '30%' }    // ✅ LAST column (actions / buttons)
                 ],
                 autoWidth: false,
+                lengthMenu: [10, 25, 50, 100,200],
+                responsive: true,
+
             });
         });
     </script>
