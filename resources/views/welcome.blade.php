@@ -296,12 +296,14 @@ $(document).ready(function() {
         });
 
         // toggle button text
-        if ($(this).attr("text") === '1') {
+        if ($("#toggle-amounts").attr("text") == 1) {
             $(this).text('Show Amounts');
-            $(this).attr("text") = '2'
+            $(this).attr('text', 2); // ✔ valid
+
         } else {
             $(this).text('Hide Amounts');
-            $(this).attr("text") = '1'
+            $(this).attr('text', 1); // ✔ valid
+
 
         }
     });

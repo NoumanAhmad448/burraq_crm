@@ -20,29 +20,30 @@ class CertificateController extends Controller
         $type = $request->get("type");
         if ($type == "paid") {
             $enrolledCourses = EnrolledCourse::with([
-                'student',
-                'course',
-                'certificate',
-            ])
-                ->whereHas("certificate")
-                ->orderby('created_at', 'desc')
-                ->get()
-                ->map(function ($enrolledCourse) {
+        'student',
+        'course',
+        'certificate',
+        ])
+        ->withSum(['payments as total_paid' => function ($q) {
+            $q->where('is_deleted', 0);
+        }], 'paid_amount')
+        ->whereHas('certificate')
+        ->whereHas('student', function ($q) {
+            $q->where('is_deleted', 0);
+        })
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($enrolledCourse) {
+            return [
+                'enrolled_course' => $enrolledCourse,
+                'student'         => $enrolledCourse->student,
+                'course'          => $enrolledCourse->course,
+                'total_fee'       => $enrolledCourse->total_fee,
+                'total_paid'      => $enrolledCourse->total_paid ?? 0,
+                'is_paid'         => ($enrolledCourse->total_paid >= $enrolledCourse->total_fee),
+            ];
+        });
 
-                    $totalPaid = EnrolledCoursePayment::where(
-                        'enrolled_course_id',
-                        $enrolledCourse->id
-                    )->where("is_deleted", 0)->sum('paid_amount');
-
-                    return [
-                        'enrolled_course' => $enrolledCourse,
-                        'student'         => $enrolledCourse->student,
-                        'course'          => $enrolledCourse->course,
-                        'total_fee'       => $enrolledCourse->total_fee,
-                        'total_paid'      => $totalPaid,
-                        'is_paid'         => ($totalPaid == $enrolledCourse->total_fee),
-                    ];
-                });
         } else {
             $enrolledCourses = EnrolledCourse::with([
                 'student',
@@ -70,7 +71,7 @@ class CertificateController extends Controller
                 });
         }
 
-        //        dd($enrolledCourses);
+            //    dd($enrolledCourses);
         return view('admin.certificates.index', compact('enrolledCourses'));
     }
 

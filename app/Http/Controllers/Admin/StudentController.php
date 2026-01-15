@@ -111,19 +111,35 @@ class StudentController extends Controller
         if ($request->hasFile('payment_slip_path')) {
             $payment_slip_path = uploadPhoto($request->file('payment_slip_path'));
         }
-        $remainingFee = $request->total_fee - $request->paid_fee;
+        if(!empty($request->total_fee) || !empty($request->paid_fee)){
+            $remainingFee = $request->total_fee - $request->paid_fee;
+        }
         $data = [
             'name'           => $request->name,
             'father_name'    => $request->father_name,
             'cnic'           => $request->cnic,
             'mobile'         => $request->mobile,
             'email'          => $request->email,
-            'admission_date' => $request->admission_date,
-            'due_date'       => $request->due_date,
-            'total_fee'      => $request->total_fee,
-            'paid_fee'       => $request->paid_fee,
-            'remaining_fee'  => $remainingFee,
         ];
+
+        if(!empty($request->admission_date)){
+            $data['admission_date'] = $request->admission_date;
+        }
+          if (!empty($request->due_date)) {
+            $data['due_date'] = $request->due_date;
+        }
+
+        if (!empty($request->total_fee)) {
+            $data['total_fee'] = $request->total_fee;
+        }
+
+        if (!empty($request->paid_fee)) {
+            $data['paid_fee'] = $request->paid_fee;
+        }
+
+        if (isset($remainingFee)) {
+            $data['remaining_fee'] = $remainingFee;
+        }
         if ($photoPath) {
             $data['photo'] = $photoPath;
         }
@@ -150,7 +166,10 @@ class StudentController extends Controller
         DB::beginTransaction();
 
          $request->validate([
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:crm_students,email',
+        ]);
+         $request->validate([
+            'cnic' => 'required|unique:crm_students,cnic',
         ]);
 
         try {
@@ -276,14 +295,18 @@ class StudentController extends Controller
                             ]);
                         }
                     }
+                    /* Keep track of valid courses */
+                    $currentEnrolledCourseIds[] = $enrolled_course->id;
                 }
-                /* Keep track of valid courses */
-                $currentEnrolledCourseIds[] = $enrolled_course->id;
             }
 
-            // EnrolledCourse::where('student_id', $student->id)
-            //     ->whereNotIn('id', $currentEnrolledCourseIds)
-            //     ->delete();
+            EnrolledCourse::where('student_id', $student->id)
+                ->whereNotIn('id', $currentEnrolledCourseIds)
+                ->update([
+                    'is_deleted'  => 1,
+                    'deleted_by'  => auth()->id(),
+                    'deleted_at'  => now(),
+                ]);
 
         }
     }

@@ -162,7 +162,7 @@
                 @foreach($payments as $index => $payment)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ number_format($payment->paid_amount, 2) }}</td>
+                        <td>{{ show_payment($payment->paid_amount, 2) }}</td>
                         <td>{{ ucfirst("Cash") }}</td>
                         <td>{{ \App\Classes\LyskillsCarbon::parse($payment->created_at)->toFormattedDateString() }}</td>
                     </tr>

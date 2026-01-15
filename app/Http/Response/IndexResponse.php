@@ -6,8 +6,9 @@ use App\Classes\CacheKeys;
 use App\Classes\CourseCache;
 use App\Classes\FaqCache;
 use App\Classes\PostCache;
-use App\Classes\ResponseKeys;
+use Illuminate\Support\Facades\DB;
 use App\Http\Contracts\IndexContracts;
+use App\Models\Certificate;
 use App\Models\Faq;
 use App\Models\RatingModal;
 use App\Models\Setting;
@@ -99,20 +100,18 @@ $totalOverdue = EnrolledCourse::with('payments', 'student')
         return max($course->total_fee - $totalPaid, 0);
     });
 
-            $cert_count = EnrolledCourse::with([
-                'student',
-                'course',
-                'certificate',
-            ])
-                ->whereHas("certificate")
-                ->whereHas("student", function($query){
-                    $query->where("is_deleted", 0);
-                })
-                ->orderby('created_at', 'desc')
-                ->count();
+        $enrolledCourses = EnrolledCourse::withSum(['payments as total_paid' => function ($q) {
+                $q->where('is_deleted', 0);
+            }], 'paid_amount')
+            ->whereHas('certificate')
+            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
+            ->get()
+            ->filter(fn ($ec) => ($ec->total_paid ?? 0) >= $ec->total_fee);
+
+        $cert_count = $enrolledCourses->count();
 
 
-                // dd($cert_count);
+             // dd($cert_count);
             // Users
             // $totalUsers = User::count();
 
