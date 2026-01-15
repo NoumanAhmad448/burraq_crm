@@ -155,6 +155,7 @@
                         {{-- <th>Due Date</th> --}}
                         <th>Total Fee</th>
                         <th>Payments</th>
+                        <th>Remaining Payment</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,6 +192,12 @@
                                 @else
                                     <span class="text-muted">No payments recorded</span>
                                 @endif
+                            </td>
+                            @php
+                            $remaining = max($enrolledCourse->total_fee - $enrolledCourse->payments->sum("paid_amount"),0);
+                            @endphp
+                            <td>
+                                {{ $remaining > 0 ? number_format($remaining) : '' }}
                             </td>
                         </tr>
                     @endforeach

@@ -7,9 +7,11 @@
 @section('content')
     <div class="container-fluid">
 
-        @include('admin.students.student_form', [
-            'is_update' => false,
-        ])
+        @if(request('type') !== 'deleted')
+            @include('admin.students.student_form', [
+                'is_update' => false,
+            ])
+        @endif
 
         {{-- ================= STUDENT LIST ================= --}}
         <div class="card">
@@ -25,9 +27,9 @@
                                 onchange="this.form.submit()">
 
                         <option value="">-- All Statuses --</option>
-                        <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>
+                        {{-- <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>
                             Deleted
-                        </option>
+                        </option> --}}
                         <option value="unpaid" {{ request('type') == 'unpaid' ? 'selected' : '' }}>
                             Unpaid
                         </option>
@@ -57,7 +59,7 @@
                             <th>Paid Fee</th>
                             <th>Remaining Fee</th>
                             {{-- <th>Admission Date</th> --}}
-                            <th>Due Date</th>
+                            {{-- <th>Due Date</th> --}}
                             <th>Status</th>
                             <th>Courses(Payments)</th>
                             <th>Actions</th>
@@ -83,14 +85,14 @@
                                     {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
                                 {{-- <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td> --}}
-                                <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td>
+                                {{-- <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td> --}}
                                 <td>
                                     <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
                                     @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0) class="btn btn-danger btn-rounded"
                                     @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0) class="btn btn-warning"
                                     @else class="btn btn-danger" @endif>
 
-                                    @if($course->total_fee - $paid_payment <= 0)
+                                    @if($course->total_fee - $paid_payment == 0)
                                         Paid
                                     @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0)
                                         Overdue
