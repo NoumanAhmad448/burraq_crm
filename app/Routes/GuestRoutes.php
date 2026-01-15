@@ -12,6 +12,6 @@ class GuestRoutes
 
     public static function verifyEmailHash()
     {
-        return config("routes.verify_emails_hash");
+        return config("routes.verify_emails_local");
     }
 }

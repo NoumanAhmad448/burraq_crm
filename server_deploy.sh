@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Enable maintenance mode
-yes | php artisan down
+yes | php artisan down --force
 
 # Create necessary directories
 mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/app
@@ -12,7 +12,7 @@ mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/logs
 mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 
 # Generate artisan key
-yes | php artisan key:generate
+yes | php artisan key:generate --force
 
 # Secure .env and other sensitive files
 sudo chmod -R 775 /home/nomilyskills/public_html/crm.burraqengineering.com/
