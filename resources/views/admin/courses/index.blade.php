@@ -5,6 +5,7 @@
 
 <h4>Courses</h4>
 
+@if($type != "deleted")
 <form method="POST" action="{{ route('courses.store') }}" class="mb-4">
 @csrf
 <div class="row">
@@ -22,7 +23,7 @@
     </div>
 </div>
 </form>
-
+@endif
 <table class="table table-bordered" id="crm_students">
 <thead>
 <tr>

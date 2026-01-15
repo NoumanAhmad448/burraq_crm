@@ -14,38 +14,38 @@
 
                 'route' => 'students.index',
             ],
-            [
-                'title' => 'Active Students',
-                'count' => $activeStudents,
-                'icon' => 'fa fa-users fa-2x',
-                'amount_color' => 'success',      // cyan   (informational)
+            // [
+            //     'title' => 'Active Students',
+            //     'count' => $activeStudents,
+            //     'icon' => 'fa fa-users fa-2x',
+            //     'amount_color' => 'success',      // cyan   (informational)
 
-                'route' => 'students.index',
-            ],
-            [
-                'title' => 'Total Courses',
-                'count' => $totalCourses,
-                'icon' => 'fa fa-graduation-cap fa-2x',
-                'amount_color' => 'danger',      // cyan   (informational)
+            //     'route' => 'students.index',
+            // ],
+            // [
+            //     'title' => 'Total Courses',
+            //     'count' => $totalCourses,
+            //     'icon' => 'fa fa-graduation-cap fa-2x',
+            //     'amount_color' => 'danger',      // cyan   (informational)
 
-                'route' => 'courses.index',
-            ],
-            [
-                'title' => 'Active Courses',
-                'count' => $activeCourses,
-                'icon' => 'fa fa-thumbs-up fa-2x',
-                'amount_color' => 'purple',      // cyan   (informational)
+            //     'route' => 'courses.index',
+            // ],
+            // [
+            //     'title' => 'Active Courses',
+            //     'count' => $activeCourses,
+            //     'icon' => 'fa fa-thumbs-up fa-2x',
+            //     'amount_color' => 'purple',      // cyan   (informational)
 
-                'route' => 'courses.index',
-            ],
-            [
-                'title' => 'Active Enrolled Students',
-                'count' => $activeEnrolledStudents,
-                'icon' => 'fa fa-check-circle fa-2x',
-                'amount_color' => 'info',      // cyan   (informational)
+            //     'route' => 'courses.index',
+            // ],
+            // [
+            //     'title' => 'Active Enrolled Students',
+            //     'count' => $activeEnrolledStudents,
+            //     'icon' => 'fa fa-check-circle fa-2x',
+            //     'amount_color' => 'info',      // cyan   (informational)
 
-                'route' => 'students.index',
-            ],
+            //     'route' => 'students.index',
+            // ],
             [
                 'title' => 'Students (This Month)',
                 'count' => $studentsThisMonth->sum('total'),
@@ -95,14 +95,12 @@
                 "route_keys" => ["type" => "overdue"]
             ],
             [
-                'title' => 'Generated Certificate',
+                'title' => 'Certificate',
                 'count' => $cert_count,
                 'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
                 'route' => 'certificates.index',
                 'amount_color' => 'danger',    // red    (overdue / pending)
-
-                "route_keys" => ["type" => "paid"]
             ],
             // [
             //     'title' => 'Pending Amount',

@@ -29,7 +29,7 @@ class StudentController extends Controller
                 ->whereHas('student', function ($query) {
                     $query->where('is_deleted', 1);
                 })
-                 ->sortByDesc('created_at')
+                 ->latest('created_at')
                 ->get();
         }
         else if ($type == 'unpaid') {

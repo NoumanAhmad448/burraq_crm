@@ -37,6 +37,18 @@
             'route' => route('hr.index'),
             'access_roles' => ['admin'],
         ],
+        [
+            'title' => 'Deleted Users',
+            'icon' => 'fa-user-circle',
+            'route' => route('students.index', ["type" => "deleted"]),
+            'access_roles' => ['admin'],
+        ],
+        [
+            'title' => 'Deleted Courses',
+            'icon' => 'fa-user-circle',
+            'route' => route('courses.index', ["type" => "deleted"]),
+            'access_roles' => ['admin'],
+        ],
     ];
 
 @endphp

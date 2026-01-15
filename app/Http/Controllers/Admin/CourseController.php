@@ -8,10 +8,15 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::where('is_deleted', 0)->get();
-        return view('admin.courses.index', compact('courses'));
+        $type = $request->get("type");
+        if($type == "deleted"){
+            $courses = Course::where('is_deleted', 1)->get();
+        }else{
+            $courses = Course::where('is_deleted', 0)->get();
+        }
+        return view('admin.courses.index', compact('courses', "type"));
     }
 
     public function store(Request $request)

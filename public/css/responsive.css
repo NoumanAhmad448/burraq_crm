@@ -76,23 +76,23 @@ a {
 }
 
 .bg-website {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
 }
 
 .bg-static-website {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
   cursor: pointer !important;
 }
 
 .bg-static {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
 }
 
 .bg-website:hover {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
 }
 
 .website {
@@ -113,12 +113,12 @@ a:hover {
 .website-outline {
   background-color: #fff !important;
   color: #0f7c90 !important;
-  border: 1px solid #0D1B2A !important;
+  border: 1px solid #0D6EFD !important;
 }
 
 .website-outline:hover {
-  background-color: #0D1B2A !important;
-  border: 1px solid #0D1B2A !important;
+  background-color: #0D6EFD !important;
+  border: 1px solid #0D6EFD !important;
   color: #fff !important;
 }
 
@@ -180,11 +180,11 @@ a {
 }
 
 .change_color:hover {
-  color: #0D1B2A !important;
+  color: #0D6EFD !important;
 }
 
 .custom_border {
-  border: 1px dotted #0D1B2A !important;
+  border: 1px dotted #0D6EFD !important;
 }
 
 .red_cross {
@@ -192,11 +192,11 @@ a {
 }
 
 .icon-color {
-  color: #0D1B2A !important;
+  color: #0D6EFD !important;
 }
 
 .activate {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
 }
 
@@ -221,18 +221,18 @@ a {
 
 .btn-website {
   background-color: #fff !important;
-  color: #0D1B2A !important;
-  border: 1px solid #0D1B2A !important;
+  color: #0D6EFD !important;
+  border: 1px solid #0D6EFD !important;
 }
 
 .btn-outline-website {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
   border: 1px solid #fff !important;
 }
 
 .btn-website:hover {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
   border: 1px solid #fff !important;
 }
@@ -246,17 +246,17 @@ a {
 }
 
 .alert-website {
-  background-color: #0D1B2A !important;
+  background-color: #0D6EFD !important;
   color: #fff !important;
 }
 
 .jumbotron-bg-color {
-  background-color: #0D1B2A;
+  background-color: #0D6EFD;
   color: #fff;
 }
 
 .footer-bg {
-  background-color: #0D1B2A;
+  background-color: #0D6EFD;
   color: #fff;
 }
 
@@ -306,7 +306,7 @@ a {
   }
 }
 .text-website {
-  color: #0D1B2A;
+  color: #0D6EFD;
 }
 
 .ui-menu {

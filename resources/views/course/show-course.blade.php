@@ -728,7 +728,7 @@
                     <section class="d-flex justify-content-between mt-3">
                         <div>
                             <span class="">
-                                <a target="_blank" style="border: 1px solid #0D1B2A; color: #0D1B2A"
+                                <a target="_blank" style="border: 1px solid #0D6EFD; color: #0D6EFD"
                                     href="https://www.facebook.com/sharer/sharer.php?u={{ route('user-course', ['slug' => $course->slug]) }}&amp;src=sdkpreparse"
                                     class="btn btn-wesbite btn-sm"><i class="fa fa-facebook-official"
                                         aria-hidden="true"></i> Facebook </a>
