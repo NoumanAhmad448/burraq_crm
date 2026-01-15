@@ -54,7 +54,7 @@
                             {{-- <th>Cnic</th> --}}
                             <th>Father Name</th>
                             <th>Total Fee</th>
-                            <th>Payed Fee</th>
+                            <th>Paid Fee</th>
                             <th>Remaining Fee</th>
                             {{-- <th>Admission Date</th> --}}
                             <th>Due Date</th>
