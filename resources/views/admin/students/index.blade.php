@@ -92,11 +92,11 @@
                                     @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0) class="btn btn-warning"
                                     @else class="btn btn-danger" @endif>
 
-                                    @if($course->total_fee - $paid_payment == 0)
+                                    @if($course->total_fee <= $paid_payment)
                                         Paid
-                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0)
+                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $paid_payment < $course->total_fee)
                                         Overdue
-                                    @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0)
+                                    @elseif($paid_payment > 0 && $course->total_fee > $paid_payment)
                                         Unpaid
                                     @endif
                                     </small>
