@@ -53,6 +53,9 @@ class IndexResponse implements IndexContracts
 
                 /* ---------- Payments This Month ---------- */
                 $paymentsThisMonth = EnrolledCoursePayment::whereMonth('created_at', now()->month)
+                    ->whereHas("enrolledCourse.student", function($query){
+                        $query->where("is_deleted",0);
+                    })
                     ->whereYear('created_at', now()->year)
                     ->where("is_deleted", 0)
                     ->sum('paid_amount');
@@ -66,8 +69,21 @@ class IndexResponse implements IndexContracts
                     ->get();
 
                 /* ---------- Paid vs Pending ---------- */
-                $totalFee  = EnrolledCourse::sum('total_fee');
-                $totalPaid = EnrolledCoursePayment::where("is_deleted", 0)->sum('paid_amount');
+                $totalFee  = EnrolledCourse::where("is_deleted", 0)
+                 ->whereHas("student", function($query){
+                        $query->where("is_deleted",0);
+                    })
+                ->sum('total_fee');
+                $totalPaid = EnrolledCoursePayment::where("is_deleted", 0)
+                ->whereHas("enrolledCourse", function($q)
+                {
+                    $q->where("is_deleted",0);
+                }
+                )
+                ->whereHas("enrolledCourse.student", function($query){
+                        $query->where("is_deleted",0);
+                    })
+                ->sum('paid_amount');
                 $pending   = max($totalFee - $totalPaid, 0);
 
             $totalStudents = Student::count();
@@ -85,6 +101,7 @@ class IndexResponse implements IndexContracts
 
             $totalUnpaid = EnrolledCourse::with('payments', 'student')
                 ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
+                ->where("is_deleted", 0)
                 ->get()
                 ->sum(function ($course) {
                     $totalPaid = $course->payments()->where('is_deleted', 0)->sum('paid_amount');

@@ -77,7 +77,7 @@
             [
                 'title' => 'Unpaid Payment',
                 'count' => show_payment($totalUnpaid),
-                'icon' => 'fa fa-check-circle',
+                'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
                 'route' => 'students.index',
                 'amount_color' => 'info',      // cyan   (informational)
@@ -95,24 +95,24 @@
                 "route_keys" => ["type" => "overdue"]
             ],
             [
-                'title' => 'Paid Certificate',
+                'title' => 'Generated Certificate',
                 'count' => $cert_count,
-                'icon' => 'fa fa-check-circle',
+                'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
                 'route' => 'certificates.index',
                 'amount_color' => 'danger',    // red    (overdue / pending)
 
                 "route_keys" => ["type" => "paid"]
             ],
-            [
-                'title' => 'Pending Amount',
-                'count' => show_payment($pending),
-                'icon' => 'fa fa-exclamation-circle',
-                'bg' => 'bg-danger',
-                'route' => null,
-                'amount_color' => 'success',   // green  (paid / positive)
+            // [
+            //     'title' => 'Pending Amount',
+            //     'count' => show_payment($pending),
+            //     'icon' => 'fa fa-exclamation-circle',
+            //     'bg' => 'bg-danger',
+            //     'route' => null,
+            //     'amount_color' => 'success',   // green  (paid / positive)
 
-            ],
+            // ],
         ];
 
     @endphp
@@ -156,49 +156,42 @@
         </div>
     @endforeach
 </div>
-
-
-
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="studentsMonthChart"></canvas>
-                </div>
+<div class="row justify-content-center mb-3">
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+        <div class="card w-100">
+            <div class="card-body d-flex align-items-center justify-content-center" style="height:300px;">
+                <canvas id="studentsMonthChart" style="max-width:100%; max-height:100%;"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="row mt-1">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="studentsYearChart" class="mt-4"></canvas>
-                </div>
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+        <div class="card w-100">
+            <div class="card-body d-flex align-items-center justify-content-center" style="height:300px;">
+                <canvas id="studentsYearChart" style="max-width:100%; max-height:100%;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+        <div class="card w-100">
+            <div class="card-body d-flex align-items-center justify-content-center" style="height:300px;">
+                <canvas id="annualPaymentsChart" style="max-width:100%; max-height:100%;"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="row mt-1">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="annualPaymentsChart" class="mt-4"></canvas>
-                </div>
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+        <div class="card w-100">
+            <div class="card-body d-flex align-items-center justify-content-center" style="height:300px;">
+                <canvas id="paymentStatusChart" style="max-width:100%; max-height:100%;"></canvas>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row mt-1">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="paymentStatusChart" class="mt-4"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('page-js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -276,8 +269,6 @@
                 }
             }
         });
-
-        
     </script>
 <script>
 $(document).ready(function() {

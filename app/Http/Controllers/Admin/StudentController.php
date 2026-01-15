@@ -29,7 +29,7 @@ class StudentController extends Controller
                 ->whereHas('student', function ($query) {
                     $query->where('is_deleted', 1);
                 })
-                ->latest()
+                 ->sortByDesc('created_at')
                 ->get();
         }
         else if ($type == 'unpaid') {
@@ -43,7 +43,7 @@ class StudentController extends Controller
                     $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
                     return $totalPaid < $enrolledCourse->total_fee;
                 })
-                ->latest()
+                 ->sortByDesc('created_at')
                 ->values();
 
         }
@@ -58,7 +58,7 @@ class StudentController extends Controller
                     $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
                     return $totalPaid >= $enrolledCourse->total_fee;
                 })
-                ->latest()
+                 ->sortByDesc('created_at')
                 ->values();
 
         }
