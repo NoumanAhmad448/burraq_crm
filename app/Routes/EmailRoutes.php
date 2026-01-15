@@ -8,6 +8,6 @@ class EmailRoutes
 
     public static function emailNotification()
     {
-        return config("routes.en") ?? static::EN;
+        return config("routes.ene") ?? static::EN;
     }
 }
