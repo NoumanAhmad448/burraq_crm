@@ -23,7 +23,7 @@
     @yield('page-css')
 </head>
 
-<body class="d-flex flex-column" style="min-height: 90%">
+<body class="d-flex flex-column min-vh-100">
    <nav class="navbar navbar-expand-lg bg-website px-3">
 
     {{-- Left side --}}
@@ -67,17 +67,18 @@
 </nav>
 
 
-    <div class="container-fluid mt-3">
-    <div class="row no-gutters">
+<div class="container-fluid mt-3 flex-grow-1">
+<div class="row no-gutters">
 <!-- MAIN CONTENT -->
         <div class="col-md-12" id="main-content">
             @yield('content')
         </div>
     </div>
 </div>
+@yield('footer')
+</body>
+</html>
+{{-- <div class="container-fluid mt-3"> --}}
+{{-- </div> --}}
 
-    {{-- <div class="container-fluid mt-3"> --}}
-    {{-- </div> --}}
 
-
-    @yield('footer')

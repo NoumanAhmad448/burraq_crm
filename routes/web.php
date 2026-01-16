@@ -277,6 +277,7 @@ require __DIR__.'/student_courses.php';
 require __DIR__.'/inquiries.php';
 require __DIR__ . '/certificate.php';
 require __DIR__ . '/hr.php';
+require __DIR__ . '/user.php';
 
 
 Route::get('/register', function () {

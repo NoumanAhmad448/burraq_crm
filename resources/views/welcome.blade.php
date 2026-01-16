@@ -153,6 +153,7 @@
         </div>
     @endforeach
 </div>
+@if(auth()->user()->is_admin)
 <div class="row justify-content-center mb-3">
     <div class="col-md-5 d-flex align-items-center justify-content-center">
         <div class="card w-100">
@@ -188,9 +189,11 @@
         </div>
     </div>
 </div>
-
+@endif
 @endsection
 @section('page-js')
+@if(auth()->user()->is_admin)
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
@@ -297,6 +300,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
+@endif
 
 @endsection

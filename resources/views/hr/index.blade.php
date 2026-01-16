@@ -54,10 +54,11 @@
                                     <a href="{{ route('hr.edit', $hr->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                         <i class="fa fa-edit"></i>
                                     </a>
+                                                                        @if(auth()->user()->is_admin)
+
                                     <a href="{{ route('hr.logs') }}?user_id={{ $hr->id }}" class="btn btn-sm btn-secondary" title="View Logs">
                                         <i class="fa fa-history"></i>
                                     </a>
-                                    @if(auth()->user()->is_admin)
                                     <a href="{{ route('hr.destroy', $hr->id) }}" class="btn btn-sm btn-danger"
                                         onclick="return confirm('Are you sure you want to delete this HR?')"
                                         title="Delete">
