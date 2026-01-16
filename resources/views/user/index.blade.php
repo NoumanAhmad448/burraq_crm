@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-@if(!empty($is_update) && $is_update == false)
+@if((!empty($is_update) && $is_update == false) || !empty($users))
 @include("user.form", ["is_update" => $is_update ?? false , "user" => $user ?? ""])
 @endif
 @if(!(!empty($is_update)))
