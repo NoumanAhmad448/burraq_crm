@@ -5,40 +5,40 @@
             'title' => 'Students',
             'icon' => 'fa-users',
             'route' => route('students.index'),
-            'access_roles' => ['admin', 'hr'],
+            'access_roles' => ['admin', 'hr', "admission_officer"],
         ],
         [
             'title' => 'Courses',
             'icon' => 'fa-video-camera',
             'route' => route('courses.index'),
-            'access_roles' => ['admin', 'hr'],
+            'access_roles' => ['admin', 'hr', "admission_officer"],
         ],
         [
             'title' => 'Inquiries',
             'icon' => 'fa-question-circle',
             'route' => route('inquiries.index'),
-            'access_roles' => ['admin', 'hr'],
+            'access_roles' => ['admin', 'hr', "admission_officer"],
         ],
         [
             'title' => 'Certificates',
             'icon' => 'fa-certificate',
             'route' => route('certificates.index'),
-            'access_roles' => ['admin', 'hr'],
+            'access_roles' => ['admin', 'hr', "admission_officer"],
         ],
         [
             'title' => 'Generated Certificates',
             'icon' => 'fa-check-circle',
             'route' => route('certificates.index', ["type" => "paid"]),
-            'access_roles' => ['admin', 'hr'],
+            'access_roles' => ['admin', 'hr',"admission_officer", "print_certificate"],
         ],
         [
             'title' => 'HR',
             'icon' => 'fa-user-circle',
             'route' => route('hr.index'),
-            'access_roles' => ['admin'],
+            'access_roles' => ['admin', "hr_role"],
         ],
         [
-            'title' => 'Deleted Users',
+            'title' => 'Deleted Students',
             'icon' => 'fa-user-circle',
             'route' => route('students.index', ["type" => "deleted"]),
             'access_roles' => ['admin'],
@@ -49,6 +49,20 @@
             'route' => route('courses.index', ["type" => "deleted"]),
             'access_roles' => ['admin'],
         ],
+        [
+            'title' => 'Users',
+            'icon' => 'fa-users',
+            'route' => route('admin.user.index'),
+            'access_roles' => ['admin'],
+        ],
+
+        [
+            'title' => 'Deleted Users',
+            'icon' => 'fa-user-times',
+            'route' => route('admin.user.index', ['type' => 'deleted']),
+            'access_roles' => ['admin'],
+        ],
+
     ];
 
 @endphp
@@ -57,7 +71,7 @@
     @if (in_array(auth()->user()->role, $item['access_roles']) || auth()->user()->is_admin)
         <li class="nav-item text-center px-3">
             <!-- Loader -->
-            <div class="py-3 menu-loader{{ $index }}">
+            <div class="py-3 menu-loader{{ $index }} d-none">
                 <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                 <div class="medium text-muted mt-1">Loading…</div>
             </div>

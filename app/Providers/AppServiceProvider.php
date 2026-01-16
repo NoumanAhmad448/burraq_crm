@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         EnrolledCourse::observe(EnrolledCourseObserver::class);
         Inquiry::observe(InquiryObserver::class);
         Profile::observe(ProfileObserver::class);
-        // User::observe(UserObserver::class);
+        User::observe(UserObserver::class);
 
 
         try {

@@ -91,10 +91,12 @@
                                     <i class="fa fa-certificate"></i>
                                 </a>
 
+                                @if(auth()->user()->is_admin)
                                 <a href="{{ route('students.certificate.logs', $row['enrolled_course']->id) }}"
                                    class="btn btn-sm btn-outline-primary">
                                     <i class="fa fa-history"></i>
                                 </a>
+                                @endif
                             </td>
                         </tr>
                         @endif

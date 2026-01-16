@@ -3,7 +3,7 @@
 use App\Http\Controllers\HrController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([config('middlewares.auth'), "admin"])->group(function () {
+Route::middleware([config('middlewares.auth')])->group(function () {
 
     Route::get('hr', [HrController::class, 'index'])->name('hr.index');
     Route::post('hr/store', [HrController::class, 'store'])->name('hr.store');

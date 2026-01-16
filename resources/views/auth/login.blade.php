@@ -23,6 +23,7 @@
         class="img-fluid mx-auto d-block"
         width="150"
     >
+    @include('messages')
 </div>
 
         <form method="POST" action="{{ route('login') }}" class="text-center">
