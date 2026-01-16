@@ -51,7 +51,11 @@ class IndexResponse implements IndexContracts
                     $year = LyskillsCarbon::create()->year($year)->year;
                 }
 
-                // dd(now()->month);
+
+                $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+                $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+
+                // dd($startOfMonth->format("Y-m-d"));
 
                 /* ---------- Students This Month ---------- */
                 $studentsThisMonth = CRMStudent::whereMonth('created_at', $month)
@@ -70,8 +74,56 @@ class IndexResponse implements IndexContracts
                     ->get();
 
                 /* ---------- Payments This Month ---------- */
+
+                $pendingThisMonth = EnrolledCourse::
+                    whereHas("payments", function($q) use($month, $year){
+                         $q->whereMonth('created_at', $month)
+                        ->whereYear('created_at', $year)
+                        ->where('is_deleted', 0);
+                    })
+                    ->where('is_deleted', 0)
+                    ->whereHas('student', function ($q) {
+                        $q->where('is_deleted', 0);
+                    })
+                    ->get()
+                    ->sum(function ($course) {
+                        $totalPaid = $course->payments->sum('paid_amount');
+                        $totalFee  = $course->total_fee;
+
+                        // Only count if paid < total
+                        return $totalPaid < $totalFee ? $totalFee - $totalPaid : 0;
+                    });
+
+                    // dd($startOfMonth);
+                    // dd($endOfMonth);
+                $dueThisMonth = EnrolledCourse::with(['payments' => function ($q) use ($month, $year) {
+                        $q->whereMonth('created_at', $month)
+                        ->whereYear('created_at', $year)
+                        ->where('is_deleted', 0);
+                    }])
+                    ->where('is_deleted', 0)
+                    ->whereHas('student', function ($q) {
+                        $q->where('is_deleted', 0);
+                    })
+                    // Only courses with due_date in current month
+                    ->whereNotNull('due_date')
+                    ->whereBetween('due_date', [$startOfMonth, $endOfMonth])
+                    ->get()
+                    ->sum(function ($course) {
+                        $totalPaid = $course->payments->sum('paid_amount');
+                        $totalFee  = $course->total_fee;
+
+                        // Only count if paid < total
+                        return $totalPaid < $totalFee ? $totalFee - $totalPaid : 0;
+                    });
+
+
+
                 $paymentsThisMonth = EnrolledCoursePayment::whereMonth('created_at', $month)
                     ->whereHas("enrolledCourse.student", function($query){
+                        $query->where("is_deleted",0);
+                    })
+                    ->whereHas("enrolledCourse", function($query){
                         $query->where("is_deleted",0);
                     })
                     ->whereYear('created_at', $year)
@@ -126,13 +178,15 @@ class IndexResponse implements IndexContracts
                     return max($course->total_fee - $totalPaid, 0); // only positive unpaid
                 });
 
-$totalOverdue = EnrolledCourse::with('payments', 'student')
-    ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
+$totalOverdue = EnrolledCourse::
+     whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
+    ->whereNotNull('due_date') // past due
     ->where('due_date', '<', now()) // past due
+    ->where('is_deleted', 0)
     ->get()
     ->sum(function ($course) {
         $totalPaid = $course->payments()->where('is_deleted', 0)->sum('paid_amount');
-        return max($course->total_fee - $totalPaid, 0);
+        return $totalPaid < $course->total_fee ? max($course->total_fee - $totalPaid, 0) : 0;
     });
 
         $enrolledCourses = EnrolledCourse::withSum(['payments as total_paid' => function ($q) {
@@ -181,12 +235,16 @@ $totalOverdue = EnrolledCourse::with('payments', 'student')
                         'totalOverdue',
                         'totalUnpaid',
                         'cert_count',
-                        'pending'
+                        'pending',
+                        'pendingThisMonth',
+                        'dueThisMonth',
+                        'month',
+                        'year',
                     )
                 );
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
             return server_logs([true, $e], [true, $request]);
         }
     }

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
+
+
     /**
      * Show create form + students list
      */

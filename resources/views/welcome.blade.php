@@ -55,7 +55,7 @@
                 'route' => 'students.index',
             ],
             [
-                'title' => 'Payments This Month',
+                'title' => 'Payments (This Month)',
                 'count' => show_payment($paymentsThisMonth),
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',
@@ -64,7 +64,25 @@
                 'route' => null,
             ],
             [
-                'title' => 'Total Paid',
+                'title' => 'Pending Payments (This Month)',
+                'count' => show_payment($pendingThisMonth),
+                'icon' => 'fa fa-money',
+                'bg' => 'bg-success',
+                'amount_color' => 'danger',      // cyan   (informational)
+
+                'route' => null,
+            ],
+            [
+                'title' => 'Overdue Payments (This Month)',
+                'count' => show_payment($dueThisMonth),
+                'icon' => 'fa fa-money',
+                'bg' => 'bg-success',
+                'amount_color' => 'info',      // cyan   (informational)
+
+                'route' => null,
+            ],
+            [
+                'title' => 'Total Paid Payment',
                 'count' => show_payment($totalPaid),
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
@@ -74,7 +92,7 @@
                 "route_keys" => ["type" => "paid"]
             ],
             [
-                'title' => 'Unpaid Payment',
+                'title' => 'Total Pending Payment',
                 'count' => show_payment($totalUnpaid),
                 'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
@@ -84,7 +102,7 @@
                 "route_keys" => ["type" => "unpaid"]
             ],
             [
-                'title' => 'Overdue Payments',
+                'title' => 'Total Overdue Payments',
                 'count' => show_payment($totalOverdue),
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
@@ -121,6 +139,41 @@
         Hide Amounts
     </button>
 </div>
+<form method="GET" action="{{ route('index') }}" class="form-inline justify-content-end mb-3">
+
+    {{-- Month --}}
+    <div class="form-group mr-2 mb-0">
+        <label for="month" class="mr-1">Month</label>
+        <select name="month" id="month" class="form-control form-control-sm">
+            @for ($m = 1; $m <= 12; $m++)
+                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                    {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                </option>
+            @endfor
+        </select>
+    </div>
+
+    {{-- Year --}}
+    <div class="form-group mr-2 mb-0">
+        <label for="year" class="mr-1">Year</label>
+        <select name="year" id="year" class="form-control form-control-sm">
+            @for ($y = 2023; $y <= 2035; $y++)
+                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
+                    {{ $y }}
+                </option>
+            @endfor
+        </select>
+    </div>
+
+    {{-- Filter Button --}}
+    <button type="submit" class="btn btn-primary btn-sm mb-0">
+        Filter
+    </button>
+
+</form>
+
+
+
 
 <div class="row g-3 p-1">
     @foreach ($info as $data)
