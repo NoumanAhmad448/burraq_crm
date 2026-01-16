@@ -46,6 +46,41 @@
                 </form>
             </div>
         </div>
+        {{-- <form method="GET" action="{{ route('students.index') }}" class="form-inline justify-content-end mb-3">
+
+            {{-- Month --}}
+            <div class="form-group mr-2 mb-0">
+                <label for="month" class="mr-1">Month</label>
+                <select name="month" id="month" class="form-control form-control-sm">
+                    <option value=""> -- Select Month -- </option>
+                    @for ($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+
+            {{-- Year --}}
+            <div class="form-group mr-2 mb-0">
+                <label for="year" class="mr-1">Year</label>
+                <select name="year" id="year" class="form-control form-control-sm">
+                                        <option value=""> -- Select Year -- </option>
+
+                    @for ($y = 2023; $y <= 2035; $y++)
+                        <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
+                            {{ $y }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+
+            {{-- Filter Button --}}
+            <button type="submit" class="btn btn-primary btn-sm mb-0">
+                Filter
+            </button>
+
+        </form> --}}
 
             <div class="card-body">
                 <table class="table table-bordered crm_students" id="crm_students">

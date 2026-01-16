@@ -26,6 +26,16 @@ class StudentController extends Controller
     {
         // dd($request->all());
         $type = $request->get('type');
+        $month = $request->get('month');
+        $year = $request->get('year');
+
+        if(!empty($month)){
+            $month = LyskillsCarbon::create()->month($month)->month;
+        }
+        if(!empty($year)){
+            $year = LyskillsCarbon::create()->year($year)->year;
+        }
+
         if ($type == 'deleted') {
             $enrolledCourses = EnrolledCourse::with('student', 'payments')
                 ->whereHas('student', function ($query) {
