@@ -27,7 +27,7 @@ class EnrolledCourse extends Model
 
     public function payments()
     {
-        return $this->hasMany(EnrolledCoursePayment::class, 'enrolled_course_id');
+        return $this->hasMany(EnrolledCoursePayment::class, 'enrolled_course_id')->where("is_deleted", 0);
     }
 
     public function totalPaid()

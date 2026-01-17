@@ -30,7 +30,7 @@ class Student extends Model
 
     public function enrolledCourses()
     {
-        return $this->hasMany(EnrolledCourse::class, 'student_id');
+        return $this->hasMany(EnrolledCourse::class, 'student_id')->where("is_deleted", 0);
     }
 
 }
