@@ -64,12 +64,20 @@
                 'route' => null,
             ],
             [
+                'title' => 'Paid Payments (This Month)',
+                'count' => show_payment($totalPaid_m),
+                'icon' => 'fa fa-money',
+                'bg' => 'bg-success',
+                'amount_color' => 'success',      // cyan   (informational)
+
+                'route' => null,
+            ],
+            [
                 'title' => 'Pending Payments (This Month)',
                 'count' => show_payment($pendingThisMonth),
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',
                 'amount_color' => 'danger',      // cyan   (informational)
-
                 'route' => null,
             ],
             [
@@ -78,8 +86,15 @@
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',
                 'amount_color' => 'info',      // cyan   (informational)
-
                 'route' => null,
+            ],
+            [
+                'title' => 'Total Payment',
+                'count' => show_payment($totalPaid_g),
+                'icon' => 'fa fa-check-circle',
+                'bg' => 'bg-info',
+                'route' => 'students.index',
+                'amount_color' => 'danger',      // cyan   (informational)
             ],
             [
                 'title' => 'Total Paid Payment',
@@ -88,7 +103,6 @@
                 'bg' => 'bg-info',
                 'route' => 'students.index',
                 'amount_color' => 'danger',      // cyan   (informational)
-
                 "route_keys" => ["type" => "paid"]
             ],
             [
@@ -139,7 +153,7 @@
         Hide Amounts
     </button>
 </div>
-{{-- <form method="GET" action="{{ route('index') }}" class="form-inline justify-content-end mb-3">
+<form method="GET" action="{{ route('index') }}" class="form-inline justify-content-end mb-3">
 
     <div class="form-group mr-2 mb-0">
         <label for="month" class="mr-1">Month</label>
@@ -167,7 +181,7 @@
         Filter
     </button>
 
-</form> --}}
+</form>
 
 
 
@@ -302,7 +316,7 @@
             data: {
                 labels: ['Paid', 'Pending'],
                 datasets: [{
-                    data: [{{ $totalPaid }}, {{ $pending }}],
+                    data: [{{ $totalPaid_g }}, {{ $pending }}],
                     backgroundColor: [
                         '#0d6efd', // Paid (Blue)
                         '#dc3545' // Pending (Red)

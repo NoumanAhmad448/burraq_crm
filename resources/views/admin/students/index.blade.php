@@ -48,7 +48,6 @@
         </div>
         {{-- <form method="GET" action="{{ route('students.index') }}" class="form-inline justify-content-end mb-3">
 
-            {{-- Month --}}
             <div class="form-group mr-2 mb-0">
                 <label for="month" class="mr-1">Month</label>
                 <select name="month" id="month" class="form-control form-control-sm">
@@ -61,7 +60,6 @@
                 </select>
             </div>
 
-            {{-- Year --}}
             <div class="form-group mr-2 mb-0">
                 <label for="year" class="mr-1">Year</label>
                 <select name="year" id="year" class="form-control form-control-sm">
@@ -75,7 +73,6 @@
                 </select>
             </div>
 
-            {{-- Filter Button --}}
             <button type="submit" class="btn btn-primary btn-sm mb-0">
                 Filter
             </button>
