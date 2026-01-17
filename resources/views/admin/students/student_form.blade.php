@@ -27,32 +27,32 @@
             <div class="row">
                 <div class="col-md-4">
                     <label>Name *</label>
-                    <input type="text" name="name" class="form-control" required
-                        value="@if ($is_update) {{ $student->name }}@else{{ old('name') }} @endif">
+                    <input type="text" name="name" class="form-control" required placeholder="Student Full Name (Mandatory)"
+                        value="@if($is_update) {{ $student->name }}@else{{ old('name')}}@endif">
                 </div>
 
                 <div class="col-md-4">
                     <label>Father Name *</label>
-                    <input type="text" name="father_name" class="form-control" required
-                        value="@if ($is_update) {{ $student->father_name }}@else{{ old('father_name') }} @endif">
+                    <input type="text" name="father_name" class="form-control" required placeholder="Father Name (Mandatory)"
+                        value="@if($is_update) {{ $student->father_name }}@else{{ old('father_name')}}@endif">
                 </div>
 
                 <div class="col-md-4">
                     <label>CNIC *</label>
-                    <input type="text" name="cnic" class="form-control"
-                        value="@if ($is_update) {{ $student->cnic }}@else{{ old('cnic') }} @endif">
+                    <input type="text" name="cnic" class="form-control" placeholder="CNIC (Mandatory)"
+                        value="@if($is_update) {{ $student->cnic }}@else{{ old('cnic')}}@endif">
                 </div>
 
                 <div class="col-md-4 mt-2">
                     <label>Mobile *</label>
-                    <input type="text" name="mobile" class="form-control"
-                        value="@if ($is_update) {{ $student->mobile }}@else{{ old('mobile') }} @endif">
+                    <input type="text" name="mobile" class="form-control" placeholder="Mobile No. (Mandatory)"
+                        value="@if($is_update) {{ $student->mobile }}@else{{ old('mobile')}}@endif">
                 </div>
 
                 <div class="col-md-4 mt-2">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control"
-                        value="@if ($is_update) {{ $student->email }}@else{{ old('email') }} @endif">
+                    <label>Email*</label>
+                    <input type="email" name="email" class="form-control" placeholder="Email Address (Mandatory)"
+                        value="@if($is_update) {{ $student->email }}@else{{ old('email')}}@endif">
                 </div>
 
 
@@ -113,7 +113,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($courses as $course)
+                    @foreach ($all_courses as $course)
                         @php
                             $enrolledCourse = null;
 
@@ -135,12 +135,14 @@
                             {{-- Select --}}
                             <td class="text-center">
                                 <input type="checkbox" name="courses[{{ $course->id }}][selected]"
-                                    @if ($enrolledCourse) checked @endif>
-
+                                @if (old('courses.' . $course->id . '.selected') || $enrolledCourse) checked @endif
+                                >
                                 @if ($is_update && $enrolledCourse)
                                     <input type="hidden" name="courses[{{ $course->id }}][CEId]"
                                         value="{{ $enrolledCourse->id }}">
                                 @endif
+                                <input type="hidden" name="courses[{{ $course->id }}][course_id]"
+                                    value="{{ $course->id }}">
                             </td>
 
                             {{-- Course --}}
@@ -170,11 +172,11 @@
                                     value="{{ old('courses['.$course->id.'][paid_amount]', $enrolledCourse?->payments?->first()->paid_amount > 0 ? (int) $enrolledCourse?->payments?->first()->paid_amount : '') }}">
                             </td>
                             <td>
-                                <input type="text" name="courses[{{ $course->id }}][admission_date]" class="form-control datepicker"
+                                <input type="text" name="courses[{{ $course->id }}][admission_date]" class="form-control datepicker" placeholder="Admission Date"
                                     value="{{ old('courses['.$course->id.'][admission_date]', $enrolledCourse?->admission_date) }}">
                             </td>
                             <td>
-                                <input type="text" name="courses[{{ $course->id }}][due_date]" class="form-control datepicker"
+                                <input type="text" name="courses[{{ $course->id }}][due_date]" class="form-control datepicker" placeholder="due Date"
                                     value="{{old('courses['.$course->id.'][due_date]', $enrolledCourse?->due_date) }}">
                             </td>
                         </tr>

@@ -68,6 +68,7 @@ class StudentStoreRequest extends FormRequest
             }
 
             $selected_count = 0;
+            // dd($this->courses);
             foreach ($this->courses as $index => $course) {
 
 
