@@ -19,7 +19,7 @@ class EnrolledCoursePayment extends Model
 
     public function enrolledCourse()
     {
-        return $this->belongsTo(EnrolledCourse::class);
+        return $this->belongsTo(EnrolledCourse::class)->where("is_deleted", 0);
     }
 
     public function paidBy()
@@ -38,5 +38,4 @@ class EnrolledCoursePayment extends Model
             'enrolled_course_payment_id'
         );
     }
-
 }

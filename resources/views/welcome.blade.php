@@ -55,7 +55,25 @@
                 'route' => 'students.index',
             ],
             [
-                'title' => 'Payments (This Month)',
+                'title' => 'Total Overdue Students',
+                'count' => $totalOverdue_count,
+                'icon' => 'fa fa-users',
+                'bg' => 'bg-primary',
+                'amount_color' => 'purple',      // cyan   (informational)
+                "route_keys" => ["type" => "overdue"],
+                'route' => 'students.index',
+            ],
+            [
+                'title' => 'Total Pending Students',
+                'count' => $totalUnpaid_count,
+                'icon' => 'fa fa-users',
+                'bg' => 'bg-primary',
+                'amount_color' => 'purple',      // cyan   (informational)
+                "route_keys" => ["type" => "unpaid"],
+                'route' => 'students.index',
+            ],
+            [
+                'title' => 'Total Payments (This Month)',
                 'count' => show_payment($paymentsThisMonth),
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',

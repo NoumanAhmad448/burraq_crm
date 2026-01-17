@@ -256,12 +256,17 @@ if (!function_exists('server_logs')) {
             }
         } else if ($return_response) {
             $response = ['error', config("setting.err_msg")];
-            return
-            $request[0] && $request[1]->expectsJson() ?
 
-                    response()->json($response, Response::HTTP_INTERNAL_SERVER_ERROR)
-                    :
-                    back()->with($response);
+            // Safely get request values
+            $first = $request[0] ?? null;
+            $second = $request[1] ?? null;
+
+            // Determine response type
+            if ($first && $second && method_exists($second, 'expectsJson') && $second->expectsJson()) {
+                return response()->json($response, \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            return back()->with($response);
         }
     }
     }

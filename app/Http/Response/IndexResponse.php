@@ -178,6 +178,14 @@ class IndexResponse implements IndexContracts
                 ->sum(function ($course) {
                     return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
                 });
+            $totalUnpaid_count = EnrolledCourse::with('payments')
+                ->whereHas('student', fn($q) => $q->where("is_deleted", 0))
+                ->where("is_deleted", 0)
+                ->totalActivePayment()
+                ->get()
+                ->filter(function ($course) {
+                    return $course->total_paid < $course->total_fee; // only positive unpaid
+                })->count();
             $pendingThisMonth = EnrolledCourse::with('payments', 'student')
                 ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
                 ->where("is_deleted", 0)
@@ -204,6 +212,15 @@ class IndexResponse implements IndexContracts
                 ->sum(function ($course) {
                     return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
                 });
+            $totalOverdue_count = EnrolledCourse::whereHas("activeStudent")
+                ->pendingCourses()
+                ->where('is_deleted', 0)
+                ->totalActivePayment()
+                ->get()
+                ->filter(function ($course) {
+                    return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
+                })->count();
+
             $dueThisMonth = EnrolledCourse::
                 whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
                 ->whereNotNull('due_date') // past due
@@ -273,6 +290,8 @@ class IndexResponse implements IndexContracts
                         'month',
                         'year',
                         'totalPaid_m',
+                        'totalOverdue_count',
+                        'totalUnpaid_count',
                     )
                 );
 
