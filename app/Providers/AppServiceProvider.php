@@ -19,6 +19,9 @@ use App\Models\User;
 use App\Observers\InquiryObserver;
 use App\Observers\ProfileObserver;
 use App\Observers\UserObserver;
+use App\Models\EnrolledCoursePayment;
+use App\Observers\EnrolledCoursePaymentObserver;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
         Inquiry::observe(InquiryObserver::class);
         Profile::observe(ProfileObserver::class);
         User::observe(UserObserver::class);
+        EnrolledCoursePayment::observe(EnrolledCoursePaymentObserver::class);
 
 
         try {

@@ -31,4 +31,12 @@ class EnrolledCoursePayment extends Model
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
+    public function logs()
+    {
+        return $this->hasMany(
+            EnrolledCoursePaymentLog::class,
+            'enrolled_course_payment_id'
+        );
+    }
+
 }
