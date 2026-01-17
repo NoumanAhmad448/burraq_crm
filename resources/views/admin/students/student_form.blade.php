@@ -13,7 +13,7 @@
     @include('messages')
 
     <div class="card-body">
-        <form method="POST"
+        <form method="POST" id="form_submisssion"
             action="@if ($is_update) {{ route('students.update', $student->id) }}@else{{ route('students.store') }} @endif"
             enctype="multipart/form-data">
             @csrf
@@ -99,7 +99,7 @@
             <hr>
             <strong>Enroll Courses</strong>
 
-            <table class="table table-bordered mt-2 courses">
+            <table class="table table-bordered mt-2 courses" id="course_table">
                 <thead class="thead-light">
                     <tr>
                         <th>Select</th>
@@ -118,9 +118,10 @@
                             $enrolledCourse = null;
 
                             if ($is_update) {
-                                $enrolledCourse = $student?->enrolledCourses
+                                $enrolledCourse = $student?->enrolledCourses()
                                     ->where('course_id', $course->id)
                                     ->where('student_id', $student?->id)
+                                    ->where('is_deleted', 0)
                                     ->first();
                             }
                             if($enrolledCourse && $enrolledCourse?->due_date){
@@ -245,5 +246,42 @@ $(document).ready(function() {
             $(".dtsp-emptyMessage").first().hide(); // Hide 'No panes to display' message
         }, 5000);
     });
+
+    $('#form_submisssion').on('submit', function(e) {
+        e.preventDefault(); // prevent the default submit until we are ready
+            var form = this;
+        var table = new DataTable('#course_table');
+
+            // Save the state of all checkboxes before changing pagination
+            var checkboxStates = {};
+            table.$('input[type="checkbox"]').each(function() {
+                var name = $(this).attr('name');
+                checkboxStates[name] = $(this).prop('checked');
+            });
+
+        // Store current pagination length
+        var originalPageLength = table.page.len();
+
+        // Show all rows temporarily
+        table.page.len(-1).draw();
+        // Wait a tick for the browser to render all rows
+        setTimeout(function() {
+
+            // Restore checkbox states
+        table.$('input[type="checkbox"]').each(function() {
+            var name = $(this).attr('name');
+            if (checkboxStates.hasOwnProperty(name)) {
+                $(this).prop('checked', checkboxStates[name]);
+            }
+        });
+            // Submit the form normally
+            form.submit();
+
+        // Restore original pagination (optional, if page reloads it won't matter)
+        table.page.len(originalPageLength).draw();
+    }, 50);
+
+    });
+
 </script>
 {{-- ================= END CREATE STUDENT FORM ================= --}}
