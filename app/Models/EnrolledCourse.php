@@ -44,6 +44,10 @@ class EnrolledCourse extends Model
     {
         return $this->belongsTo(Student::class);
     }
+    public function activeStudent()
+    {
+        return $this->belongsTo(Student::class)->where("is_deleted", 0);
+    }
 
     public function certificate()
     {
@@ -62,5 +66,17 @@ class EnrolledCourse extends Model
     {
         if (!$this->due_date) return null;
         return LyskillsCarbon::parse($this->due_date)->format('d-m-Y');
+    }
+
+    public function scopePendingCourses(){
+        return $this->whereNotNull('due_date') // past due
+                ->where('due_date', '<', now()); // past due
+    }
+
+    public function scopeTotalActivePayment($query)
+    {
+        return $query->withSum(['payments as total_paid' => function ($q) {
+                        $q->where('is_deleted', 0);
+                    }], 'paid_amount');
     }
 }
