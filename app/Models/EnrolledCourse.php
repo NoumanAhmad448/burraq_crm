@@ -81,6 +81,8 @@ class EnrolledCourse extends Model
     }
     public function scopeTotalIncome($query)
     {
-        return $query->where('is_deleted', 0)->sum("total_fee");
+        return $query->whereHas('student', function ($q) {
+        $q->where('is_deleted', 0);
+    })->where('is_deleted', 0)->sum("total_fee");
     }
 }
