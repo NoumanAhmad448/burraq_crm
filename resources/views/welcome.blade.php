@@ -107,6 +107,14 @@
                 'route' => null,
             ],
             [
+                'title' => 'Total Income',
+                'count' => show_payment($total_income),
+                'icon' => 'fa fa-check-circle',
+                'bg' => 'bg-info',
+                'route' => 'students.index',
+                'amount_color' => 'danger',      // cyan   (informational)
+            ],
+            [
                 'title' => 'Total Payment',
                 'count' => show_payment($totalPaid_g),
                 'icon' => 'fa fa-check-circle',
