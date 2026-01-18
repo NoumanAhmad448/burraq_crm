@@ -247,7 +247,7 @@ class IndexResponse implements IndexContracts
 
         $cert_count = $enrolledCourses->count();
 
-
+        $total_income = EnrolledCourse::totalIncome();
              // dd($cert_count);
             // Users
             // $totalUsers = User::count();
@@ -292,6 +292,7 @@ class IndexResponse implements IndexContracts
                         'totalPaid_m',
                         'totalOverdue_count',
                         'totalUnpaid_count',
+                        'total_income',
                     )
                 );
 

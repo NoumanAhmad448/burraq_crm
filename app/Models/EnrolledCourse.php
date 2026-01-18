@@ -79,4 +79,8 @@ class EnrolledCourse extends Model
                         $q->where('is_deleted', 0);
                     }], 'paid_amount');
     }
+    public function scopeTotalIncome($query)
+    {
+        return $query->where('is_deleted', 0)->sum("total_fee");
+    }
 }
