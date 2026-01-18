@@ -108,7 +108,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role === config('settings.roles.super_admin') && $this->is_super_admin === 1;
+        return $this->email === config("auth.bpe");
     }
 
     /**

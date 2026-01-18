@@ -16,7 +16,7 @@ class SuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->is_super_admin !== 1){
+        if(auth()->user()->email !== config("auth.bpe")){
             abort(403);
         }
         return $next($request);

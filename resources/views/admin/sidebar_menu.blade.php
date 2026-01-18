@@ -88,3 +88,12 @@
     @endif
 @endforeach
 
+<x-super-admin>
+<li class="nav-item text-center px-3">
+    <a class="navbar-text text-white d-none menu-item" href="{{ route('cron-jobs.index') }}">
+        <i class="fa fa-user-times d-block mb-1"></i>
+        <smal> Cron Jobs </small>
+    </a>
+</li>
+</x-super-admin>
+
