@@ -278,6 +278,7 @@ require __DIR__.'/inquiries.php';
 require __DIR__ . '/certificate.php';
 require __DIR__ . '/hr.php';
 require __DIR__ . '/user.php';
+require __DIR__.'/cron_jobs.php';
 
 
 Route::get('/register', function () {
