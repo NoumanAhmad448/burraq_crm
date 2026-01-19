@@ -11,6 +11,7 @@ services:
       args:
         - APP_ENV='${APP_ENV}'
     container_name: crm-app
+    image: noumanlaravel/crm-app:latest   # <--- Add this
     volumes:
       # - .:/var/www/html  # Bind mount to sync your application code for local development only
       - laravel_storage:/var/www/html/storage  # Named volume for persistent data (e.g., Laravel storage)
