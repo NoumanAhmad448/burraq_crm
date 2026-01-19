@@ -11,7 +11,7 @@
         }
 
         body {
-            font-family: "Courier New", Consolas, Menlo, monospace;
+             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
             color: #333;
             line-height: 1.6;
@@ -175,7 +175,7 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $enrolledCourse->course->name }}</td>
-                            <td class="text-right">{{ number_format($enrolledCourse->total_fee, 2) }}</td>
+                            <td class="text-right">{{ show_payment($enrolledCourse->total_fee, 2) }}</td>
 
                             {{-- <td>{{ $enrolledCourses?->admission_date }}</td>
                             @if(!empty($enrolledCourses?->due_date))
@@ -194,7 +194,7 @@
                                         <tbody>
                                             @foreach($enrolledCourse->payments as $payment)
                                                 <tr>
-                                                    <td class="text-right">{{ number_format($payment->paid_amount, 2) }}</td>
+                                                    <td class="text-right">{{ show_payment($payment->paid_amount, 2) }}</td>
                                                     <td>{{ $payment->paid_at }}</td>
                                                     <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
                                                 </tr>
@@ -209,7 +209,7 @@
                             $remaining = max($enrolledCourse->total_fee - $enrolledCourse->payments->sum("paid_amount"),0);
                             @endphp
                             <td>
-                                {{ $remaining > 0 ? number_format($remaining) : '' }}
+                                {{ $remaining > 0 ? show_payment($remaining) : '' }}
                             </td>
                         </tr>
                     @endforeach
