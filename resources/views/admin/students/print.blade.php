@@ -5,9 +5,14 @@
     <title>Student Enrollment & Fee Record</title>
 
     <style>
+        .logo {
+            display: block;
+            margin: 0 auto;
+        }
+
         body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 13px;
+            font-family: "Courier New", Consolas, Menlo, monospace;
+            font-size: 11px;
             color: #333;
             line-height: 1.6;
         }
@@ -30,7 +35,7 @@
         }
 
         .section-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             border-bottom: 1px solid #ccc;
             margin-bottom: 10px;
@@ -83,19 +88,26 @@
 
     <!-- HEADER -->
     <div class="header">
-        <h2>Burraq Engineering</h2>
-        <p class="text-muted">Student Enrollment & Fee Record</p>
+        <h2>Burraq CRM - Fee Receipt</h2>
+        <p class="text-muted"> {{ now() }}</p>
     </div>
+    <hr/>
+
+    {{-- <img
+    src="{{ asset(config('setting.img_logo_path')) }}"
+    alt="lyskills"
+    class="logo"
+    width="40" /> --}}
 
     <!-- STUDENT INFORMATION -->
     <div class="section">
         <div class="section-title">Student Information</div>
 
         <table>
-            <tr>
+            {{-- <tr>
                 <th>Student ID</th>
                 <td>{{ $student->id }}</td>
-            </tr>
+            </tr> --}}
             <tr>
                 <th>Name</th>
                 <td>{{ $student->name }}</td>
@@ -105,17 +117,17 @@
                 <td>{{ $student->father_name }}</td>
             </tr>
             <tr>
-                <th>CNIC</th>
+                <th>Course</th>
                 <td>{{ $student->cnic }}</td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <th>Mobile</th>
                 <td>{{ $student->mobile }}</td>
-            </tr>
-            <tr>
+            </tr> --}}
+            {{-- <tr>
                 <th>Email</th>
                 <td>{{ $student?->email}}</td>
-            </tr>
+            </tr> --}}
         </table>
     </div>
 

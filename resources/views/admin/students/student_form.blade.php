@@ -89,7 +89,7 @@
                     @include('file', ['name' => 'payment_slip_path'])
                     <br />
                     @if ($is_update && $student->payment_slip_path)
-                        <a href="{{ asset(img_path($student->payment_slip_path)) }}" target="_blank">View Current
+                        <a href="{{ asset(img_path($student->payment_slip_path)) }}" target="_blank" class="text-primary underscore">View Current
                             Slip</a>
                     @endif
                 </div>
