@@ -117,27 +117,25 @@ jobs:
       - name: Run Pint for code styling
         run: pint --config pint.json
 
-      - name: Creating essential directoires
+      - name: Prepare storage and bootstrap directories
         run: |
-          sudo mkdir -p $GITHUB_WORKSPACE/storage/app
-          sudo mkdir -p $GITHUB_WORKSPACE/storage/framework/cache
-          sudo mkdir -p $GITHUB_WORKSPACE/storage/framework/sessions
-          sudo mkdir -p $GITHUB_WORKSPACE/storage/framework/views
-          sudo mkdir -p $GITHUB_WORKSPACE/storage/logs
+          mkdir -p $GITHUB_WORKSPACE/storage/{app,framework/{cache,sessions,views},logs} \
+                  $GITHUB_WORKSPACE/bootstrap/cache
+          chmod -R 777 $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
 
-      # Fiel permission may fail on Github Action
-      # - name: File permission
-      #   run: yes | sudo chmod -R 777 $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
+      # Fiel permission may fail on Github Action if you use sudo
+      - name: File permission
+        run: chmod -R 777 $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
 
       - name: Show file structure
-        run: sudo ls -l $GITHUB_WORKSPACE
+        run: ls -l $GITHUB_WORKSPACE
 
       - name: check user
         run: whoami
 
-      # This won't work
-      # - name: Set folder ownership to current user
-      #   run: sudo chown -R $(whoami):$(whoami) $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
+      # This won't work with sudo
+      - name: Set folder ownership to current user
+        run: chown -R $(whoami):$(whoami) $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
 
       - name: installing composer
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-cache
