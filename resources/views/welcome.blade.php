@@ -249,7 +249,6 @@
         </div>
     @endforeach
 </div>
-@if(auth()->user()->is_admin)
 <div class="row justify-content-center mb-3">
     <div class="col-md-5 d-flex align-items-center justify-content-center">
         <div class="card w-100">
@@ -366,35 +365,35 @@
             }
         });
     </script>
-<script>
-$(document).ready(function() {
-    $('#toggle-amounts').click(function() {
-        // loop through all amount fields
-        $('h2').each(function() {
-            var classes = $(this).attr('class');
-            if (classes && classes.indexOf('amount-') !== -1) {
-                // toggle visibility manually
-                if ($(this).css('display') === 'none') {
-                    $(this).css('display', 'block'); // show
+    <script>
+        $(document).ready(function() {
+            $('#toggle-amounts').click(function() {
+                // loop through all amount fields
+                $('h2').each(function() {
+                    var classes = $(this).attr('class');
+                    if (classes && classes.indexOf('amount-') !== -1) {
+                        // toggle visibility manually
+                        if ($(this).css('display') === 'none') {
+                            $(this).css('display', 'block'); // show
+                        } else {
+                            $(this).css('display', 'none');  // hide
+                        }
+                    }
+                });
+
+                // toggle button text
+                if ($("#toggle-amounts").attr("text") == 1) {
+                    $(this).text('Show Amounts');
+                    $(this).attr('text', 2); // ✔ valid
+
                 } else {
-                    $(this).css('display', 'none');  // hide
+                    $(this).text('Hide Amounts');
+                    $(this).attr('text', 1); // ✔ valid
+
+
                 }
-            }
+            });
         });
-
-        // toggle button text
-        if ($("#toggle-amounts").attr("text") == 1) {
-            $(this).text('Show Amounts');
-            $(this).attr('text', 2); // ✔ valid
-
-        } else {
-            $(this).text('Hide Amounts');
-            $(this).attr('text', 1); // ✔ valid
-
-
-        }
-    });
-});
-</script>
+    </script>
 </x-admin>
 @endsection

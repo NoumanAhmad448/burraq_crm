@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Student Enrollment & Fee Record</title>
@@ -11,7 +12,7 @@
         }
 
         body {
-             font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
             color: #333;
             line-height: 1.6;
@@ -82,57 +83,58 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-        <h2>Burraq CRM - Fee Receipt</h2>
-        <p class="text-muted"> {{ now() }}</p>
-    </div>
-    <hr/>
+        <!-- HEADER -->
+        <div class="header">
+            <h2>Burraq CRM - Fee Receipt</h2>
+            <p class="text-muted"> {{ now() }}</p>
+        </div>
+        <hr />
 
-    {{-- <img
+        {{-- <img
     src="{{ asset(config('setting.img_logo_path')) }}"
     alt="lyskills"
     class="logo"
     width="40" /> --}}
 
-    <!-- STUDENT INFORMATION -->
-    <div class="section">
-        <div class="section-title">Student Information</div>
+        <!-- STUDENT INFORMATION -->
+        <div class="section">
+            <div class="section-title">Student Information</div>
 
-        <table>
-            {{-- <tr>
+            <table>
+                {{-- <tr>
                 <th>Student ID</th>
                 <td>{{ $student->id }}</td>
             </tr> --}}
-            <tr>
-                <th>Name</th>
-                <td>{{ $student->name }}</td>
-            </tr>
-            <tr>
-                <th>Father Name</th>
-                <td>{{ $student->father_name }}</td>
-            </tr>
-            <tr>
-                <th>Course</th>
-                <td>{{ $student->cnic }}</td>
-            </tr>
-            {{-- <tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ $student->name }}</td>
+                </tr>
+                <tr>
+                    <th>Father Name</th>
+                    <td>{{ $student->father_name }}</td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td>{{ $student->cnic }}</td>
+                </tr>
+                {{-- <tr>
                 <th>Mobile</th>
                 <td>{{ $student->mobile }}</td>
             </tr> --}}
-            {{-- <tr>
+                {{-- <tr>
                 <th>Email</th>
                 <td>{{ $student?->email}}</td>
             </tr> --}}
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <!-- FINANCIAL SUMMARY -->
-    {{-- <div class="section">
+        <!-- FINANCIAL SUMMARY -->
+        {{-- <div class="section">
         <div class="section-title">Financial Summary</div>
 
         <table>
@@ -151,79 +153,57 @@
         </table>
     </div> --}}
 
-    <!-- ENROLLED COURSES -->
-    <div class="section">
-        <div class="section-title">Enrolled Courses & Payments</div>
+        <!-- ENROLLED COURSES -->
+        <div class="section">
+            {{-- <div class="section-title">Enrolled Courses & Payments</div> --}}
 
-        @if($student?->enrolledCourses?->isEmpty())
-            <p class="text-muted">No enrolled courses found.</p>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Course Name</th>
-                        {{-- <th>Admission Date</th> --}}
-                        {{-- <th>Due Date</th> --}}
-                        <th>Total Fee</th>
-                        <th>Payments</th>
-                        <th>Remaining Payment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($student->enrolledCourses as $index => $enrolledCourse)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $enrolledCourse->course->name }}</td>
-                            <td class="text-right">{{ show_payment($enrolledCourse->total_fee, 2) }}</td>
+            @if ($student?->enrolledCourses?->isEmpty())
+                <p class="text-muted">No enrolled courses found.</p>
+            @else
+                @foreach ($student->enrolledCourses as $index => $enrolledCourse)
+                    <h2> Course: {{ $enrolledCourse->course->name }} </h2>
+                    <div> Total Fee: {{ show_payment($enrolledCourse->total_fee) }} </div>
+                    <div> Admission Date: {{ showWebPageDate($enrolledCourse->admission_date) }} </div>
+                    @if(!empty($enrolledCourse->due_date))
+                        <div> Due Date: {{ showWebPageDate($enrolledCourse->due_date) }} </div>
+                    @endif
+                    @if(max($enrolledCourse->total_fee - $enrolledCourse->payments->sum('paid_amount'), 0) > 9)
+                    <div> Remaining Fee:
+                        {{ show_payment(max($enrolledCourse->total_fee - $enrolledCourse->payments->sum('paid_amount'), 0)) }} </div>
+                    @endif
+                    <h5> Payment History </h5>
+                    <table>
+                        <thead>
+                            <tr>
+                            <tr>
+                                <th>Paid Amount</th>
+                                <th>Paid At</th>
+                                <th>Received By</th>
+                            </tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($enrolledCourse->payments as $payment)
+                                <tr>
+                                    <td class="text-left">{{ show_payment($payment->paid_amount, 2) }}</td>
+                                    <td>{{ showWebPageDate($payment->paid_at) }}</td>
+                                    <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endforeach
 
-                            {{-- <td>{{ $enrolledCourses?->admission_date }}</td>
-                            @if(!empty($enrolledCourses?->due_date))
-                            <td>{{ $enrolledCourses?->due_date }}</td>
-                            @endif --}}
-                            <td>
-                                @if ($enrolledCourse->payments->isNotEmpty())
-                                    <table class="sub-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Paid Amount</th>
-                                                <th>Paid At</th>
-                                                <th>Payment By</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($enrolledCourse->payments as $payment)
-                                                <tr>
-                                                    <td class="text-right">{{ show_payment($payment->paid_amount, 2) }}</td>
-                                                    <td>{{ $payment->paid_at }}</td>
-                                                    <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                @else
-                                    <span class="text-muted">No payments recorded</span>
-                                @endif
-                            </td>
-                            @php
-                            $remaining = max($enrolledCourse->total_fee - $enrolledCourse->payments->sum("paid_amount"),0);
-                            @endphp
-                            <td>
-                                {{ $remaining > 0 ? show_payment($remaining) : '' }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
+            @endif
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            Generated on {{ now()->format('d M Y, h:i A') }}
+        </div>
+
     </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-        Generated on {{ now()->format('d M Y, h:i A') }}
-    </div>
-
-</div>
 
 </body>
+
 </html>

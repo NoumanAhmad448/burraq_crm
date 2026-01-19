@@ -14,6 +14,7 @@ class LyskillsCarbon
      * @return int
      */
     private static $date_form = "Y-m-d";
+    private static $web_date_form = "d M Y";
     private static $db_date_form = "Y-m-d H:i:s";
 
     public static function  setDate($date) {
@@ -103,6 +104,9 @@ class LyskillsCarbon
 
     public static function dateFormat($value){
         return self::parse($value)->format(self::$date_form);
+    }
+    public static function webDate($value){
+        return self::parse($value)->format(self::$web_date_form);
     }
 
     public static function dbDateFormat($value){
