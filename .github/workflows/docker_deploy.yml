@@ -168,7 +168,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build images using docker-compose
-        run: docker compose build
+        run: docker compose build crm-app
+
+      - name: List All Images
+        run: docker images                  # verify image exists locally
 
       # - name: Tag the image(DO not need)
       #   run: docker tag ${{matrix.container}} ${{ secrets.DOCKER_USERNAME }}/${{matrix.container}}:latest
