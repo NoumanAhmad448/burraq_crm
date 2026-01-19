@@ -1,6 +1,11 @@
 @extends('admin.admin_main')
 @section('page-css')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style> 
+    .amount-orange{
+  color: #fd7e14
+}
+</style>
 @endsection
 @section('content')
     @php
@@ -58,7 +63,7 @@
                 'title' => 'Total Overdue Students',
                 'count' => $totalOverdue_count,
                 'icon' => 'fa fa-users',
-                'bg' => 'bg-primary',
+                'bg' => 'bg-danger',
                 'amount_color' => 'purple',      // cyan   (informational)
                 "route_keys" => ["type" => "overdue"],
                 'route' => 'students.index',
@@ -68,7 +73,7 @@
                 'count' => $totalUnpaid_count,
                 'icon' => 'fa fa-users',
                 'bg' => 'bg-primary',
-                'amount_color' => 'purple',      // cyan   (informational)
+                'amount_color' => 'success',      // cyan   (informational)
                 "route_keys" => ["type" => "unpaid"],
                 'route' => 'students.index',
             ],
@@ -95,7 +100,7 @@
                 'count' => show_payment($pendingThisMonth),
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',
-                'amount_color' => 'danger',      // cyan   (informational)
+                'amount_color' => 'orange',      // cyan   (informational)
                 'route' => null,
             ],
             [
@@ -103,7 +108,7 @@
                 'count' => show_payment($dueThisMonth),
                 'icon' => 'fa fa-money',
                 'bg' => 'bg-success',
-                'amount_color' => 'info',      // cyan   (informational)
+                'amount_color' => 'danger',      // cyan   (informational)
                 'route' => null,
             ],
             [
@@ -112,15 +117,15 @@
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
                 'route' => 'students.index',
-                'amount_color' => 'danger',      // cyan   (informational)
+                'amount_color' => 'success',      // cyan   (informational)
             ],
             [
                 'title' => 'Total Payment',
                 'count' => show_payment($totalPaid_g),
                 'icon' => 'fa fa-check-circle',
-                'bg' => 'bg-info',
+                'bg' => 'bg-success',
                 'route' => 'students.index',
-                'amount_color' => 'danger',      // cyan   (informational)
+                'amount_color' => 'success',      // cyan   (informational)
             ],
             [
                 'title' => 'Total Paid Payment',
@@ -128,7 +133,7 @@
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
                 'route' => 'students.index',
-                'amount_color' => 'danger',      // cyan   (informational)
+                'amount_color' => 'success',      // cyan   (informational)
                 "route_keys" => ["type" => "paid"]
             ],
             [
@@ -137,7 +142,7 @@
                 'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
                 'route' => 'students.index',
-                'amount_color' => 'info',      // cyan   (informational)
+                'amount_color' => 'orange',      // cyan   (informational)
 
                 "route_keys" => ["type" => "unpaid"]
             ],
@@ -147,7 +152,7 @@
                 'icon' => 'fa fa-check-circle',
                 'bg' => 'bg-info',
                 'route' => 'students.index',
-                'amount_color' => 'primary',   // blue   (neutral totals)
+                'amount_color' => 'danger',   // blue   (neutral totals)
 
                 "route_keys" => ["type" => "overdue"]
             ],
@@ -157,7 +162,7 @@
                 'icon' => 'fa fa-thumbs-up fa-2x',
                 'bg' => 'bg-info',
                 'route' => 'certificates.index',
-                'amount_color' => 'danger',    // red    (overdue / pending)
+                'amount_color' => 'primary',    // red    (overdue / pending)
             ],
             // [
             //     'title' => 'Pending Amount',
@@ -172,6 +177,7 @@
 
     @endphp
 
+<x-admin>
 <!-- Toggle Button Top-Right -->
 <!-- Toggle Button Top-Right -->
 <div class="d-flex justify-content-end mb-2">
@@ -279,11 +285,11 @@
         </div>
     </div>
 </div>
-@endif
+
+</x-admin>
 @endsection
 @section('page-js')
-@if(auth()->user()->is_admin)
-
+<x-admin>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
@@ -390,6 +396,5 @@ $(document).ready(function() {
     });
 });
 </script>
-@endif
-
+</x-admin>
 @endsection

@@ -38,7 +38,7 @@
                         <td>{{ number_format($payment->paid_amount, 2) }}</td>
                         <td>
                             @if ($payment->payment_slip_path)
-                                <a href="{{ asset(img_path($payment->payment_slip_path)) }}" target="_blank">View Slip</a>
+                                <a href="{{ asset(img_path($payment->payment_slip_path)) }}" target="_blank" class="text-primary underscore">View Slip</a>
                             @else
                                 N/A
                             @endif

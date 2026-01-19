@@ -29,7 +29,12 @@
     {{-- Left side --}}
     @if (config('setting.show_site_log'))
         <a class="navbar-brand text-white" href="{{ route('index') }}">
-            CRM
+            <img
+                src="{{ asset(config('setting.img_logo_path')) }}"
+                alt="lyskills"
+                class="img-fluid mx-auto d-block"
+                width="60"
+            >
         </a>
     @endif
 

@@ -17,7 +17,7 @@ $site_settings = [
         "rate_limit" => 60,
         "lang_middleware" => "",
         #Image logo path is set w.r.t public folder.
-        "img_logo_path" => "img/logo.jpg",
+        "img_logo_path" => "img/logo.png",
         "enable_verify_email" => true,
         "extra_middlewares" => [],
         "enable_text_showing" => true,

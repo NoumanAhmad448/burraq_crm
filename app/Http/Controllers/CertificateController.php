@@ -53,6 +53,9 @@ class CertificateController extends Controller
             ])
                 ->whereDoesntHave("certificate")
                 ->where("is_deleted", 0)
+                ->whereHas('student', function ($q) {
+                    $q->where('is_deleted', 0);
+                })
                 ->orderby('created_at', 'desc')
                 ->get()
                 ->map(function ($enrolledCourse) {
