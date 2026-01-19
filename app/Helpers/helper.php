@@ -316,3 +316,8 @@ function img_path($img_path){
 function show_payment($amount){
     return "Rs " . number_format($amount);
 }
+
+function showWebPageDate($value){
+     if($value == null){            return;        }
+        return LyskillsCarbon::webDate($value);
+}
