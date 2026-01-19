@@ -170,8 +170,8 @@ jobs:
       - name: Build images using docker-compose
         run: docker compose build
 
-      - name: Tag the image
-        run: docker tag ${{matrix.container}} ${{ secrets.DOCKER_USERNAME }}/${{matrix.container}}:latest
+      # - name: Tag the image(DO not need)
+      #   run: docker tag ${{matrix.container}} ${{ secrets.DOCKER_USERNAME }}/${{matrix.container}}:latest
 
       - name: Push the image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{matrix.container}}:latest
