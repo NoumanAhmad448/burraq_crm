@@ -135,8 +135,9 @@ jobs:
       - name: check user
         run: whoami
 
-      - name: Set folder ownership to current user
-        run: sudo chown -R $(whoami):$(whoami) $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
+      # This won't work
+      # - name: Set folder ownership to current user
+      #   run: sudo chown -R $(whoami):$(whoami) $GITHUB_WORKSPACE/storage/ $GITHUB_WORKSPACE/bootstrap/cache
 
       - name: installing composer
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-cache
