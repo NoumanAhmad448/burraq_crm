@@ -118,10 +118,10 @@
                     <th>Father Name</th>
                     <td>{{ $student->father_name }}</td>
                 </tr>
-                <tr>
-                    <th>Course</th>
+                {{-- <tr>
+                    <th>Cnic</th>
                     <td>{{ $student->cnic }}</td>
-                </tr>
+                </tr> --}}
                 {{-- <tr>
                 <th>Mobile</th>
                 <td>{{ $student->mobile }}</td>
