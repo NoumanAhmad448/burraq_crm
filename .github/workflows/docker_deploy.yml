@@ -22,8 +22,7 @@ permissions:
 
 jobs:
   docker-deploy:
-    if: ${{ vars.DEPLOY_TYPE == 'docker'}}  && github.actor == "NoumanAhmad448" && ${{ false }}
-    needs: laravel-deployment # This makes test-mysql depend on the successful completion of setup-mysql
+    if: ${{ vars.DEPLOY_TYPE == 'docker'}}  && github.actor == "NoumanAhmad448"
     runs-on: ubuntu-latest
 
     strategy:
@@ -43,7 +42,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         volumes:
-          - ./my.cnf:/etc/mysql/my.cnf  # Mount the custom config file
+          - ./my.cnf:/etc/mysql/my.cnf # Mount the custom config file
     steps:
       - uses: actions/checkout@v3
         with:
@@ -53,14 +52,14 @@ jobs:
         uses: shivammathur/setup-php@21e092a3e0c2fabb77bf641337eced34a4bcd3cc
         with:
           php-version: ${{ matrix.php }}
-          extensions: json, dom, curl, libxml, mbstring, bz2, fileinfo, gd, gettext, mbstring, exif, mysqli, pdo_mysql
+          extensions: json, dom, curl, libxml, mbstring, bz2, fileinfo, gd, gettext, exif, mysqli, pdo_mysql
           tools: pint:1.16.1, phpdoc, composer:2.4.4
           coverage: none
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Specify the Node.js version you want to use (e.g., 14, 16, 18, etc.)
+          node-version: "20" # Specify the Node.js version you want to use (e.g., 14, 16, 18, etc.)
       - name: Set up Environment File
         run: |
           cp .env.testing.example .env
@@ -115,7 +114,6 @@ jobs:
           echo "SLACK_CHANNEL=${{secrets.DB_TESTING_DATABASE}}"  >> .env
           echo "SLACK_USR_NAM=${{secrets.DB_LARAVEL}}"  >> .env
 
-
       - name: Run Pint for code styling
         run: pint --config pint.json
 
@@ -144,12 +142,12 @@ jobs:
 
       - name: Checking databse credentials
         run: |
-            echo "DB_CONNECTION=${{secrets.DB_CONNECTION}}"
-            echo "DB_HOST=${{secrets.DB_HOST}}"
-            echo "DB_PORT=${{secrets.DB_PORT}}"
-            echo "DB_DATABASE=${{secrets.DB_DATABASE}}"
-            echo "DB_USERNAME=${{secrets.DB_USERNAME}}"
-            echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}"
+          echo "DB_CONNECTION=${{secrets.DB_CONNECTION}}"
+          echo "DB_HOST=${{secrets.DB_HOST}}"
+          echo "DB_PORT=${{secrets.DB_PORT}}"
+          echo "DB_DATABASE=${{secrets.DB_DATABASE}}"
+          echo "DB_USERNAME=${{secrets.DB_USERNAME}}"
+          echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}"
 
       - name: install npm
         run: npm install
