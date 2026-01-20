@@ -79,10 +79,12 @@ class StudentController extends Controller
 
         }
         else if ($type == 'overdue') {
-            $enrolledCourses = EnrolledCourse::where("due_date", "<", now())->with('student', 'payments')
+            $enrolledCourses = EnrolledCourse::pendingCourses()->with('student', 'payments')
              ->whereHas('student', function ($query) {
                     $query->where('is_deleted', 0);
-                })            ->where('is_deleted', 0)
+                })
+                ->activeCourse()
+            ->paidStudentsOnly()
              ->latest()
             ->get();
         }
