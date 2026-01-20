@@ -95,7 +95,10 @@ $site_settings = [
                 '.env.live.example',
                 '.env.dev.example',
         ],
-        "en_showing_vid_val" => false
+        "en_showing_vid_val" => false,
+        "student_emails" => [
+                'usmansaleem195@gmail.com',
+            ]
 ];
 
 if (env("SHOW_MIDDLEWARE")) {
