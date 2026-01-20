@@ -6,6 +6,7 @@ use App\Classes\LyskillsCarbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
+use App\Mail\StudentFeeReceiptMail;
 use App\Models\Student;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
@@ -14,6 +15,7 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class StudentController extends Controller
 {
@@ -209,6 +211,28 @@ class StudentController extends Controller
 
 
             DB::commit();
+
+            // Main recipients
+            $toEmails = config("setting.student_emails");
+
+            // Remove empty emails just in case
+            $toEmails = array_filter($toEmails);
+
+            // Do not proceed if no valid TO emails
+            if (!empty($toEmails) && !empty($student?->email)) {
+                $mail = Mail::to($student->email);
+
+                // CC student if email exists
+                $mail->cc($toEmails);
+
+                $mail->send(new StudentFeeReceiptMail($student));
+            }else{
+                Log::warning('Student fee receipt email NOT sent: No primary recipient emails found.', [
+                    'student_id' => $student->id ?? null,
+                    'student_email' => $student->email ?? null,
+                ]);
+
+            }
 
             /* ---------- CHECKBOX LOGIC ---------- */
             if ($request->print) {

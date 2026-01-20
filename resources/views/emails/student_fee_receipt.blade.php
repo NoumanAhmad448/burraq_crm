@@ -14,7 +14,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
-            color: #333;
+            color: #000;
             line-height: 1.6;
         }
 
@@ -67,7 +67,7 @@
         }
 
         .text-muted {
-            color: #777;
+            color: #000;
             font-size: 12px;
         }
 
@@ -79,7 +79,7 @@
             margin-top: 40px;
             text-align: center;
             font-size: 11px;
-            color: #777;
+            color: #000;
         }
     </style>
 </head>
@@ -87,6 +87,10 @@
 <body>
 
     <div class="container">
+        Dear {{ $student->name }},<br><br>
+
+        We hope this message finds you well.  
+        Please find below the receipt for your enrolled course(s).<br><br><br><br><br><br><br>
 
         <!-- HEADER -->
         <div class="header">
@@ -201,6 +205,7 @@
 
         <!-- FOOTER -->
         <div class="footer">
+            © {{ now()->year }} Burraq Engineering. All rights reserved. <br/>
             Generated on {{ now()->format('d M Y, h:i A') }}
         </div>
 
