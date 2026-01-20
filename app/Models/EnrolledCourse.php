@@ -85,4 +85,17 @@ class EnrolledCourse extends Model
         $q->where('is_deleted', 0);
     })->where('is_deleted', 0)->sum("total_fee");
     }
+
+    public function scopeActiveCourse($query){
+        return $query->where('is_deleted', 0);
+    }
+    public function scopePaidStudentsOnly($query){
+        return $query->whereRaw(
+            '(SELECT COALESCE(SUM(paid_amount), 0)
+            FROM crm_course_payments as payments
+            WHERE payments.enrolled_course_id = crm_enrolled_courses.id
+            AND payments.is_deleted = 0
+            ) < crm_enrolled_courses.total_fee'
+        );
+    }
 }
