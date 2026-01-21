@@ -148,7 +148,7 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan event:cache && php artisan optimize
 
 # Check project health
-php artisan health:check --no-notification
+# php artisan health:check --no-notification
 
 # Reset permissions for web server & FTP user
 sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/crm.burraqengineering.com/
