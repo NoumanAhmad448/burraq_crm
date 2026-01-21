@@ -219,7 +219,7 @@ class IndexResponse implements IndexContracts
                 ->totalActivePayment()
                 ->get()
                 ->filter(function ($course) {
-                    return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
+                    return $course->total_paid < $course->total_fee; // only positive unpaid
                 })->count();
 
             $dueThisMonth = EnrolledCourse::
