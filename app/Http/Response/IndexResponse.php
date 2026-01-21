@@ -212,15 +212,13 @@ class IndexResponse implements IndexContracts
                 ->sum(function ($course) {
                     return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
                 });
-            $totalOverdue_count = EnrolledCourse::
-                whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
-                ->pendingCourses()
-                ->where('is_deleted', 0)
-                ->totalActivePayment()
-                ->get()
-                ->filter(function ($course) {
-                    return $course->total_paid < $course->total_fee; // only positive unpaid
-                })->count();
+            $totalOverdue_count = EnrolledCourse
+                ::pendingCourses()->with('student', 'payments')
+                ->whereHas('student', function ($query) {
+                        $query->where('is_deleted', 0);
+                    })
+                    ->activeCourse()
+                ->paidStudentsOnly()->count();
 
             $dueThisMonth = EnrolledCourse::
                 whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
