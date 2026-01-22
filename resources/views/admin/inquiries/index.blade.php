@@ -21,7 +21,7 @@
             <th>Phone</th>
             <th>Email</th>
             <th>Course</th>
-            <th>Status</th>
+            <th>Source</th>
             <th>Deleted</th>
             <th>Action</th>
         </tr>

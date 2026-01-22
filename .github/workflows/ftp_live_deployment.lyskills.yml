@@ -24,7 +24,6 @@ jobs:
   laravel-deployment:
     runs-on: ubuntu-latest
     timeout-minutes: 1200
-    if: ${{ vars.DEPLOY_TYPE  == 'laravel' }} && github.actor == "NoumanAhmad448"
     steps:
       - uses: actions/checkout@v3
         with:
