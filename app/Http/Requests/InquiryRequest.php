@@ -14,12 +14,21 @@ class InquiryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
+            'email' => 'nullable|string',
             'note' => 'nullable|string',
             'status' => 'required|in:pending,resolved,other',
-            'course_id' => 'nullable|exists:crm_courses,id',
+            'course_id' => 'required|exists:crm_courses,id',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        $email = $this->input('email');
+
+        $this->merge([
+            'email' => is_string($email) && trim($email) === '' ? null : $email,
+        ]);
     }
 }
