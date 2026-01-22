@@ -70,11 +70,6 @@
                         {{ $is_update && $inquiry?->source === 'friend' ? 'selected' : '' }}>
                         Friend
                     </option>
-
-                    <option value="other"
-                        {{ $is_update && $inquiry?->source === 'other' ? 'selected' : '' }}>
-                        Other
-                    </option>
                 </select>
             </div>
 
