@@ -3,14 +3,16 @@
         <h5> @if ($is_update) Edit Inquiry @else Create Inquiry @endif</h5>
     </div>
 
+    @include("messages")
+
     <div class="card-body">
         <form method="POST" action="@if($is_update) {{ route('inquiries.update', $inquiry?->id) }} @else {{ route('inquiries.store') }} @endif">
             @csrf
 
             <div class="form-group">
-                <label>Name <span class="text-danger">*</span></label>
+                <label>Name</label>
                 <input type="text" name="name" class="form-control"
-                       value="@if($is_update) {{ $inquiry->name }} @else {{ old('name') }} @endif" required>
+                       value="@if($is_update){{ $inquiry->name }}@else{{ old('name') }}@endif">
             </div>
 
             <div class="form-group">
@@ -22,7 +24,7 @@
             <div class="form-group">
                 <label>Email</label>
                 <input type="text" name="email" class="form-control"
-                       value="@if($is_update) {{ $inquiry->email }} @else {{ old('email') }} @endif">
+                       value="@if($is_update){{$inquiry->email}}@else{{old('email')}}@endif">
             </div>
 
             <div class="form-group">
@@ -39,11 +41,40 @@
             </div>
 
             <div class="form-group">
-                <label>Status</label>
+                <label>Source  <span class="text-danger">*</span></label>
                 <select name="status" class="form-control">
                     <option value="pending" {{ $is_update && $inquiry?->status == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="resolved" {{ $is_update && $inquiry?->status == 'resolved' ? 'selected' : '' }}>Resolved</option>
                     <option value="other" {{ $is_update && $inquiry?->status == 'other' ? 'selected' : '' }}>Other</option>
+                     <option value="facebook"
+                        {{ $is_update && $inquiry?->source === 'facebook' ? 'selected' : '' }}>
+                        Facebook
+                    </option>
+
+                    <option value="instagram"
+                        {{ $is_update && $inquiry?->source === 'instagram' ? 'selected' : '' }}>
+                        Instagram
+                    </option>
+
+                    <option value="linkedin"
+                        {{ $is_update && $inquiry?->source === 'linkedin' ? 'selected' : '' }}>
+                        LinkedIn
+                    </option>
+
+                    <option value="whatsapp"
+                        {{ $is_update && $inquiry?->source === 'whatsapp' ? 'selected' : '' }}>
+                        WhatsApp
+                    </option>
+
+                    <option value="friend"
+                        {{ $is_update && $inquiry?->source === 'friend' ? 'selected' : '' }}>
+                        Friend
+                    </option>
+
+                    <option value="other"
+                        {{ $is_update && $inquiry?->source === 'other' ? 'selected' : '' }}>
+                        Other
+                    </option>
                 </select>
             </div>
 
@@ -51,11 +82,11 @@
                 <label>Note</label>
                 <textarea name="note" class="form-control" rows="4">@if($is_update) {{ $inquiry->note }} @else {{ old('note') }} @endif</textarea>
             </div>
-            @if($is_update == false || $is_update && auth()->user()->is_admin)
+            {{-- @if($is_update == false) --}}
                 <button type="submit" class="btn btn-success">
                     @if($is_update) Update @else Save @endif Inquiry
                 </button>
-            @endif
+            {{-- @endif --}}
         </form>
     </div>
 </div>

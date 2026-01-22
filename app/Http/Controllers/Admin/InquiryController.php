@@ -7,7 +7,9 @@ use App\Http\Requests\InquiryRequest;
 use App\Models\Course;
 use App\Models\Inquiry;
 use App\Models\InquiryLog;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class InquiryController extends Controller
 {
@@ -26,14 +28,21 @@ class InquiryController extends Controller
 
     public function store(InquiryRequest $request)
     {
-        Inquiry::create(array_merge(
-            $request->validated(),
-            ['created_by' => Auth::id()]
-        ));
+        try {
+            Inquiry::create(array_merge(
+                $request->validated(),
+                ['created_by' => Auth::id()]
+            ));
 
-        debug_logs('Inquiry created', $request->all());
+            debug_logs('Inquiry created', $request->all());
 
-        return redirect()->route('inquiries.index');
+            return redirect()->route('inquiries.index')->with('success', "Saved...");;
+        } catch (Exception $e) {
+            // dd($e->getMessage());
+            return redirect()
+                ->route('inquiries.index')
+                ->with('error', $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -46,17 +55,25 @@ class InquiryController extends Controller
 
     public function update(InquiryRequest $request, $id)
     {
-        $inquiry = Inquiry::findOrFail($id);
+        try {
+            $inquiry = Inquiry::findOrFail($id);
 
-        $inquiry->update(array_merge(
-            $request->validated(),
-            ['updated_by' => Auth::id()]
-        ));
+            $inquiry->update(array_merge(
+                $request->validated(),
+                ['updated_by' => Auth::id()]
+            ));
 
-        debug_logs('Inquiry updated', $request->all());
+            debug_logs('Inquiry updated', $request->all());
 
-        return redirect()->route('inquiries.index');
+            return redirect()->route('inquiries.index')->with('success', "Updated...");;
+        } catch (Exception $e) {
+            // dd($e->getMessage());
+            return redirect()
+                ->route('inquiries.index')
+                ->with('error', $e->getMessage());
+        }
     }
+
 
     public function delete($id)
     {
@@ -70,11 +87,11 @@ class InquiryController extends Controller
         return back();
     }
     public function logs($id)
-{
-    $logs = InquiryLog::where('inquiry_id', $id)
-        ->orderBy('id', 'desc')
-        ->get();
+    {
+        $logs = InquiryLog::where('inquiry_id', $id)
+            ->orderBy('id', 'desc')
+            ->get();
 
-    return view('admin.inquiries.logs', compact('logs', 'id'));
-}
+        return view('admin.inquiries.logs', compact('logs', 'id'));
+    }
 }

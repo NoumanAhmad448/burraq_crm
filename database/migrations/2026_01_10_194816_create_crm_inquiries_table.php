@@ -15,12 +15,17 @@ return new class extends Migration
     {
         Schema::create('crm_inquiries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('email')->nullable();
             $table->unsignedBigInteger('course_id');
             $table->text('note')->nullable();
-            $table->enum('status', ['pending', 'resolved', 'other'])->default('pending');
+            $table->enum('status', ['pending', 'resolved', 'other',
+            'facebook', 
+            'instagram', 
+            'linkedin', 
+            'whatsapp', 
+            'friend'])->default('pending');
 
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
