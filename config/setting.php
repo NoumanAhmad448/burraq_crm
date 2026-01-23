@@ -97,7 +97,9 @@ $site_settings = [
         ],
         "en_showing_vid_val" => false,
         "student_emails" => [
-                'usmansaleem195@gmail.com',
+                "usmansaleem195@gmail.com",
+                "burraq.engineering@gmail.com",
+                "burraqadmission@gmail.com"
             ]
 ];
 
