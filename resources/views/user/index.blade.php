@@ -47,13 +47,14 @@
                     <td>
                         @if(auth()->user()->is_admin && !empty($user))
                         <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
-
+                        <x-admin>
                         <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" style="display:inline">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" onclick="return confirm('Delete user?')">Delete</button>
                         </form>
-                        <a href="{{ route('hr.logs', ["user_id" => $user?->id]) }}" class="btn btn-info btn-sm">Logs</a>
+                            <a href="{{ route('hr.logs', ["user_id" => $user?->id]) }}" class="btn btn-info btn-sm">Logs</a>
+                        </x-admin>
                         @endif
                     </td>
                 </tr>

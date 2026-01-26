@@ -79,8 +79,9 @@
                             <td> <a href="{{ route('a_e_users', compact('user')) }}"> <i class="fa fa-pencil-square-o"
                                         aria-hidden="true"></i> </a> </td>
                             <td>
-                                <div class="cursor_pointer delete" link="{{ route('a_d_users', compact('user')) }}"> <i
-                                        class="fa fa-trash" aria-hidden="true"></i> </div>
+                                <x-admin>
+                                    <x-delete :route="route('a_d_users', compact('user'))" title="Delete User"/>
+                                </x-admin>
                             </td>
                         </tr>
                     @endforeach

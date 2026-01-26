@@ -41,6 +41,9 @@
 <script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.6/js/dataTables.buttons.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
 {{-- Red Alert  css/text.css must comes in the end always --}}
 <link rel="stylesheet" href="{{ asset('css/text.css') }}">
 {{-- this must comes in the end always --}}

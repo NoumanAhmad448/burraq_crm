@@ -54,18 +54,12 @@
                             >
                             Edit
                             </a>
-                            @if (!$payment->is_deleted || auth()->user()->is_admin)
+                            @if (!$payment->is_deleted && auth()->user()->is_admin)
                                 <form action="{{ route('course_payments.delete', $payment->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
-                                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                                    <x-delete :route="route('students.course.payments_logs', $student_id)" title="Payments Logs of the course"/>
                                 </form>
-
-                            <a href="{{ route('students.course.payments_logs', $student_id) }}"
-                                        class="btn btn-sm btn-secondary mt-1 ml-1"
-                                        title="Payments Logs of the course">
-                                            <i class="fa fa-credit-card"></i>
-                            </a>
                             @endif
                         </td>
                     </tr>

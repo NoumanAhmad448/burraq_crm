@@ -75,7 +75,7 @@ class EnrolledCoursePaymentController extends Controller
             );
         }
 
-        // dd($enrolledCourse);
+        // dd($request->all());
 
         $data = [
                 'paid_amount' => $data['paid_amount'],
@@ -84,6 +84,8 @@ class EnrolledCoursePaymentController extends Controller
                 'paid_at' => now(),
                 "student_id" => $data['student_id'],
                 "enrolled_course_id" => $enrolledCourse->id,
+                'payment_date' => $data["payment_date"],
+                'payment_method' => $data["payment_method"],
             ];
 
         // dd($request->payment_id);
@@ -110,6 +112,9 @@ class EnrolledCoursePaymentController extends Controller
         }
         $payment->payment_by = auth()->id();
         $payment->paid_at = now();
+
+        $payment->payment_date = $request->payment_date;
+        $payment->payment_method = $request->payment_method;
 
         $payment->save();
 
