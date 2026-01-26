@@ -18,10 +18,10 @@ class UpdatePaymentDatesSeeder extends Seeder
         $enrolledCourses = EnrolledCourse::with('payments')->get();
 
         foreach ($enrolledCourses as $course) {
-            if ($course->admission_date && $course->payments->isNotEmpty()) {
-                $paymentIds = $course->payments->pluck('id');
+            if ($course->admission_date) {
+                $paymentIds = $course->payments()->pluck('id');
                 EnrolledCoursePayment::whereIn('id', $paymentIds)
-                    ->update(['payment_date' => $course->admission_date]);
+                    ->update(['payment_date' => $course->admission_date, "payment_method" => "cash"]);
             }
         }
 

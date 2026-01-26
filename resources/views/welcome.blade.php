@@ -15,7 +15,7 @@
     [
         'title' => 'Total Students',
         'count' => $activeStudents,
-        'icon' => 'fa fa-users fa-2x',
+        'icon' => 'img/Total_Studenet.png',
         'amount_color' => 'success',
         'route' => 'students.index',
     ],
@@ -23,7 +23,7 @@
     [
         'title' => 'Students (This Month)',
         'count' => $studentsThisMonth->sum('total'),
-        'icon' => 'fa fa-users',
+        'icon' => 'img/fa-fa-users.png',
         'bg' => 'bg-primary',
         'amount_color' => 'purple',
         'route' => 'students.index',
@@ -32,7 +32,7 @@
     [
         'title' => 'Total Overdue Students',
         'count' => $totalOverdue_count,
-        'icon' => 'fa fa-users',
+        'icon' => 'img/fa-fa-users_o.png',
         'bg' => 'bg-danger',
         'amount_color' => 'purple',
         'route' => 'students.index',
@@ -42,7 +42,7 @@
     [
         'title' => 'Total Pending Students',
         'count' => $totalUnpaid_count,
-        'icon' => 'fa fa-users',
+        'icon' => 'img/fa-fa-users-u.png',
         'bg' => 'bg-primary',
         'amount_color' => 'success',
         'route' => 'students.index',
@@ -51,7 +51,7 @@
     [
         'title' => 'Total Payments (This Month)',
         'count' => show_payment($paymentsThisMonth),
-        'icon' => 'fa fa-money',
+        'icon' => 'img/fa-fa-money.png',
         'bg' => 'bg-success',
         'amount_color' => 'success',
         'route' => null,
@@ -61,7 +61,7 @@
     [
         'title' => 'Paid Payments (This Month)',
         'count' => show_payment($totalPaid_m),
-        'icon' => 'fa fa-money',
+        'icon' => 'img/fa-fa-money10.png',
         'bg' => 'bg-success',
         'amount_color' => 'success',
         'route' => null,
@@ -71,7 +71,7 @@
     [
         'title' => 'Pending Payments (This Month)',
         'count' => show_payment($pendingThisMonth),
-        'icon' => 'fa fa-money',
+        'icon' => 'img/fa-fa-money2.png',
         'bg' => 'bg-success',
         'amount_color' => 'orange',
         'route' => null,
@@ -81,7 +81,7 @@
     [
         'title' => 'Overdue Payments (This Month)',
         'count' => show_payment($dueThisMonth),
-        'icon' => 'fa fa-money',
+        'icon' => 'img/fa-fa-money3.png',
         'bg' => 'bg-success',
         'amount_color' => 'danger',
         'route' => null,
@@ -91,7 +91,7 @@
     [
         'title' => 'Total Income',
         'count' => show_payment($total_income),
-        'icon' => 'fa fa-check-circle',
+        'icon' => 'img/fa-fa-check-circle.png',
         'bg' => 'bg-info',
         'amount_color' => 'success',
         'route' => 'students.index',
@@ -101,7 +101,7 @@
     [
         'title' => 'Total Payment',
         'count' => show_payment($totalPaid_g),
-        'icon' => 'fa fa-check-circle',
+        'icon' => 'img/fa-fa-check-circle1.png',
         'bg' => 'bg-success',
         'amount_color' => 'success',
         'route' => 'students.index',
@@ -111,7 +111,7 @@
     [
         'title' => 'Total Paid Payment',
         'count' => show_payment($totalPaid),
-        'icon' => 'fa fa-check-circle',
+        'icon' => 'img/fa-fa-check-circle2.png',
         'bg' => 'bg-info',
         'amount_color' => 'success',
         'route' => 'students.index',
@@ -122,7 +122,7 @@
     [
         'title' => 'Total Pending Payment',
         'count' => show_payment($totalUnpaid),
-        'icon' => 'fa fa-thumbs-up fa-2x',
+        'icon' => 'img/fa-fa-thumbs-up.png',
         'bg' => 'bg-info',
         'amount_color' => 'orange',
         'route' => 'students.index',
@@ -133,7 +133,7 @@
     [
         'title' => 'Total Overdue Payments',
         'count' => show_payment($totalOverdue),
-        'icon' => 'fa fa-check-circle',
+        'icon' => 'img/fa-fa-check-circle.png',
         'bg' => 'bg-info',
         'amount_color' => 'danger',
         'route' => 'students.index',
@@ -144,7 +144,7 @@
     [
         'title' => 'Certificate',
         'count' => $cert_count,
-        'icon' => 'fa fa-thumbs-up fa-2x',
+        'icon' => 'img/fa-fa-thumbs-up fa-2x.png',
         'bg' => 'bg-info',
         'amount_color' => 'primary',
         'route' => 'certificates.index',
@@ -213,7 +213,7 @@
             <div class="card shadow-sm stat-card">
                 <div class="card-body d-flex align-items-center">
                     <div class="icon-wrapper me-3">
-                        <i class="{{ $data['icon'] }}"></i>
+                        <img src="{{ asset($data['icon']) }}" class="img_fluid" width="40px"></i>
                     </div>
                     <div class="pl-1">
                         <h6 class="text-uppercase text-muted small mb-1">
