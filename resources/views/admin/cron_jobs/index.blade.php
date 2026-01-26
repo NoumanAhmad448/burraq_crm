@@ -26,7 +26,7 @@
                     <td>{{ $job->name }}</td>
                     <td>{{ $job->w_name }}</td>
                     <td>
-                        @if($job->status === 'success')
+                        @if($job->status === 'successed')
                             <span class="badge badge-success">Success</span>
                         @else
                             <span class="badge badge-danger">Failed</span>

@@ -50,7 +50,7 @@ class CheckUrlAccessibility extends Command
             Storage::disk('s3')->getAdapter();
             // ✅ SUCCESS
             $cron_job->update([
-                config('table.status')     => config('constants.success'),
+                config('table.status')     => config('constants.successed'),
                 config('table.ends_at')    => LyskillsCarbon::now(),
                 config('table.message')    => 'S3 connection successful'
             ]);
