@@ -70,6 +70,21 @@
                         {{ $is_update && $inquiry?->source === 'friend' ? 'selected' : '' }}>
                         Friend
                     </option>
+                    <option value="contacted"
+                        {{ $is_update && $inquiry?->status === 'contacted' ? 'selected' : '' }}>
+                        Contacted
+                    </option>
+
+                    <option value="follow_up"
+                        {{ $is_update && $inquiry?->status === 'follow_up' ? 'selected' : '' }}>
+                        Follow Up
+                    </option>
+
+                    <option value="not_interested"
+                        {{ $is_update && $inquiry?->status === 'not_interested' ? 'selected' : '' }}>
+                        Not Interested
+                    </option>
+
                 </select>
             </div>
 

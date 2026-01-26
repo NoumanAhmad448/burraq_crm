@@ -24,6 +24,12 @@ $menuGroups = [
                 'route' => route('inquiries.index'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
+            // [
+            //     'title' => 'Inquiries Dashboard',
+            //     'icon'  => 'fa-question-circle',
+            //     'route' => route('admin.inquiry.dashboard'),
+            //     'access_roles' => ['admin', 'hr', 'admission_officer'],
+            // ],
         ],
     ],
 
