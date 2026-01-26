@@ -53,7 +53,6 @@ class StudentController extends Controller
                 ->whereHas('student', function ($query) {
                     $query->where('is_deleted', 0);
                 })            ->where('is_deleted', 0)
-
                 ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
