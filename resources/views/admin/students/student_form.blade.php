@@ -32,14 +32,14 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label>Father Name *</label>
-                    <input type="text" name="father_name" class="form-control" required placeholder="Father Name (Mandatory)"
+                    <label>Father Name</label>
+                    <input type="text" name="father_name" class="form-control" required placeholder="Father Name"
                         value="@if($is_update) {{ $student->father_name }}@else{{ old('father_name')}}@endif">
                 </div>
 
                 <div class="col-md-4">
-                    <label>CNIC *</label>
-                    <input type="text" name="cnic" class="form-control" placeholder="CNIC (Mandatory)"
+                    <label>CNIC</label>
+                    <input type="text" name="cnic" class="form-control" placeholder="CNIC"
                         value="@if($is_update) {{ $student->cnic }}@else{{ old('cnic')}}@endif">
                 </div>
 
@@ -50,8 +50,8 @@
                 </div>
 
                 <div class="col-md-4 mt-2">
-                    <label>Email*</label>
-                    <input type="email" name="email" class="form-control" placeholder="Email Address (Mandatory)"
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="Email Address"
                         value="@if($is_update) {{ $student->email }}@else{{ old('email')}}@endif">
                 </div>
 
