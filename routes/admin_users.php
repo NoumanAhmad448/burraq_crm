@@ -14,5 +14,5 @@ $route->group(function () {
     Route::post(
         'block-user/{user}',
         [UserController::class, 'blockUser']
-    )->name('admin.user.update');
+    )->name('admin.user.updated');
 });
