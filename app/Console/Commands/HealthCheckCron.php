@@ -48,8 +48,9 @@ class HealthCheckCron extends Command
 
             // If success, update cron table
             $cron_job->update([
-                config('table.status') => config('constants.completed'),
-                'last_run_at' => LyskillsCarbon::now(),
+                config('table.status')     => config('constants.successed'),
+                config('table.ends_at')    => LyskillsCarbon::now(),
+                config('table.message')    => 'Health Laravel is normal'
             ]);
 
             $this->info("Health check ran successfully and cron updated.");
@@ -57,9 +58,9 @@ class HealthCheckCron extends Command
         } catch (Exception $e) {
             // If error, mark cron as failed
             $cron_job->update([
-                config('table.status') => config('constants.failed'),
-                'last_run_at' => LyskillsCarbon::now(),
-                'error_message' => $e->getMessage(),
+                config('table.status') => config('constants.error'),
+                config('table.message') => $e->getMessage(),
+                config('table.ends_at') => LyskillsCarbon::now(),
             ]);
 
             $this->error("Health check failed: " . $e->getMessage());
