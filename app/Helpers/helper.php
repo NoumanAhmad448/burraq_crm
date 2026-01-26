@@ -235,9 +235,9 @@ if (!function_exists('server_logs')) {
         ) {
 
         if(is_array($e) && count($e) > 1){
-        Log::channel("slack")->error("Exception caught: " . $e[1]->getMessage(),[
-            "exception" => $e[1]
-        ]);
+        // Log::channel("slack")->error("Exception caught: " . $e[1]->getMessage(),[
+        //     "exception" => $e[1]
+        // ]);
 
         if (config("app.debug")) {
             if (count($e) > 1 && $e[0]) {

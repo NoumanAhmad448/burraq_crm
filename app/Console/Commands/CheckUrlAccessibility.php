@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use App\Models\CronJobs;
 use App\Classes\LyskillsCarbon;
+use Illuminate\Support\Facades\Storage;
 
 class CheckUrlAccessibility extends Command
 {
@@ -42,44 +43,26 @@ class CheckUrlAccessibility extends Command
             ]
         );
         // Define the URLs to check
-        $urls = [
-            'image' => config('setting.s3Url') . 'storage/img/174074848467c1b6c407fc0Ly-skills-Web-Page-1.jpg',
-            'video' => config('setting.s3Url') . 'uploads/ZwVFzN6Pntp2uqlgUjXgmO7yo5UEX3GHeovZbCX3.mp4'
-        ];
 
         // Check each URL
-        foreach ($urls as $type => $url) {
-            $this->info("Checking {$type} URL: {$url}");
 
-            try {
-                // Send a HEAD request to check the status code
-                $response = Http::head($url);
+        try {
+            Storage::disk('s3')->getAdapter();
+            // ✅ SUCCESS
+            $cron_job->update([
+                config('table.status')     => config('constants.success'),
+                config('table.ends_at')    => LyskillsCarbon::now(),
+                config('table.message')    => 'S3 connection successful'
+            ]);
 
-                if ($response->successful()) {
-                    $this->info("✅ {$type} URL is accessible. Status code: " . $response->status());
-                    $cron_job->update([
-                        config('table.status') => config('constants.successed'),
-                        config('table.ends_at') => LyskillsCarbon::now(),
-                    ]);
-                    return 0; // Command executed successfully
-                } else {
-                    $msg = __("error.slack_err_msg", ['type' => $type, "msg" => $response->status()]);
-                    throw_exception($msg);
-                    $cron_job->update([
-                        config('table.status') => config('constants.error'),
-                        config('table.message') => $msg,
-                        config('table.ends_at') => LyskillsCarbon::now(),
-                    ]);
-                    $this->error($msg);
-                }
-            } catch (\Exception $e) {
-                $this->error(__("error.slack_err_msg", ['type' => $type, "msg" => $e->getMessage()]));
-                $cron_job->update([
-                    config('table.status') => config('constants.error'),
-                    config('table.message') => $e->getMessage(),
-                    config('table.ends_at') => LyskillsCarbon::now(),
-                ]);
-            }
+            $this->info('S3 connection OK');
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            $cron_job->update([
+                config('table.status') => config('constants.error'),
+                config('table.message') => $e->getMessage(),
+                config('table.ends_at') => LyskillsCarbon::now(),
+            ]);
         }
     }
 }
