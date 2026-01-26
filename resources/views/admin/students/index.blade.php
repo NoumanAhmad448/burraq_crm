@@ -158,7 +158,7 @@
                                             </a>
                                         @endif
 
-                                        @if (auth()->user()->is_admin)
+                                        <x-admin>
                                             <a href="{{ route('students.logs', $course->student->id) }}"
                                             class="btn btn-sm btn-primary mt-1 ml-1"
                                             title="View Student Logs">
@@ -171,13 +171,9 @@
                                                 <i class="fa fa-credit-card"></i>
                                             </a>
 
-                                            <a href="{{ route('students.delete', $course->student->id) }}"
-                                            class="ml-1 btn btn-sm btn-danger mt-1"
-                                            title="Delete the student permanently"
-                                            onclick="return confirm('Are you sure?')">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
+                                            <x-delete :route="route('students.delete', $course->student->id)"
+                                                title="Delete the student permanently"/>
+                                        </x-admin>
                                     </div>
                                 </td>
 

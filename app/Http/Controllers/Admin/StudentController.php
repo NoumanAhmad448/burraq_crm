@@ -205,7 +205,7 @@ class StudentController extends Controller
 
 
             // dd($student);
-            // dd($request->courses);
+            // dd($request);
             /* ---------- ENROLL COURSES ---------- */
             $this->updateEnrolledCourses($request, $student);
 
@@ -317,6 +317,7 @@ class StudentController extends Controller
                             'total_fee'  => $courseData['total_fee'],
                             'admission_date' => $courseData['admission_date'],
                             'due_date' => $courseData['due_date'],
+
                         ]);
                     }
 
@@ -332,6 +333,8 @@ class StudentController extends Controller
                                     'paid_at' => now(),
                                     'payment_by' => auth()->user()->id,
                                     'payment_slip_path'  => $student->payment_slip_path,
+                                    'payment_date' => $request->payment_date,
+                                    'payment_method' => $request->payment_method,
                                 ]
                             );
                         } else {
@@ -341,6 +344,8 @@ class StudentController extends Controller
                                 'paid_at'            => LyskillsCarbon::now(),
                                 'payment_by'         => auth()->user()->id,
                                 'payment_slip_path'  => $student->payment_slip_path,
+                                'payment_date' => $request->payment_date,
+                                'payment_method' => $request->payment_method,
 
                             ]);
                         }

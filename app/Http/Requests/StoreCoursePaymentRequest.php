@@ -17,7 +17,9 @@ class StoreCoursePaymentRequest extends FormRequest
             'student_id' => 'required|exists:crm_students,id',
             'enrolled_course_id' => 'nullable|exists:crm_enrolled_courses,id',
             'paid_amount' => 'required|numeric|min:1',
-            'payment_slip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+            'payment_slip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'payment_method' => 'nullable',
+            'payment_date' => 'nullable',
         ];
     }
 }

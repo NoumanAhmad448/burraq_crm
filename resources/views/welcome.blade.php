@@ -10,174 +10,151 @@
 @section('content')
     @php
 
-        $info = [
-            // [
-            //     'title' => 'Total Students',
-            //     'count' => $totalStudents,
-            //     'icon' => 'fa fa-users fa-2x',
-            //     'amount_color' => 'primary',      // cyan   (informational)
+       $info = [
 
-            //     'route' => 'students.index',
-            // ],
-            [
-                'title' => 'Total Students',
-                'count' => $activeStudents,
-                'icon' => 'fa fa-users fa-2x',
-                'amount_color' => 'success',      // cyan   (informational)
-                'route' => 'students.index',
-            ],
-            // [
-            //     'title' => 'Total Courses',
-            //     'count' => $totalCourses,
-            //     'icon' => 'fa fa-graduation-cap fa-2x',
-            //     'amount_color' => 'danger',      // cyan   (informational)
+    [
+        'title' => 'Total Students',
+        'count' => $activeStudents,
+        'icon' => 'fa fa-users fa-2x',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+    ],
 
-            //     'route' => 'courses.index',
-            // ],
-            // [
-            //     'title' => 'Active Courses',
-            //     'count' => $activeCourses,
-            //     'icon' => 'fa fa-thumbs-up fa-2x',
-            //     'amount_color' => 'purple',      // cyan   (informational)
+    [
+        'title' => 'Students (This Month)',
+        'count' => $studentsThisMonth->sum('total'),
+        'icon' => 'fa fa-users',
+        'bg' => 'bg-primary',
+        'amount_color' => 'purple',
+        'route' => 'students.index',
+    ],
 
-            //     'route' => 'courses.index',
-            // ],
-            // [
-            //     'title' => 'Active Enrolled Students',
-            //     'count' => $activeEnrolledStudents,
-            //     'icon' => 'fa fa-check-circle fa-2x',
-            //     'amount_color' => 'info',      // cyan   (informational)
+    [
+        'title' => 'Total Overdue Students',
+        'count' => $totalOverdue_count,
+        'icon' => 'fa fa-users',
+        'bg' => 'bg-danger',
+        'amount_color' => 'purple',
+        'route' => 'students.index',
+        'route_keys' => ['type' => 'overdue'],
+    ],
 
-            //     'route' => 'students.index',
-            // ],
-            [
-                'title' => 'Students (This Month)',
-                'count' => $studentsThisMonth->sum('total'),
-                'icon' => 'fa fa-users',
-                'bg' => 'bg-primary',
-                'amount_color' => 'purple',      // cyan   (informational)
+    [
+        'title' => 'Total Pending Students',
+        'count' => $totalUnpaid_count,
+        'icon' => 'fa fa-users',
+        'bg' => 'bg-primary',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+        'route_keys' => ['type' => 'unpaid'],
+    ],
+    [
+        'title' => 'Total Payments (This Month)',
+        'count' => show_payment($paymentsThisMonth),
+        'icon' => 'fa fa-money',
+        'bg' => 'bg-success',
+        'amount_color' => 'success',
+        'route' => null,
+        'roles' => ['admin'],
+    ],
 
-                'route' => 'students.index',
-            ],
-            [
-                'title' => 'Total Overdue Students',
-                'count' => $totalOverdue_count,
-                'icon' => 'fa fa-users',
-                'bg' => 'bg-danger',
-                'amount_color' => 'purple',      // cyan   (informational)
-                "route_keys" => ["type" => "overdue"],
-                'route' => 'students.index',
-            ],
-            [
-                'title' => 'Total Pending Students',
-                'count' => $totalUnpaid_count,
-                'icon' => 'fa fa-users',
-                'bg' => 'bg-primary',
-                'amount_color' => 'success',      // cyan   (informational)
-                "route_keys" => ["type" => "unpaid"],
-                'route' => 'students.index',
-            ],
-            [
-                'title' => 'Total Payments (This Month)',
-                'count' => show_payment($paymentsThisMonth),
-                'icon' => 'fa fa-money',
-                'bg' => 'bg-success',
-                'amount_color' => 'success',      // cyan   (informational)
+    [
+        'title' => 'Paid Payments (This Month)',
+        'count' => show_payment($totalPaid_m),
+        'icon' => 'fa fa-money',
+        'bg' => 'bg-success',
+        'amount_color' => 'success',
+        'route' => null,
+        'roles' => ['admin'],
+    ],
 
-                'route' => null,
-            ],
-            [
-                'title' => 'Paid Payments (This Month)',
-                'count' => show_payment($totalPaid_m),
-                'icon' => 'fa fa-money',
-                'bg' => 'bg-success',
-                'amount_color' => 'success',      // cyan   (informational)
+    [
+        'title' => 'Pending Payments (This Month)',
+        'count' => show_payment($pendingThisMonth),
+        'icon' => 'fa fa-money',
+        'bg' => 'bg-success',
+        'amount_color' => 'orange',
+        'route' => null,
+        'roles' => ['admin'],
+    ],
 
-                'route' => null,
-            ],
-            [
-                'title' => 'Pending Payments (This Month)',
-                'count' => show_payment($pendingThisMonth),
-                'icon' => 'fa fa-money',
-                'bg' => 'bg-success',
-                'amount_color' => 'orange',      // cyan   (informational)
-                'route' => null,
-            ],
-            [
-                'title' => 'Overdue Payments (This Month)',
-                'count' => show_payment($dueThisMonth),
-                'icon' => 'fa fa-money',
-                'bg' => 'bg-success',
-                'amount_color' => 'danger',      // cyan   (informational)
-                'route' => null,
-            ],
-            [
-                'title' => 'Total Income',
-                'count' => show_payment($total_income),
-                'icon' => 'fa fa-check-circle',
-                'bg' => 'bg-info',
-                'route' => 'students.index',
-                'amount_color' => 'success',      // cyan   (informational)
-            ],
-            [
-                'title' => 'Total Payment',
-                'count' => show_payment($totalPaid_g),
-                'icon' => 'fa fa-check-circle',
-                'bg' => 'bg-success',
-                'route' => 'students.index',
-                'amount_color' => 'success',      // cyan   (informational)
-            ],
-            [
-                'title' => 'Total Paid Payment',
-                'count' => show_payment($totalPaid),
-                'icon' => 'fa fa-check-circle',
-                'bg' => 'bg-info',
-                'route' => 'students.index',
-                'amount_color' => 'success',      // cyan   (informational)
-                "route_keys" => ["type" => "paid"]
-            ],
-            [
-                'title' => 'Total Pending Payment',
-                'count' => show_payment($totalUnpaid),
-                'icon' => 'fa fa-thumbs-up fa-2x',
-                'bg' => 'bg-info',
-                'route' => 'students.index',
-                'amount_color' => 'orange',      // cyan   (informational)
+    [
+        'title' => 'Overdue Payments (This Month)',
+        'count' => show_payment($dueThisMonth),
+        'icon' => 'fa fa-money',
+        'bg' => 'bg-success',
+        'amount_color' => 'danger',
+        'route' => null,
+        'roles' => ['admin'],
+    ],
 
-                "route_keys" => ["type" => "unpaid"]
-            ],
-            [
-                'title' => 'Total Overdue Payments',
-                'count' => show_payment($totalOverdue),
-                'icon' => 'fa fa-check-circle',
-                'bg' => 'bg-info',
-                'route' => 'students.index',
-                'amount_color' => 'danger',   // blue   (neutral totals)
+    [
+        'title' => 'Total Income',
+        'count' => show_payment($total_income),
+        'icon' => 'fa fa-check-circle',
+        'bg' => 'bg-info',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+        'roles' => ['admin'],
+    ],
 
-                "route_keys" => ["type" => "overdue"]
-            ],
-            [
-                'title' => 'Certificate',
-                'count' => $cert_count,
-                'icon' => 'fa fa-thumbs-up fa-2x',
-                'bg' => 'bg-info',
-                'route' => 'certificates.index',
-                'amount_color' => 'primary',    // red    (overdue / pending)
-            ],
-            // [
-            //     'title' => 'Pending Amount',
-            //     'count' => show_payment($pending),
-            //     'icon' => 'fa fa-exclamation-circle',
-            //     'bg' => 'bg-danger',
-            //     'route' => null,
-            //     'amount_color' => 'success',   // green  (paid / positive)
+    [
+        'title' => 'Total Payment',
+        'count' => show_payment($totalPaid_g),
+        'icon' => 'fa fa-check-circle',
+        'bg' => 'bg-success',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+        'roles' => ['admin'],
+    ],
 
-            // ],
-        ];
+    [
+        'title' => 'Total Paid Payment',
+        'count' => show_payment($totalPaid),
+        'icon' => 'fa fa-check-circle',
+        'bg' => 'bg-info',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+        'route_keys' => ['type' => 'paid'],
+        'roles' => ['admin'],
+    ],
+
+    [
+        'title' => 'Total Pending Payment',
+        'count' => show_payment($totalUnpaid),
+        'icon' => 'fa fa-thumbs-up fa-2x',
+        'bg' => 'bg-info',
+        'amount_color' => 'orange',
+        'route' => 'students.index',
+        'route_keys' => ['type' => 'unpaid'],
+        'roles' => ['admin'],
+    ],
+
+    [
+        'title' => 'Total Overdue Payments',
+        'count' => show_payment($totalOverdue),
+        'icon' => 'fa fa-check-circle',
+        'bg' => 'bg-info',
+        'amount_color' => 'danger',
+        'route' => 'students.index',
+        'route_keys' => ['type' => 'overdue'],
+        'roles' => ['admin'],
+    ],
+
+    [
+        'title' => 'Certificate',
+        'count' => $cert_count,
+        'icon' => 'fa fa-thumbs-up fa-2x',
+        'bg' => 'bg-info',
+        'amount_color' => 'primary',
+        'route' => 'certificates.index',
+        'roles' => ['admin'],
+    ],
+];
+
 
     @endphp
 
-<x-admin>
 <!-- Toggle Button Top-Right -->
 <!-- Toggle Button Top-Right -->
 <div class="d-flex justify-content-end mb-2">
@@ -216,10 +193,17 @@
 </form>
 
 
-
-
 <div class="row g-3 p-1">
     @foreach ($info as $data)
+            @php
+            $allowed =
+                empty($data['roles'])
+                || in_array(auth()->user()->role, $data['roles'])
+                || auth()->user()->is_admin;
+
+        @endphp
+
+        @if($allowed)
         <div class="col-xl-3 col-md-4 col-sm-6 my-2" data-aos="fade-up">
 
             @if (!empty($data['route']) && $data['route'] != null)
@@ -247,8 +231,10 @@
             @endif
 
         </div>
+        @endif
     @endforeach
 </div>
+<x-admin>
 <div class="row justify-content-center mb-3">
     <div class="col-md-5 d-flex align-items-center justify-content-center">
         <div class="card w-100">
@@ -284,7 +270,6 @@
         </div>
     </div>
 </div>
-
 </x-admin>
 @endsection
 @section('page-js')
@@ -341,16 +326,23 @@
             }
         });
 
+        const paymentLinks = {
+            paid: "{{ route('students.index', ['type' => 'paid']) }}",
+            unpaid: "{{ route('students.index', ['type' => 'unpaid']) }}",
+            overdue: "{{ route('students.index', ['type' => 'overdue']) }}"
+        };
+
         //* ---------- Paid vs Pending ---------- */
         new Chart(document.getElementById('paymentStatusChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Paid', 'Pending'],
+                labels: ['Paid', 'Pending', 'Overdue'],
                 datasets: [{
-                    data: [{{ $totalPaid_g }}, {{ $pending }}],
+                    data: [{{ $totalPaid_g }}, {{ $pending }}, {{ $totalOverdue }}],
                     backgroundColor: [
                         '#0d6efd', // Paid (Blue)
-                        '#dc3545' // Pending (Red)
+                        '#dc3545', // Pending (Red)
+                        '#000000' // Pending (Red)
                     ],
                     borderColor: '#ffffff',
                     borderWidth: 2
@@ -360,6 +352,19 @@
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    }
+                },
+                responsive: true,
+                onClick: function (evt, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        label = this.data.labels[index].toLowerCase();
+                        if(label == "pending"){
+                            label="unpaid"
+                        }
+                        if (paymentLinks[label]) {
+                            window.location.href = paymentLinks[label];
+                        }
                     }
                 }
             }

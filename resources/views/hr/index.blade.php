@@ -59,11 +59,8 @@
                                     <a href="{{ route('hr.logs') }}?user_id={{ $hr->id }}" class="btn btn-sm btn-secondary" title="View Logs">
                                         <i class="fa fa-history"></i>
                                     </a>
-                                    <a href="{{ route('hr.destroy', $hr->id) }}" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure you want to delete this HR?')"
-                                        title="Delete">
-                                    <i class="fa fa-trash"></i>
-                                    </a>
+                                    <x-delete :route="route('hr.destroy', $hr->id)" title="Delete HR"/>
+
                                     @endif
 
                                 </td>

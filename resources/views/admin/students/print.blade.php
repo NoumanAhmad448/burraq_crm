@@ -6,6 +6,54 @@
     <title>Student Enrollment & Fee Record</title>
 
     <style>
+        .pdf-header {
+            background-color: #0d47a1;
+            /* deep professional blue */
+            color: #ffffff;
+            padding: 20px 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .pdf-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        /* Line before and after heading */
+        .pdf-header h2::before,
+        .pdf-header h2::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 100vw;
+            /* stretch to page edge */
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .pdf-header h2::before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        .pdf-header h2::after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
+        .pdf-header .date {
+            margin-top: 6px;
+            font-size: 11px;
+            opacity: 0.85;
+        }
+
         .logo {
             display: block;
             margin: 0 auto;
@@ -36,7 +84,7 @@
         }
 
         .section-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             border-bottom: 1px solid #ccc;
             margin-bottom: 10px;
@@ -82,6 +130,76 @@
             color: #777;
         }
     </style>
+
+    <style>
+        .bg{
+        background-color: #0d47a1; /* deep professional blue */
+        color: #ffffff;
+        width: 199px;
+        padding-left: 10px;
+        }
+        .color{
+        color: #0d47a1;
+        width: 199px;
+        padding-left: 10px;
+        }
+        .pdf-header {
+        background-color: #0d47a1; /* deep professional blue */
+        color: #ffffff;
+        padding: 20px 30px;
+        text-align: center;
+        margin-bottom: 20px;
+        }
+
+        .pdf-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        /* Line before and after heading */
+        .pdf-header h2::before,
+        .pdf-header h2::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 100vw;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .pdf-header h2::before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        .pdf-header h2::after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
+        .pdf-header .date {
+            margin-top: 6px;
+            font-size: 11px;
+            opacity: 0.85;
+            display: inline-block;
+        }
+
+    </style>
+    <style>
+        /* Date styling below header */
+        .pdf-date {
+            text-align: center;
+            font-size: 12px;
+            color: #000000;
+            margin-top: 10px; /* space below header */
+        }
+    </style>
 </head>
 
 <body>
@@ -89,21 +207,20 @@
     <div class="container">
 
         <!-- HEADER -->
-        <div class="header">
-            <h2>Burraq CRM - Fee Receipt</h2>
-            <p class="text-muted"> {{ now() }}</p>
+        <!-- HEADER -->
+        <div class="pdf-header">
+            <h2>BURRAQ CRM - FEE RECEIPT</h2>
         </div>
-        <hr />
 
-        {{-- <img
-    src="{{ asset(config('setting.img_logo_path')) }}"
-    alt="lyskills"
-    class="logo"
-    width="40" /> --}}
-
+        <p class="pdf-date">
+            Receipt# BES-{{ 3000 + (int) $student->id }}
+        </p>
+        <p class="pdf-date">
+            Generated at {{ now()->format('d M Y') }}
+        </p>
         <!-- STUDENT INFORMATION -->
         <div class="section">
-            <div class="section-title">Student Information</div>
+            <div class="section-title bg">Student Information</div>
 
             <table>
                 {{-- <tr>
@@ -111,11 +228,11 @@
                 <td>{{ $student->id }}</td>
             </tr> --}}
                 <tr>
-                    <th>Name</th>
+                    <th class="">Name</th>
                     <td>{{ $student->name }}</td>
                 </tr>
                 <tr>
-                    <th>Father Name</th>
+                    <th class="">Father Name</th>
                     <td>{{ $student->father_name }}</td>
                 </tr>
                 {{-- <tr>
@@ -161,19 +278,20 @@
                 <p class="text-muted">No enrolled courses found.</p>
             @else
                 @foreach ($student->enrolledCourses as $index => $enrolledCourse)
-                    <h2> Course: {{ $enrolledCourse->course->name }} </h2>
+                    <h2 class="bg"> Course: {{ $enrolledCourse->course->name }} </h2>
                     <div> Total Fee: {{ show_payment($enrolledCourse->total_fee) }} </div>
                     <div> Admission Date: {{ showWebPageDate($enrolledCourse->admission_date) }} </div>
-                    @if(!empty($enrolledCourse->due_date))
+                    @if (!empty($enrolledCourse->due_date))
                         <div> Due Date: {{ showWebPageDate($enrolledCourse->due_date) }} </div>
                     @endif
-                    @if($enrolledCourse->total_fee > $enrolledCourse->payments->sum('paid_amount'))
-                    <div> Remaining Fee:
-                        <small style="color: red"> {{ show_payment(max($enrolledCourse->total_fee - $enrolledCourse->payments->sum('paid_amount'), 0)) }}
-                        </small>
-                    </div>
+                    @if ($enrolledCourse->total_fee > $enrolledCourse->payments->sum('paid_amount'))
+                        <div> Remaining Fee:
+                            <small style="color: red">
+                                {{ show_payment(max($enrolledCourse->total_fee - $enrolledCourse->payments->sum('paid_amount'), 0)) }}
+                            </small>
+                        </div>
                     @endif
-                    <h5> Payment History </h5>
+                    <h2 class="bg"> Payment History </h2>
                     <table>
                         <thead>
                             <tr>
@@ -181,6 +299,7 @@
                                 <th>Paid Amount</th>
                                 <th>Paid At</th>
                                 <th>Received By</th>
+                                <th>Received Method</th>
                             </tr>
                             </tr>
                         </thead>
@@ -188,8 +307,9 @@
                             @foreach ($enrolledCourse->payments as $payment)
                                 <tr>
                                     <td class="text-left">{{ show_payment($payment->paid_amount, 2) }}</td>
-                                    <td>{{ showWebPageDate($payment->paid_at) }}</td>
+                                    <td>{{ showWebPageDate($payment->payment_date) }}</td>
                                     <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
+                                    <td>{{ $payment->payment_method ?? 'System' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -201,6 +321,18 @@
 
         <!-- FOOTER -->
         <div class="footer">
+            <style>
+                .application-note {
+                    padding: 10px 0; /* top & bottom padding */
+                    font-size: 12px; /* optional: readable in PDF */
+                    line-height: 1.5;
+                }
+                </style>
+            <hr>
+            <p class="application-note">
+                <strong>Note:</strong> The application fee is a monetary payment to the institute and must be submitted along with the application for enrollment. Application fees are generally non-refundable, even if the application is either rejected or enrollment is cancelled.
+            </p>
+            <hr>
             Generated on {{ now()->format('d M Y, h:i A') }}
         </div>
 
