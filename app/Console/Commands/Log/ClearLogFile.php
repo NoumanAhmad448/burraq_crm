@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\File;
 class ClearLogFile extends Command {
     // Command name
     protected $signature = "log:clear {duration=7}
-                {ext='*.log'}
-    ";
+                {ext='*.log'}";
 
     // Description
     protected $description = 'Clear Laravel log';

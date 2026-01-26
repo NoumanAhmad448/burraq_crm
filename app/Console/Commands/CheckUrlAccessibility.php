@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use App\Models\CronJobs;
+use App\Classes\LyskillsCarbon;
 
 class CheckUrlAccessibility extends Command
 {
@@ -28,6 +30,17 @@ class CheckUrlAccessibility extends Command
      */
     public function handle()
     {
+        $cron_job = CronJobs::firstOrCreate(
+            [
+                config('table.name') => $this->signature
+            ],
+            [
+                config('table.name') => $this->signature,
+                config('table.status') => config('constants.idle'),
+                config('table.w_name') => config('app.url'),
+                config('table.starts_at') => LyskillsCarbon::now()
+            ]
+        );
         // Define the URLs to check
         $urls = [
             'image' => config('setting.s3Url') . 'storage/img/174074848467c1b6c407fc0Ly-skills-Web-Page-1.jpg',
@@ -44,16 +57,29 @@ class CheckUrlAccessibility extends Command
 
                 if ($response->successful()) {
                     $this->info("✅ {$type} URL is accessible. Status code: " . $response->status());
+                    $cron_job->update([
+                        config('table.status') => config('constants.successed'),
+                        config('table.ends_at') => LyskillsCarbon::now(),
+                    ]);
                     return 0; // Command executed successfully
                 } else {
                     $msg = __("error.slack_err_msg", ['type' => $type, "msg" => $response->status()]);
                     throw_exception($msg);
+                    $cron_job->update([
+                        config('table.status') => config('constants.error'),
+                        config('table.message') => $msg,
+                        config('table.ends_at') => LyskillsCarbon::now(),
+                    ]);
                     $this->error($msg);
                 }
             } catch (\Exception $e) {
                 $this->error(__("error.slack_err_msg", ['type' => $type, "msg" => $e->getMessage()]));
+                $cron_job->update([
+                    config('table.status') => config('constants.error'),
+                    config('table.message') => $e->getMessage(),
+                    config('table.ends_at') => LyskillsCarbon::now(),
+                ]);
             }
         }
-
     }
 }

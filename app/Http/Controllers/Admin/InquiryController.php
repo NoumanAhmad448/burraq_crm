@@ -16,7 +16,54 @@ class InquiryController extends Controller
 
     public function index()
     {
-        $inquiries = Inquiry::withTrashed()->latest()->get();
+
+    $type = request('type', 'all');
+
+    $query = Inquiry::withTrashed()->latest();
+
+
+        switch ($type) {
+        case 'pending':
+            $query->where('status', 'pending');
+            break;
+
+        case 'contacted':
+            $query->where('status', 'contacted');
+            break;
+
+        case 'follow_up':
+            $query->where('status', 'follow_up');
+            break;
+
+        case 'not_interested':
+            $query->where('status', 'not_interested');
+            break;
+
+        case 'not_contacted':
+            $query->whereNull('status');
+            break;
+
+        // month-based (later refinement)
+        case 'this_month_pending':
+            $query->where('status', 'pending')
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            break;
+
+        case 'this_month_contacted':
+            $query->where('status', 'contacted')
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            break;
+
+        case 'all':
+        default:
+            // no filter
+            break;
+    }
+
+    $inquiries = $query->get();
+
         $courses = Course::all();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));
     }
@@ -62,8 +109,6 @@ class InquiryController extends Controller
                 $request->validated(),
                 ['updated_by' => Auth::id()]
             ));
-
-            debug_logs('Inquiry updated', $request->all());
 
             return redirect()->route('inquiries.index')->with('success', "Updated...");;
         } catch (Exception $e) {

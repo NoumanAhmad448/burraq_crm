@@ -17,8 +17,8 @@ class StudentStoreRequest extends FormRequest
         // what would be the logic?
         return [
             'name'          => 'required|string|max:255',
-            'father_name'   => 'required|string|max:255',
-            'cnic'          => 'required|string|max:25',
+            'father_name'   => 'nullable|string|max:255',
+            'cnic'          => 'nullable|string|max:25',
             'mobile'        => 'required|string|max:20',
             'email'         => 'nullable|email|max:255',
             'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',

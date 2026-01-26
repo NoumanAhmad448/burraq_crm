@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminPageController;
+use App\Http\Controllers\InquiryDashboardController;
 use Illuminate\Support\Facades\Route;
 
 $route = Route::prefix("admin")->middleware("admin");
 
 if (config("setting.enable_admin_domain")) {
-    $route->domain(config("setting.admin_domain"));
+    // $route->domain(config("setting.admin_domain"));
 }
 $route->group(function () {
     Route::post('page/{page}/change-status', [AdminPageController::class, 'changeStatus'])->name('admin_cs_page');
@@ -17,4 +18,7 @@ $route->group(function () {
 
     Route::get('page/{page}/edit-page', [AdminPageController::class, 'editPage'])->name('admin_edit_page');
     Route::put('page/{page}/update-page', [AdminPageController::class, 'updatePage'])->name('admin_update_page');
+
+        Route::get('/inquiry-dashboard', [InquiryDashboardController::class, 'index'])
+            ->name('admin.inquiry.dashboard');
 });

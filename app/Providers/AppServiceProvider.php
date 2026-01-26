@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Contracts\InquiryDashboardContract;
+use App\Http\Response\InquiryDashboardResponse;
 use App\Models\ConfigSetting;
 use App\Models\Social;
 use Illuminate\Support\Facades\Schema;
@@ -39,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
         $this->app->register(TelescopeServiceProvider::class);
+        $this->app->bind(
+            InquiryDashboardContract::class,
+            InquiryDashboardResponse::class
+        );
     }
 
     /**

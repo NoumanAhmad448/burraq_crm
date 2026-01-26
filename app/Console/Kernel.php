@@ -26,11 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('create:dir')->everyMinute();
-        $schedule->command(\Spatie\Health\Commands\RunHealthChecksCommand::class)->hourly();
-        $schedule->command(ClearLogFile::class)->weekly();
-        $schedule->command(CheckUrlAccessibility::class)->daily();
-        $schedule->command('telescope:prune')->daily();
+        $schedule->command("cron:health-check")->everyMinute();
+        $schedule->command("log:clear")->daily();
+        $schedule->command("check:url-accessibility")->everyMinute();
+        $schedule->command('cron:telescope-prune')->everyMinute();
+        // $schedule->command('cron:test')->everyMinute();
     }
 
     /**
