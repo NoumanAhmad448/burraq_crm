@@ -187,13 +187,6 @@ class StudentController extends Controller
     {
         DB::beginTransaction();
 
-         $request->validate([
-            'email' => 'required|email|unique:crm_students,email',
-        ]);
-         $request->validate([
-            'cnic' => 'required|unique:crm_students,cnic',
-        ]);
-
         try {
 
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
