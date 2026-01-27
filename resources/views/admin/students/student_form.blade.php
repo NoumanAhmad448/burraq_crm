@@ -74,13 +74,26 @@
 
                     <select name="payment_method" class="form-control">
                         <option value="">Select Method</option>
-
                         <option value="cash"      {{ $selectedMethod === 'cash' ? 'selected' : '' }}>Cash</option>
                         <option value="bank"      {{ $selectedMethod === 'bank' ? 'selected' : '' }}>Bank Transfer</option>
                         <option value="online"    {{ $selectedMethod === 'online' ? 'selected' : '' }}>Online</option>
                         <option value="easypaisa" {{ $selectedMethod === 'easypaisa' ? 'selected' : '' }}>Easypaisa</option>
                         <option value="jazzcash"  {{ $selectedMethod === 'jazzcash' ? 'selected' : '' }}>Jazzcash</option>
                     </select>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <label for="status">Student Status</label>
+                    <select name="status" id="student_status" class="form-control">
+                        <option value="Enrolled" {{ old('status', $is_update && $student->status ? $student->status : '')  == 'Enrolled' ? 'selected' : '' }}>Enrolled</option>
+                        <option value="Dropped" {{ old('status', $is_update && $student->status ? $student->status : '') == 'Dropped' ? 'selected' : '' }}>Dropped</option>
+                        <option value="Refund"  {{ old('status', $is_update && $student->status ? $student->status : '')== 'Refund' ? 'selected' : '' }}>Refund</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mt-2" id="drop_reason_box" style="display: none;">
+                    <label for="drop_reason">Drop Reason</label>
+                    <textarea name="drop_reason" class="form-control" rows="3"
+                        placeholder="Enter reason for dropping">{{ old('drop_reason', $is_update && $student->drop_reason ? $student->drop_reason : '') }}</textarea>
                 </div>
                 <div class="col-md-4 mt-2">
 
@@ -330,5 +343,27 @@ $(document).ready(function() {
 
     });
 
+
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusSelect = document.getElementById('student_status');
+        const reasonBox = document.getElementById('drop_reason_box');
+
+        function toggleReasonBox() {
+            if (statusSelect.value === 'Dropped') {
+                reasonBox.style.display = 'block';
+            } else {
+                reasonBox.style.display = 'none';
+            }
+        }
+
+        // Initial check (for edit page)
+        toggleReasonBox();
+
+        // On change
+        statusSelect.addEventListener('change', toggleReasonBox);
+    });
+</script>
+
 {{-- ================= END CREATE STUDENT FORM ================= --}}

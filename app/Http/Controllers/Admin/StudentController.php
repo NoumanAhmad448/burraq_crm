@@ -125,6 +125,12 @@ class StudentController extends Controller
         if (!empty($request->registration_date)) {
             $data['registration_date'] = $request->registration_date;
         }
+        if (!empty($request->status)) {
+            $data['status'] = $request->status;
+        }
+        if (!empty($request->drop_reason)) {
+            $data['drop_reason'] = $request->drop_reason;
+        }
         // dump($request);
         // dd($data);
 
@@ -154,7 +160,7 @@ class StudentController extends Controller
 
 
             // dd($student);
-            // dd($request);
+            // dd($request->name);
             /* ---------- ENROLL COURSES ---------- */
             $this->updateEnrolledCourses($request, $student);
 
