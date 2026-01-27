@@ -49,7 +49,6 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev -
 # yes | composer require --dev phpunit/phpunit
 
 # yes | php artisan db:seed --class=LanguageSeeder
-yes | php artisan db:seed --class=UpdatePaymentDatesSeeder
 
 
 # Avoid any node permission error
@@ -155,7 +154,8 @@ php artisan event:cache && php artisan optimize
 # Reset permissions for web server & FTP user
 sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/crm.burraqengineering.com/
 sudo chmod -R 755 /home/nomilyskills/public_html/crm.burraqengineering.com/
-sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage/
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage/framework/cache/data
 sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 

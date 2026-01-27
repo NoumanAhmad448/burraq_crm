@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
-
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
@@ -340,20 +340,20 @@ if (!function_exists('parseMonthYear')) {
         // Default to current month if not provided
         if (!$request->has($monthKey)) {
             $month = now()->month;
-        } else {
-            $month = (int) LyskillsCarbon::create()->month($month)->month;
+        } else if(!empty($month)){
+            $month = (int) Carbon::create()->month($month)->month;
         }
 
         // Default to current year if not provided
         if (empty($year)) {
             $year = now()->year;
         } else {
-            $year = (int) LyskillsCarbon::create()->year($year)->year;
+            $year = (int) Carbon::create()->year($year)->year;
         }
 
         // Calculate start and end of month
-        $startOfMonth = LyskillsCarbon::create($year, $month, 1)->startOfDay();
-        $endOfMonth   = LyskillsCarbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
 
         return compact('month', 'year', 'startOfMonth', 'endOfMonth');
     }
@@ -375,17 +375,17 @@ if (!function_exists('studentMonthYear')) {
 
         // Default to current month if not provided
         if(!empty($month)){
-            $month = (int) LyskillsCarbon::create()->month($month)->month;
+            $month = (int) Carbon::create()->month($month)->month;
         }
 
         // Default to current year if not provided
         if (!empty($year)) {
-            $year = (int) LyskillsCarbon::create()->year($year)->year;
+            $year = (int) Carbon::create()->year($year)->year;
         }
 
         // Calculate start and end of month
-        $startOfMonth = LyskillsCarbon::create($year, $month, 1)->startOfDay();
-        $endOfMonth   = LyskillsCarbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
 
         return compact('month', 'year', 'startOfMonth', 'endOfMonth');
     }
