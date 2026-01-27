@@ -168,6 +168,10 @@ class StudentController extends Controller
         if ($payment_slip_path) {
             $data['payment_slip_path'] = $payment_slip_path;
         }
+        // dd($request->registration_date);
+        if (!empty($request->registration_date)) {
+            $data['registration_date'] = $request->registration_date;
+        }
         // dump($request);
         // dd($data);
 
@@ -365,6 +369,7 @@ class StudentController extends Controller
          DB::beginTransaction();
 
         $student = Student::findOrFail($id);
+        // dd($request->all());
         $this->studentForm($request, true, $student);
 
         $this->updateEnrolledCourses($request, $student);

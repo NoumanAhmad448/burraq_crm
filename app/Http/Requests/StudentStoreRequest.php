@@ -25,6 +25,7 @@ class StudentStoreRequest extends FormRequest
 
             'admission_date' => 'nullable|date',
             'due_date'      => 'nullable|date|after_or_equal:admission_date',
+            'registration_date'      => 'nullable|date',
 
             'total_fee'     => 'nullable|numeric|min:0',
             'paid_fee'      => 'nullable|numeric|min:0|lte:total_fee',

@@ -167,6 +167,9 @@
     <div class="form-group mr-2 mb-0">
         <label for="month" class="mr-1">Month</label>
         <select name="month" id="month" class="form-control form-control-sm">
+            <option value=""> -- Select Month --
+            </option>
+
             @for ($m = 1; $m <= 12; $m++)
                 <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
                     {{ \Carbon\Carbon::create()->month($m)->format('F') }}

@@ -23,6 +23,7 @@ class Student extends Model
         'total_fee',
         'paid_fee',
         'remaining_fee',
+        'registration_date',
         'role',
         'is_deleted',
         'payment_slip_path',

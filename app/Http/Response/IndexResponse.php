@@ -2,8 +2,6 @@
 
 namespace App\Http\Response;
 
-use App\Classes\CacheKeys;
-use App\Classes\CourseCache;
 use App\Classes\EnrolledCourseDue;
 use App\Classes\EnrolledCourseDueThisMonth;
 use App\Classes\EnrolledCoursePaymentsThisMonth;
@@ -14,27 +12,20 @@ use App\Classes\EnrolledCourseTotalFee;
 use App\Classes\EnrolledCourseTotalOverdue;
 use App\Classes\EnrolledCourseTotalPaid;
 use App\Classes\EnrolledCourseWithCertificate;
-use App\Classes\FaqCache;
 use App\Classes\LyskillsCarbon;
 use App\Classes\EnrolledCourseTotalOverdueCount;
 use App\Classes\EnrolledCourseTotalPaidMonth;
 use App\Classes\EnrolledCourseTotalUnpaid;
 use App\Classes\EnrolledCourseTotalUnpaidCount;
 use App\Classes\StudentCache;
+use App\Classes\StudentMonthYearCache;
 use App\Classes\StudentYearly;
-use Illuminate\Support\Facades\DB;
 use App\Http\Contracts\IndexContracts;
-use App\Models\Certificate;
-use App\Models\Faq;
-use App\Models\RatingModal;
 use App\Models\Setting;
 use Exception;
-use Illuminate\Support\Facades\Cache;
 use App\Models\Student;
 use App\Models\Course;
-use App\Models\Student as CRMStudent;
 use App\Models\EnrolledCourse;
-use App\Models\EnrolledCoursePayment;
 use Carbon\Carbon;
 
 class IndexResponse implements IndexContracts
@@ -48,20 +39,23 @@ class IndexResponse implements IndexContracts
         $month = $request->get("month");
         $year = $request->get("year");
 
-        if(!$month){
+        // dd($request->has("month"));
+        if(!$request->has("month")){
             $month = now()->month;
-        }else{
-            $month = LyskillsCarbon::create()->month($month)->month;
+        }else if(!empty($month)){
+            $month = (int) LyskillsCarbon::create()->month($month)->month;
         }
-        if(!$year){
+
+        // dd($month);
+
+        if(!empty($year)){
+            $year = (int) LyskillsCarbon::create()->year($year)->year;
+        }else{
             $year = now()->year;
-        }else{
-            $year = LyskillsCarbon::create()->year($year)->year;
         }
 
-
-        $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
-        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+        $startOfMonth = Carbon::create($year ?? now()->year, $month ?? now()->month, 1)->startOfDay();
+        $endOfMonth   = Carbon::create($year ?? now()->year, $month ?? now()->month, 1)->endOfMonth()->endOfDay();
 
         // dd($startOfMonth->format("Y-m-d"));
 
@@ -94,7 +88,7 @@ class IndexResponse implements IndexContracts
         $pending   = max($totalFee - $totalPaid_g, 0);
 
         $totalStudents = Student::count();
-        $activeStudents = Student::where('is_deleted', 0)->count();
+        $activeStudents = StudentMonthYearCache::get($month, $year);
 
         $activeEnrolledStudents = Student::where('is_deleted', 0)
             ->whereHas('enrolledCourses')
