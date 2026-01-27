@@ -33,7 +33,8 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->runInBackground();
         $schedule->command('cron:delete-old-notifications')->dailyAt('02:00');
-
+        $schedule->command('env:check-consistency')->everyMinute();
+        $schedule->command('app:check-debug')->everyMinute();
         // $schedule->command('cron:test')->everyMinute();
     }
 

@@ -45,9 +45,7 @@ fi
 # Update Composer Dependencies
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --no-cache
 
-# For ENV file testing
-# yes | composer require --dev phpunit/phpunit
-
+# Laravel Seeders
 # yes | php artisan db:seed --class=LanguageSeeder
 
 
@@ -55,7 +53,7 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev -
 sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com/
 
 # Create a custom link of public folder with storage folder
-# yes | php artisan storage:link-custom
+# yes | php artisan storage:link
 
 # Run database migrations
 yes | php artisan migrate --force
