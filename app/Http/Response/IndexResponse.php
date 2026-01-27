@@ -37,7 +37,7 @@ class IndexResponse implements IndexContracts
         $settings = Setting::first();
 
         extract(parseMonthYear($request));
-
+        // dd($month, $year, $startOfMonth, $endOfMonth);
         // dd($startOfMonth->format("Y-m-d"));
 
         /* ---------- Students This Month ---------- */
