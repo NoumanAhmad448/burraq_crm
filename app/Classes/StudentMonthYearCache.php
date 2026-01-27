@@ -31,17 +31,13 @@ class StudentMonthYearCache
      */
     public static function get(?int $month = null, ?int $year = null, int $cacheMinutes = 1)
     {
-        return Cache::remember(self::cacheKey($month, $year), $cacheMinutes * 60, function () use($month, $year) {
-            $query = Student::where('is_deleted', 0)
+        return Cache::remember(self::cacheKey($month, $year), $cacheMinutes, function () use($month, $year) {
+            return Student::where('is_deleted', 0)
                 ->when(!is_null($month), function($q) use($month){
                     return  $q->whereMonth('registration_date', $month);
                     })
-                ->when(!is_null($year), function($q) use($year){return  $q->whereYear('registration_date', $year);});
-
-            return $query->selectRaw('DATE(registration_date) as date, COUNT(*) as total')
-                         ->groupBy('date')
-                         ->orderBy('date')
-                         ->get();
+                ->when(!is_null($year), function($q) use($year){return  $q->whereYear('registration_date', $year);})
+                ->count();
         });
     }
 }
