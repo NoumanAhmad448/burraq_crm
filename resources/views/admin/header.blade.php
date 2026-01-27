@@ -58,7 +58,7 @@
                         Welcome, {{ ucfirst(auth()->user()->name) }}
                     </span>
                 </li>
-                <x-notification/>
+                {{-- <x-notification/> --}}
                 @if (config('setting.login_profile'))
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('logout_user') }}">
