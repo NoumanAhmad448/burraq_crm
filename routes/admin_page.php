@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\InquiryDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,17 @@ $route->group(function () {
     Route::get('page/{page}/edit-page', [AdminPageController::class, 'editPage'])->name('admin_edit_page');
     Route::put('page/{page}/update-page', [AdminPageController::class, 'updatePage'])->name('admin_update_page');
 
-        Route::get('/inquiry-dashboard', [InquiryDashboardController::class, 'index'])
-            ->name('admin.inquiry.dashboard');
+    Route::get('/inquiry-dashboard', [InquiryDashboardController::class, 'index'])
+        ->name('admin.inquiry.dashboard');
+
+    Route::get(
+        'notifications/{notification}/open',
+        [NotificationController::class, 'open']
+    )->name('notifications.open');
+
+    Route::post(
+            'notifications/mark-read',
+            [NotificationController::class, 'markRead']
+        )->name('notifications.mark-read');
+
 });
