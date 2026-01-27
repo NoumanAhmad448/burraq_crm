@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\EnrolledCourseDuePaymentCache;
+use App\Classes\EnrolledCoursePaidCache;
+use App\Classes\EnrolledCourseStudentFilter;
 use App\Classes\LyskillsCarbon;
+use App\Classes\StudentEnrolledCourseCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
@@ -28,66 +32,18 @@ class StudentController extends Controller
     {
         // dd($request->all());
         $type = $request->get('type');
-        $month = $request->get('month');
-        $year = $request->get('year');
-
-        if(!empty($month)){
-            $month = LyskillsCarbon::create()->month($month)->month;
-        }
-        if(!empty($year)){
-            $year = LyskillsCarbon::create()->year($year)->year;
-        }
-
+        extract(studentMonthYear($request));
         if ($type == 'deleted') {
-            $enrolledCourses = EnrolledCourse::with('student', 'payments')
-                ->whereHas('student', function ($query) {
-                    $query->where('is_deleted', 1);
-                })
-
-                 ->latest('created_at')
-                ->get();
+            $enrolledCourses = EnrolledCourseStudentFilter::query($month, $year);
         }
         else if ($type == 'unpaid') {
-
-            $enrolledCourses = EnrolledCourse::with('student', 'payments')
-                ->whereHas('student', function ($query) {
-                    $query->where('is_deleted', 0);
-                })            ->where('is_deleted', 0)
-                ->get()
-                ->filter(function ($enrolledCourse) {
-                    $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
-                    return $totalPaid < $enrolledCourse->total_fee;
-                })
-                 ->sortByDesc('created_at')
-                ->values();
-
+            $enrolledCourses = EnrolledCourseDuePaymentCache::get($month, $year);
         }
         else if ($type == 'paid') {
-
-            $enrolledCourses = EnrolledCourse::with('student', 'payments')
-                ->whereHas('student', function ($query) {
-                    $query->where('is_deleted', 0);
-                })
-                ->get()
-                ->filter(function ($enrolledCourse) {
-                    $totalPaid = $enrolledCourse->payments()->where('is_deleted', 0)->sum('paid_amount');
-                    return $totalPaid >= $enrolledCourse->total_fee;
-                })
-                            ->where('is_deleted', 0)
-
-                 ->sortByDesc('created_at')
-                ->values();
-
+            $enrolledCourses = EnrolledCoursePaidCache::get($month, $year);
         }
         else if ($type == 'overdue') {
-            $enrolledCourses = EnrolledCourse::pendingCourses()->with('student', 'payments')
-             ->whereHas('student', function ($query) {
-                    $query->where('is_deleted', 0);
-                })
-                ->activeCourse()
-            ->paidStudentsOnly()
-             ->latest()
-            ->get();
+            $enrolledCourses = PendingPaidEnrolledCourseCache::get($month, $year);
         }
         else if ($type === 'certificate_issued') {
            $enrolledCourses = EnrolledCourse::with([
@@ -107,11 +63,7 @@ class StudentController extends Controller
 
         }
         else {
-        $enrolledCourses = EnrolledCourse::with('student', 'payments')
-            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
-            ->where('is_deleted', 0)
-            ->latest()
-            ->get();
+        $enrolledCourses = StudentEnrolledCourseCache::get($month, $year);
         }
 
         // dd($enrolledCourses);

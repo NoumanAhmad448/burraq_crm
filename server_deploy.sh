@@ -49,7 +49,7 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev -
 # yes | composer require --dev phpunit/phpunit
 
 # yes | php artisan db:seed --class=LanguageSeeder
-yes | php artisan db:seed --class=UpdateStudentRegistrationDateSeeder
+yes | php artisan db:seed --class=UpdatePaymentDatesSeeder
 
 
 # Avoid any node permission error
