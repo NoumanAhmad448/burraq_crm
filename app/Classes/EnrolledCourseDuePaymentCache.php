@@ -17,8 +17,9 @@ class EnrolledCourseDuePaymentCache
         return Cache::remember($cacheKey, $ttl, function () use ($month, $year) {
 
             return EnrolledCourse::with([
-                    'student',
-                    'payments' => function ($q) use ($month, $year) {
+                    'student'
+                ])
+                ->whereHas('payments' , function ($q) use ($month, $year) {
                         $q->where('is_deleted', 0)
                           ->when(!is_null($month), fn ($qq) =>
                               $qq->whereMonth('payment_date', $month)
@@ -26,8 +27,7 @@ class EnrolledCourseDuePaymentCache
                           ->when(!is_null($year), fn ($qq) =>
                               $qq->whereYear('payment_date', $year)
                           );
-                    }
-                ])
+                })
                 ->where('is_deleted', 0)
                 ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
                 ->get()

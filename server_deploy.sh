@@ -145,9 +145,6 @@ nvm use 20.18.3
 # make sure .env files are same
 # APP_ENV=testing php artisan test --filter EnvFilesConsistencyTest
 
-php artisan config:cache && php artisan route:cache && php artisan view:cache
-php artisan event:cache && php artisan optimize
-
 # Check project health
 # php artisan health:check --no-notification
 
@@ -159,11 +156,11 @@ sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/stora
 sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
-# Run cron
-# php artisan schedule:run >> /dev/null 2>&1
 
-# TO save all the logs in the the databse table
-# php artisan schedule-monitor:sync
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+php artisan cache:clear
+php artisan event:cache && php artisan optimize
+
 
 # Disable maintenance mode
 php artisan up
