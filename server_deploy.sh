@@ -158,8 +158,8 @@ sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
 
 php artisan config:cache && php artisan route:cache && php artisan view:cache
-php artisan cache:clear
 php artisan event:cache && php artisan optimize
+php artisan cache:clear
 
 
 # Disable maintenance mode
