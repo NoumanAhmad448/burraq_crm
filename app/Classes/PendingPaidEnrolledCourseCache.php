@@ -25,8 +25,9 @@ class PendingPaidEnrolledCourseCache
                 ->activeCourse()
                 ->paidStudentsOnly()
                 ->with([
-                    'student',
-                    'payments' => function ($q) use ($month, $year) {
+                    'student'
+                ])
+                ->whereHas('payments' , function ($q) use ($month, $year) {
                         $q->where('is_deleted', 0)
                           ->when(!is_null($month), fn ($qq) =>
                               $qq->whereMonth('payment_date', $month)
@@ -34,8 +35,7 @@ class PendingPaidEnrolledCourseCache
                           ->when(!is_null($year), fn ($qq) =>
                               $qq->whereYear('payment_date', $year)
                           );
-                    }
-                ])
+                })
                 ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
                 ->latest()
                 ->get();
