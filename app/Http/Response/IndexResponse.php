@@ -36,26 +36,7 @@ class IndexResponse implements IndexContracts
 
         $settings = Setting::first();
 
-        $month = $request->get("month");
-        $year = $request->get("year");
-
-        // dd($request->has("month"));
-        if(!$request->has("month")){
-            $month = now()->month;
-        }else if(!empty($month)){
-            $month = (int) LyskillsCarbon::create()->month($month)->month;
-        }
-
-        // dd($month);
-
-        if(!empty($year)){
-            $year = (int) LyskillsCarbon::create()->year($year)->year;
-        }else{
-            $year = now()->year;
-        }
-
-        $startOfMonth = Carbon::create($year ?? now()->year, $month ?? now()->month, 1)->startOfDay();
-        $endOfMonth   = Carbon::create($year ?? now()->year, $month ?? now()->month, 1)->endOfMonth()->endOfDay();
+        extract(parseMonthYear($request));
 
         // dd($startOfMonth->format("Y-m-d"));
 

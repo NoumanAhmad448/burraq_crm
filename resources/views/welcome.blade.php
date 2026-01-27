@@ -27,6 +27,7 @@
         'bg' => 'bg-primary',
         'amount_color' => 'purple',
         'route' => 'students.index',
+        'route_keys' => ['month' => $month, "year" => $year],
     ],
 
     [
@@ -163,36 +164,10 @@
     </button>
 </div>
 <form method="GET" action="{{ route('index') }}" class="form-inline justify-content-end mb-3">
-
-    <div class="form-group mr-2 mb-0">
-        <label for="month" class="mr-1">Month</label>
-        <select name="month" id="month" class="form-control form-control-sm">
-            <option value=""> -- Select Month --
-            </option>
-
-            @for ($m = 1; $m <= 12; $m++)
-                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
-                    {{ \Carbon\Carbon::create()->month($m)->format('F') }}
-                </option>
-            @endfor
-        </select>
-    </div>
-
-    <div class="form-group mr-2 mb-0">
-        <label for="year" class="mr-1">Year</label>
-        <select name="year" id="year" class="form-control form-control-sm">
-            @for ($y = 2023; $y <= 2035; $y++)
-                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
-                    {{ $y }}
-                </option>
-            @endfor
-        </select>
-    </div>
-
+    <x-month_year_filter :month="$month" :year="$year" year_select=false/>
     <button type="submit" class="btn btn-primary btn-sm mb-0">
         Filter
     </button>
-
 </form>
 
 

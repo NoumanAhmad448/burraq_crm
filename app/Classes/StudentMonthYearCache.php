@@ -7,37 +7,39 @@ use Illuminate\Support\Facades\Cache;
 
 class StudentMonthYearCache
 {
-    protected ?int $month;
-    protected ?int $year;
-    protected int $cacheMinutes;
-
-    public function __construct(?int $month = null, ?int $year = null, int $cacheMinutes = 60)
+    /**
+     * Get student count filtered by registration month/year (cached)
+     *
+     * @param int|null $month
+     * @param int|null $year
+     * @param int $ttlSeconds  Cache TTL in seconds (default 60)
+     */
+    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1): int
     {
-        $this->month = $month;
-        $this->year = $year;
-        $this->cacheMinutes = $cacheMinutes;
+        return Cache::remember(
+            self::cacheKey($month, $year),
+            now()->addSeconds($ttlSeconds),
+            function () use ($month, $year) {
+
+                return Student::where('is_deleted', 0)
+                    ->when(!is_null($month), fn ($q) =>
+                        $q->whereMonth('registration_date', $month)
+                    )
+                    ->when(!is_null($year), fn ($q) =>
+                        $q->whereYear('registration_date', $year)
+                    )
+                    ->count();
+            }
+        );
     }
 
     /**
-     * Generate a unique cache key based on month/year
+     * Cache key generator
      */
-    protected static function cacheKey($month, $year): string
+    protected static function cacheKey(?int $month, ?int $year): string
     {
-        return 'active_students_' . ($month ?? 'all') . '_' . ($year ?? 'all');
-    }
-
-    /**
-     * Get active students with month/year filter and cache
-     */
-    public static function get(?int $month = null, ?int $year = null, int $cacheMinutes = 1)
-    {
-        return Cache::remember(self::cacheKey($month, $year), $cacheMinutes, function () use($month, $year) {
-            return Student::where('is_deleted', 0)
-                ->when(!is_null($month), function($q) use($month){
-                    return  $q->whereMonth('registration_date', $month);
-                    })
-                ->when(!is_null($year), function($q) use($year){return  $q->whereYear('registration_date', $year);})
-                ->count();
-        });
+        return 'students_count_'
+            . ($month ?? 'all') . '_'
+            . ($year ?? 'all');
     }
 }

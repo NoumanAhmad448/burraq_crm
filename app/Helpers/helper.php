@@ -321,3 +321,72 @@ function showWebPageDate($value){
      if($value == null){            return;        }
         return LyskillsCarbon::webDate($value);
 }
+
+if (!function_exists('parseMonthYear')) {
+    /**
+     * Parse month/year from request and return month, year, startOfMonth, endOfMonth
+     *
+     * @param Request $request
+     * @param string $monthKey
+     * @param string $yearKey
+     * @return array
+     */
+    function parseMonthYear(Request $request, string $monthKey = 'month', string $yearKey = 'year'): array
+    {
+        // Get month and year from request
+        $month = $request->get($monthKey);
+        $year = $request->get($yearKey);
+
+        // Default to current month if not provided
+        if (!$request->has($monthKey)) {
+            $month = now()->month;
+        } else {
+            $month = (int) LyskillsCarbon::create()->month($month)->month;
+        }
+
+        // Default to current year if not provided
+        if (empty($year)) {
+            $year = now()->year;
+        } else {
+            $year = (int) LyskillsCarbon::create()->year($year)->year;
+        }
+
+        // Calculate start and end of month
+        $startOfMonth = LyskillsCarbon::create($year, $month, 1)->startOfDay();
+        $endOfMonth   = LyskillsCarbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+
+        return compact('month', 'year', 'startOfMonth', 'endOfMonth');
+    }
+}
+if (!function_exists('studentMonthYear')) {
+    /**
+     * Parse month/year from request and return month, year, startOfMonth, endOfMonth
+     *
+     * @param Request $request
+     * @param string $monthKey
+     * @param string $yearKey
+     * @return array
+     */
+    function studentMonthYear(Request $request, string $monthKey = 'month', string $yearKey = 'year'): array
+    {
+        // Get month and year from request
+        $month = $request->get($monthKey);
+        $year = $request->get($yearKey);
+
+        // Default to current month if not provided
+        if(!empty($month)){
+            $month = (int) LyskillsCarbon::create()->month($month)->month;
+        }
+
+        // Default to current year if not provided
+        if (!empty($year)) {
+            $year = (int) LyskillsCarbon::create()->year($year)->year;
+        }
+
+        // Calculate start and end of month
+        $startOfMonth = LyskillsCarbon::create($year, $month, 1)->startOfDay();
+        $endOfMonth   = LyskillsCarbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+
+        return compact('month', 'year', 'startOfMonth', 'endOfMonth');
+    }
+}
