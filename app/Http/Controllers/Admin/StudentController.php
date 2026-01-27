@@ -6,6 +6,7 @@ use App\Classes\EnrolledCourseDuePaymentCache;
 use App\Classes\EnrolledCoursePaidCache;
 use App\Classes\EnrolledCourseStudentFilter;
 use App\Classes\LyskillsCarbon;
+use App\Classes\PendingPaidEnrolledCourseCache;
 use App\Classes\StudentEnrolledCourseCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
