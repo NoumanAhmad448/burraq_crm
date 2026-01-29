@@ -89,6 +89,15 @@
         'roles' => ['admin'],
     ],
 
+    // [
+    //     'title' => 'Total Income (This Month)',
+    //     'count' => show_payment($total_income_m),
+    //     'icon' => 'img/fa-fa-check-circle.png',
+    //     'bg' => 'bg-info',
+    //     'amount_color' => 'success',
+    //     'route' => 'students.index',
+    //     'roles' => ['admin'],
+    // ],
     [
         'title' => 'Total Income',
         'count' => show_payment($total_income),
@@ -316,7 +325,7 @@
             data: {
                 labels: ['Paid', 'Pending', 'Overdue'],
                 datasets: [{
-                    data: [{{ $totalPaid_g }}, {{ $pending }}, {{ $totalOverdue }}],
+                    data: [{{ $totalPaid_g }}, {{ $pending }}],
                     backgroundColor: [
                         '#0d6efd', // Paid (Blue)
                         '#dc3545', // Pending (Red)

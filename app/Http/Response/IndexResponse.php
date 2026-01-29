@@ -69,7 +69,7 @@ class IndexResponse implements IndexContracts
         $pending   = max($totalFee - $totalPaid_g, 0);
 
         $totalStudents = Student::count();
-        $activeStudents = StudentMonthYearCache::get($month, $year);
+        $activeStudents = StudentMonthYearCache::get($request, $month, $year);
 
         $activeEnrolledStudents = Student::where('is_deleted', 0)
             ->whereHas('enrolledCourses')
@@ -99,6 +99,7 @@ class IndexResponse implements IndexContracts
         $cert_count = $enrolledCourses->count();
 
         $total_income = EnrolledCourse::totalIncome();
+        $total_income_m = EnrolledCourse::totalMonthlyIncome($month, $year);
         $totalPaid_m = EnrolledCourseTotalPaidMonth::get($startOfMonth, $endOfMonth);
 
             return $request->wantsJson()
@@ -140,11 +141,11 @@ class IndexResponse implements IndexContracts
                         'totalOverdue_count',
                         'totalUnpaid_count',
                         'total_income',
+                        'total_income_m',
                     )
                 );
 
         } catch (Exception $e) {
-            dd($e->getMessage());
             server_logs([true, $e], [true, $request]);
             return back()->with(["error" => "something went wrong"]);
         }
