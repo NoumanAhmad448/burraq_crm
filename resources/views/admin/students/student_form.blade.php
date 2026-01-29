@@ -69,38 +69,6 @@
 
                         $payment_slip_path = $is_update && $student ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_slip_path : "";
                     @endphp
-                <div class="col-md-4 mt-2">
-                    <label>Payment Method</label>
-
-                    <select name="payment_method" class="form-control">
-                        <option value="">Select Method</option>
-
-                        <option value="cash"      {{ $selectedMethod === 'cash' ? 'selected' : '' }}>Cash</option>
-                        <option value="bank"      {{ $selectedMethod === 'bank' ? 'selected' : '' }}>Bank Transfer</option>
-                        <option value="online"    {{ $selectedMethod === 'online' ? 'selected' : '' }}>Online</option>
-                        <option value="easypaisa" {{ $selectedMethod === 'easypaisa' ? 'selected' : '' }}>Easypaisa</option>
-                        <option value="jazzcash"  {{ $selectedMethod === 'jazzcash' ? 'selected' : '' }}>Jazzcash</option>
-                    </select>
-                </div>
-                <div class="col-md-4 mt-2">
-
-                    <div class="form-group">
-                        <label>Payment Date</label>
-                        <input type="date"
-                            name="payment_date"
-                            class="form-control datepicker"
-                            value="{{ $paymentDate }}">
-                    </div>
-                </div>
-                <div class="col-md-4 mt-2">
-                    <div class="form-group">
-                        <label>Registration Date</label>
-                        <input type="date"
-                            name="registration_date"
-                            class="form-control datepicker"
-                            value="{{ old('registration_date', $student->registration_date ?? '') }}">
-                    </div>
-                </div>
 
 
                 {{-- <div class="col-md-4 mt-2">

@@ -94,21 +94,6 @@
             ($is_update ?? false) ? ($payment->payment_method ?? null) : null
         );
     @endphp
-    <div class="form-group">
-
-    <label>Payment Method</label>
-    <select name="payment_method" class="form-control">
-
-        <option value="">Select Method</option>
-
-        <option value="cash"      {{ $selectedMethod === 'cash' ? 'selected' : '' }}>Cash</option>
-        <option value="bank"      {{ $selectedMethod === 'bank' ? 'selected' : '' }}>Bank Transfer</option>
-        <option value="online"    {{ $selectedMethod === 'online' ? 'selected' : '' }}>Online</option>
-        <option value="easypaisa" {{ $selectedMethod === 'easypaisa' ? 'selected' : '' }}>Easypaisa</option>
-        <option value="jazzcash"  {{ $selectedMethod === 'jazzcash' ? 'selected' : '' }}>Jazzcash</option>
-    </select>
-
-    </div>
     @php
         $paymentDate = old(
             'payment_date',
@@ -117,14 +102,6 @@
                 : ""
         );
     @endphp
-
-    <div class="form-group">
-        <label>Payment Date</label>
-        <input type="date"
-            name="payment_date"
-            class="form-control datepicker"
-            value="{{ $paymentDate }}">
-    </div>
 
 
     <div class="form-group">
