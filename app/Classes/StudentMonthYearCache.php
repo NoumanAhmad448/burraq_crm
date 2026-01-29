@@ -14,8 +14,12 @@ class StudentMonthYearCache
      * @param int|null $year
      * @param int $ttlSeconds  Cache TTL in seconds (default 60)
      */
-    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1): int
+    public static function get(Request $request, ?int $month = null, ?int $year = null, int $ttlSeconds = 1): int
     {
+        if(empty($request->get("month")) && empty($request->get("year"))){
+            $month = null;
+            $year = null;
+        }
         return Cache::remember(
             self::cacheKey($month, $year),
             now()->addSeconds($ttlSeconds),
