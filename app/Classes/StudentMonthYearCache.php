@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Models\Student;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 class StudentMonthYearCache
 {

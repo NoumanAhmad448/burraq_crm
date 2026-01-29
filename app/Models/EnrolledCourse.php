@@ -85,6 +85,19 @@ class EnrolledCourse extends Model
         $q->where('is_deleted', 0);
     })->where('is_deleted', 0)->sum("total_fee");
     }
+    public function scopeTotalMonthlyIncome($query, $month, $year)
+    {
+        return $query->whereHas('student', function ($q) {
+        $q->where('is_deleted', 0);
+    })->where('is_deleted', 0)->
+    when($month, function ($query) use ($month) {
+                    $query->whereMonth('admission_date', $month);
+                })
+                ->when($year, function ($query) use ($year) {
+                    $query->whereYear('admission_date', $year);
+                })->
+    sum("total_fee");
+    }
 
     public function scopeActiveCourse($query){
         return $query->where('is_deleted', 0);
