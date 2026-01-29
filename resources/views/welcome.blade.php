@@ -88,7 +88,6 @@
         'roles' => ['admin'],
     ],
 
-    
     [
         'title' => 'Total Income',
         'count' => show_payment($total_income),
