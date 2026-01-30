@@ -39,5 +39,9 @@ class RuleServiceProvider extends ServiceProvider
         Gate::define('is-admin', function ($user, Student $student) {
             return auth()->user()->isAdmin();
         });
+
+         Gate::define('viewHorizon', function () {
+            return auth()->user()->isSuperAdmin();;
+        });
     }
 }
