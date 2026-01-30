@@ -19,7 +19,7 @@ use App\Classes\EnrolledCourseTotalUnpaid;
 use App\Classes\EnrolledCourseTotalUnpaidCount;
 use App\Classes\StudentCache;
 use App\Classes\StudentMonthYearCache;
-use App\Classes\StudentYearly;
+use App\Classes\StudentsYearly;
 use App\Http\Contracts\IndexContracts;
 use App\Models\Setting;
 use Exception;
@@ -44,14 +44,15 @@ class IndexResponse implements IndexContracts
         $studentsThisMonth = StudentCache::studentsThisMonth($month, $year);
 
         /* ---------- Students Yearly ---------- */
-        $studentsYearly = StudentYearly::get($month, $year);
+        $studentsYearly = StudentsYearly::get($year);
+        // dd($studentsYearly);
 
         /* ---------- Payments This Month ---------- */
 
         $dueThisMonth = EnrolledCourseDue::get($month, $year);
 
         /* ---------- Annual Payments ---------- */
-        $annualPayments = EnrolledCoursePaymentYearly::get($month, $year);
+        $annualPayments = EnrolledCoursePaymentYearly::get($year);
 
 
         // Get cached total fee
@@ -91,8 +92,7 @@ class IndexResponse implements IndexContracts
 
         $totalOverdue_count = EnrolledCourseTotalOverdueCount::get();
 
-
-         $dueThisMonth = EnrolledCourseDueThisMonth::get($startOfMonth, $endOfMonth);
+        $dueThisMonth = EnrolledCourseDueThisMonth::get($startOfMonth, $endOfMonth);
 
         $enrolledCourses = EnrolledCourseWithCertificate::get();
 
@@ -101,17 +101,8 @@ class IndexResponse implements IndexContracts
         $total_income = EnrolledCourse::totalIncome();
         $total_income_m = EnrolledCourse::totalMonthlyIncome($month, $year);
         $totalPaid_m = EnrolledCourseTotalPaidMonth::get($startOfMonth, $endOfMonth);
-
             return $request->wantsJson()
                 ? response()->json([
-                    // ResponseKeys::TITLE => $title,
-                    // ResponseKeys::DESC => $desc,
-                    // ResponseKeys::CS => $cs,
-                    // 'post' => $post,
-                    // 'faq' => $faq,
-                    // 'courses' => $courses,
-                    // "settings" => $settings,
-                    // "RatingModal" => $RatingModal
                 ])
                 :  view(
                     config('setting.welcome_blade', 'dashboard.welcome'),

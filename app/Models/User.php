@@ -90,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(WishList::class,'user_id');
     }
 
-    public function isAdmin(): bool
+    public function scopeIsAdmin(): bool
     {
         return $this->role === config('settings.roles.admin') || $this->is_admin == 1;
     }

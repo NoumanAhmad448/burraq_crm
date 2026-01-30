@@ -353,6 +353,15 @@ class StudentController extends Controller
 
         return redirect()->back()->with('success', 'Student deleted successfully');
     }
+    /**
+     * Soft delete student (ADMIN ONLY)
+     */
+    public function activate($id)
+    {
+        Student::where('id', $id)->update(['is_deleted' => 0]);
+
+        return redirect()->back()->with('success', 'Student activated successfully');
+    }
 
     /**
      * Print student PDF

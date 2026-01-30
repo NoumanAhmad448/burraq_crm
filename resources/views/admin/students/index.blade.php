@@ -181,6 +181,12 @@
                                             <x-delete :route="route('students.delete', $course->student->id)"
                                                 title="Delete the student permanently"/>
                                         </x-admin>
+                                        <x-super-admin>
+                                            @can("is-deleted-student", $course->student)
+                                                <x-active :route="route('students.activate', $course->student->id)"
+                                                    />
+                                            @endcan
+                                        </x-super-admin>
                                     </div>
                                 </td>
 
