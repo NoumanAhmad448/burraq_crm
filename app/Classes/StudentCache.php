@@ -24,7 +24,7 @@ class StudentCache
         $cacheKey = "students_this_month_{$year}_{$month}";
 
         // Return cached value or execute closure
-        return Cache::remember($cacheKey, $ttl * 60, function () use ($month, $year) {
+        return Cache::remember($cacheKey, $ttl, function () use ($month, $year) {
             return CRMStudent::where('is_deleted', 0)
             ->when(!empty($month), function ($query) use ($month) {
                 $query->whereMonth('registration_date', $month);

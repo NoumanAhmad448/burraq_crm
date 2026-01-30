@@ -4,9 +4,8 @@ namespace App\Classes;
 
 use App\Models\Student as CRMStudent;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 
-class StudentYearly
+class StudentsYearly
 {
     /**
      * Get students grouped by month for a given year
@@ -18,12 +17,12 @@ class StudentYearly
      */
     public static function get($year = null, $ttl = 1)
     {
-
+        $year = !empty($year) ? $year : now()->year;
         $cacheKey = "students_yearly_{$year}";
-
+        // dump($year);
         return Cache::remember($cacheKey, $ttl, function () use ($year) {
-            return CRMStudent::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-                ->whereYear('created_at', $year)
+            return CRMStudent::selectRaw('MONTH(registration_date) as month, COUNT(*) as total')
+                ->whereYear('registration_date', $year)
                 ->where('is_deleted', 0)
                 ->groupBy('month')
                 ->orderBy('month')

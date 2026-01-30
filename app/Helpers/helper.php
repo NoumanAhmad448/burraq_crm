@@ -298,6 +298,10 @@ if (! function_exists('throw_exception')) {
     }
 }
 
+function isNotProduction(){
+    return  !app()->environment(config("app.live_env"));
+}
+
   function uploadPhoto($img)
     {
 

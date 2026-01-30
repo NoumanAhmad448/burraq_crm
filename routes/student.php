@@ -26,6 +26,9 @@ Route::middleware(config('middlewares.auth'))->group(function () {
     Route::get('students/{id}/delete', [StudentController::class, 'delete'])
         ->name('students.delete');
 
+    Route::get('students/{id}/activate', [StudentController::class, 'activate'])
+        ->name('students.activate');
+
     // Print / Receipt
     Route::get('students/{id}/print', [StudentController::class, 'print'])
         ->name('students.print');

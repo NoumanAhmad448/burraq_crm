@@ -10,7 +10,7 @@ class EnrolledCourseStudentFilter
     /**
      * Build the filtered query
      */
-    public static function query(?int $month = null, ?int $year = null): Builder
+    public static function query(?int $month = null, ?int $year = null)
     {
         return EnrolledCourse::with(['student', 'payments'])
             ->whereHas('student', function ($query) use ($month, $year) {
@@ -22,7 +22,7 @@ class EnrolledCourseStudentFilter
                           $q->whereYear('registration_date', $year);
                       });
             })
-            ->latest('created_at');
+            ->latest('created_at')->get();
     }
 
     /**
