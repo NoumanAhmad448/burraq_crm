@@ -154,44 +154,45 @@ sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/stora
 sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
-echo "Stopping Horizon if running..."
-if /usr/local/bin/php artisan horizon:status >/dev/null 2>&1; then
-    /usr/local/bin/php artisan horizon:terminate || true
-fi
+# echo "Stopping Horizon if running..."
+# if /usr/local/bin/php artisan horizon:status >/dev/null 2>&1; then
+#     /usr/local/bin/php artisan horizon:terminate || true
+# fi
 
-composer require laravel/horizon --no-dev
+# yes | composer require laravel/horizon
 
 # Run this only first time
-php artisan horizon:install
-php artisan migrate
-echo "📊 Publishing Horizon config..."
-/usr/local/bin/php artisan horizon:publish || true
+# php artisan horizon:install
+# php artisan migrate
+# echo "📊 Publishing Horizon config..."
+# /usr/local/bin/php artisan horizon:publish || true
 # Run this only first time
 
-echo "🔍 Checking Supervisor..."
-if ! command -v supervisorctl >/dev/null 2>&1; then
-    echo "⚠️ Supervisor not found. Installing..."
+# echo "🔍 Checking Supervisor..."
+# if ! command -v supervisorctl >/dev/null 2>&1; then
+#     echo "⚠️ Supervisor not found. Installing..."
 
-    if command -v dnf >/dev/null 2>&1; then
-        dnf install -y supervisor
-    else
-        yum install -y supervisor
-    fi
+#     if command -v dnf >/dev/null 2>&1; then
+#         dnf install -y supervisor
+#     else
+#         yum install -y supervisor
+#     fi
 
-    systemctl enable supervisord
-    systemctl start supervisord
-fi
+#     systemctl enable supervisord
+#     systemctl start supervisord
+# fi
 
 
-echo "📁 Installing Horizon Supervisor config..."
-cp deploy/supervisor/horizon.conf /etc/supervisor/conf.d/laravel-horizon.conf
+# echo "📁 Installing Horizon Supervisor config..."
+# echo "Confirm the location of supervisor location in the files section if it is supervisord.d it means /etc/supervisord.d/"
+# yes | cp deploy/supervisor/horizon.conf /etc/supervisord.d/laravel-horizon.ini
 
-echo "🔄 Reloading Supervisor..."
-supervisorctl reread
-supervisorctl update
+# echo "🔄 Reloading Supervisor..."
+# supervisorctl reread
+# supervisorctl update
 
-echo "▶️ Starting Horizon via Supervisor..."
-supervisorctl start laravel-horizon || supervisorctl restart laravel-horizon
+# echo "▶️ Starting Horizon via Supervisor..."
+# supervisorctl start laravel-horizon || supervisorctl restart laravel-horizon
 
 php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan event:cache && php artisan optimize
