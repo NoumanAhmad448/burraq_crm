@@ -19,21 +19,24 @@ class StudentCache
      */
     public static function studentsThisMonth($month = null, $year = null, $ttl = 1)
     {
-        $month = $month ?? Carbon::now()->month;
-        $year = $year ?? Carbon::now()->year;
 
         // Cache key
         $cacheKey = "students_this_month_{$year}_{$month}";
 
         // Return cached value or execute closure
         return Cache::remember($cacheKey, $ttl * 60, function () use ($month, $year) {
-            return CRMStudent::whereMonth('created_at', $month)
-                ->whereYear('created_at', $year)
-                ->where('is_deleted', 0)
-                ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get();
+            return CRMStudent::where('is_deleted', 0)
+            ->when(!empty($month), function ($query) use ($month) {
+                $query->whereMonth('registration_date', $month);
+            })
+            ->when(!empty($year), function ($query) use ($year) {
+                $query->whereYear('registration_date', $year);
+            })
+            ->selectRaw('DATE(registration_date) as date, COUNT(*) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
         });
     }
 
@@ -46,9 +49,6 @@ class StudentCache
      */
     public static function clearCache($month = null, $year = null)
     {
-        $month = $month ?? Carbon::now()->month;
-        $year = $year ?? Carbon::now()->year;
-
         $cacheKey = "students_this_month_{$year}_{$month}";
         Cache::forget($cacheKey);
     }

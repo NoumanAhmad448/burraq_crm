@@ -27,6 +27,7 @@
         'bg' => 'bg-primary',
         'amount_color' => 'purple',
         'route' => 'students.index',
+        'route_keys' => ['month' => $month, "year" => $year],
     ],
 
     [
@@ -88,6 +89,15 @@
         'roles' => ['admin'],
     ],
 
+    // [
+    //     'title' => 'Total Income (This Month)',
+    //     'count' => show_payment($total_income_m),
+    //     'icon' => 'img/fa-fa-check-circle.png',
+    //     'bg' => 'bg-info',
+    //     'amount_color' => 'success',
+    //     'route' => 'students.index',
+    //     'roles' => ['admin'],
+    // ],
     [
         'title' => 'Total Income',
         'count' => show_payment($total_income),
@@ -163,33 +173,10 @@
     </button>
 </div>
 <form method="GET" action="{{ route('index') }}" class="form-inline justify-content-end mb-3">
-
-    <div class="form-group mr-2 mb-0">
-        <label for="month" class="mr-1">Month</label>
-        <select name="month" id="month" class="form-control form-control-sm">
-            @for ($m = 1; $m <= 12; $m++)
-                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
-                    {{ \Carbon\Carbon::create()->month($m)->format('F') }}
-                </option>
-            @endfor
-        </select>
-    </div>
-
-    <div class="form-group mr-2 mb-0">
-        <label for="year" class="mr-1">Year</label>
-        <select name="year" id="year" class="form-control form-control-sm">
-            @for ($y = 2023; $y <= 2035; $y++)
-                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
-                    {{ $y }}
-                </option>
-            @endfor
-        </select>
-    </div>
-
+    <x-month_year_filter :month="$month" :year="$year" year_select=false/>
     <button type="submit" class="btn btn-primary btn-sm mb-0">
         Filter
     </button>
-
 </form>
 
 
@@ -338,7 +325,7 @@
             data: {
                 labels: ['Paid', 'Pending', 'Overdue'],
                 datasets: [{
-                    data: [{{ $totalPaid_g }}, {{ $pending }}, {{ $totalOverdue }}],
+                    data: [{{ $totalPaid_g }}, {{ $pending }}],
                     backgroundColor: [
                         '#0d6efd', // Paid (Blue)
                         '#dc3545', // Pending (Red)

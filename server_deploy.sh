@@ -45,18 +45,15 @@ fi
 # Update Composer Dependencies
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --no-cache
 
-# For ENV file testing
-# yes | composer require --dev phpunit/phpunit
-
+# Laravel Seeders
 # yes | php artisan db:seed --class=LanguageSeeder
-php artisan db:seed --class=UpdatePaymentDatesSeeder
 
 
 # Avoid any node permission error
 sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com/
 
 # Create a custom link of public folder with storage folder
-# yes | php artisan storage:link-custom
+# yes | php artisan storage:link
 
 # Run database migrations
 yes | php artisan migrate --force
@@ -146,24 +143,22 @@ nvm use 20.18.3
 # make sure .env files are same
 # APP_ENV=testing php artisan test --filter EnvFilesConsistencyTest
 
-php artisan config:cache && php artisan route:cache && php artisan view:cache
-php artisan event:cache && php artisan optimize
-
 # Check project health
 # php artisan health:check --no-notification
 
 # Reset permissions for web server & FTP user
 sudo chown -R nomilyskills:nomilyskills /home/nomilyskills/public_html/crm.burraqengineering.com/
 sudo chmod -R 755 /home/nomilyskills/public_html/crm.burraqengineering.com/
-sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage/
+sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/storage/framework/cache/data
 sudo chmod -R 777 /home/nomilyskills/public_html/crm.burraqengineering.com/bootstrap/cache
 sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 
-# Run cron
-# php artisan schedule:run >> /dev/null 2>&1
 
-# TO save all the logs in the the databse table
-# php artisan schedule-monitor:sync
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+php artisan event:cache && php artisan optimize
+php artisan cache:clear
+
 
 # Disable maintenance mode
 php artisan up

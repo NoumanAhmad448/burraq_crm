@@ -69,6 +69,7 @@
 
                         $payment_slip_path = $is_update && $student ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_slip_path : "";
                     @endphp
+
                 <div class="col-md-4 mt-2">
                     <label>Payment Method</label>
 
@@ -92,7 +93,15 @@
                             value="{{ $paymentDate }}">
                     </div>
                 </div>
-
+                <div class="col-md-4 mt-2">
+                    <div class="form-group">
+                        <label>Registration Date</label>
+                        <input type="date"
+                            name="registration_date"
+                            class="form-control datepicker"
+                            value="{{ old('registration_date', $student->registration_date ?? '') }}">
+                    </div>
+                </div>
                 {{-- <div class="col-md-4 mt-2">
                     <label>Admission Date</label>
                     <input type="text" name="admission_date" class="form-control datepicker"

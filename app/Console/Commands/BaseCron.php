@@ -26,12 +26,12 @@ abstract class BaseCron extends Command
 
         try {
             // Execute the actual cron logic
-            $this->runCron();
+            $erro_message = $this->runCron();
 
             // Success update
             $this->cronJob->update([
-                config('table.status')  => config('constants.successed'),
-                config('table.message') => 'Cron executed successfully',
+                config('table.status')  => $erro_message ? config('constants.error') : config('constants.successed'),
+                config('table.message') => $erro_message ?? 'Cron executed successfully',
                 config('table.ends_at') => LyskillsCarbon::now(),
             ]);
         } catch (Exception $e) {

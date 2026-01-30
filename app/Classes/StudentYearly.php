@@ -18,7 +18,6 @@ class StudentYearly
      */
     public static function get($year = null, $ttl = 1)
     {
-        $year = $year ?? Carbon::now()->year;
 
         $cacheKey = "students_yearly_{$year}";
 
@@ -40,8 +39,6 @@ class StudentYearly
      */
     public static function clear($year = null)
     {
-        $year = $year ?? Carbon::now()->year;
-
         $cacheKey = "students_yearly_{$year}";
         Cache::forget($cacheKey);
     }
