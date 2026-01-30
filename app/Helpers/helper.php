@@ -4,13 +4,12 @@ use App\Models\CourseStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\LyskillsCarbon;
 use App\Helpers\UploadData;
-use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+
 
 if (! function_exists('custom_dump')) {
     function custom_dump($input): void
@@ -234,6 +233,7 @@ if (!function_exists('server_logs')) {
         $return_response = true,
         ) {
 
+        recordLogs($e);
         if(is_array($e) && count($e) > 1){
         // Log::channel("slack")->error("Exception caught: " . $e[1]->getMessage(),[
         //     "exception" => $e[1]
@@ -389,4 +389,9 @@ if (!function_exists('studentMonthYear')) {
 
         return compact('month', 'year', 'startOfMonth', 'endOfMonth');
     }
+}
+
+function recordLogs($message){
+    Log::error($message);
+
 }
