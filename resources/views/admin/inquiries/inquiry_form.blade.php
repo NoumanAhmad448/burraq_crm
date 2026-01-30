@@ -43,48 +43,10 @@
             <div class="form-group">
                 <label>Source  <span class="text-danger">*</span></label>
                 <select name="status" class="form-control">
-                    <option value="pending" {{ $is_update && $inquiry?->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="resolved" {{ $is_update && $inquiry?->status == 'resolved' ? 'selected' : '' }}>Resolved</option>
-                    <option value="other" {{ $is_update && $inquiry?->status == 'other' ? 'selected' : '' }}>Other</option>
-                     <option value="facebook"
-                        {{ $is_update && $inquiry?->source === 'facebook' ? 'selected' : '' }}>
-                        Facebook
-                    </option>
-
-                    <option value="instagram"
-                        {{ $is_update && $inquiry?->source === 'instagram' ? 'selected' : '' }}>
-                        Instagram
-                    </option>
-
-                    <option value="linkedin"
-                        {{ $is_update && $inquiry?->source === 'linkedin' ? 'selected' : '' }}>
-                        LinkedIn
-                    </option>
-
-                    <option value="whatsapp"
-                        {{ $is_update && $inquiry?->source === 'whatsapp' ? 'selected' : '' }}>
-                        WhatsApp
-                    </option>
-
-                    <option value="friend"
-                        {{ $is_update && $inquiry?->source === 'friend' ? 'selected' : '' }}>
-                        Friend
-                    </option>
-                    <option value="contacted"
-                        {{ $is_update && $inquiry?->status === 'contacted' ? 'selected' : '' }}>
-                        Contacted
-                    </option>
-
-                    <option value="follow_up"
-                        {{ $is_update && $inquiry?->status === 'follow_up' ? 'selected' : '' }}>
-                        Follow Up
-                    </option>
-
-                    <option value="not_interested"
-                        {{ $is_update && $inquiry?->status === 'not_interested' ? 'selected' : '' }}>
-                        Not Interested
-                    </option>
-
+                    <x-select-options
+                            :items="['pending','resolved','contacted','follow_up','not_interested','other']"
+                            :selected="$is_update ? $inquiry?->status : '' "
+                        />
                 </select>
             </div>
 

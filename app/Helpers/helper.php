@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 
 if (! function_exists('custom_dump')) {
@@ -394,4 +395,25 @@ if (!function_exists('studentMonthYear')) {
 function recordLogs($message){
     Log::error($message);
 
+}
+
+
+function humanize($value)
+{
+    return Str::of($value)
+        ->replace('_', ' ')
+        ->title(); // Capitalize each word
+}
+
+function statusBadgeClass($status)
+{
+    return match ($status) {
+        'pending'         => 'badge-warning',
+        'resolved'        => 'badge-success',
+        'contacted'       => 'badge-primary',
+        'follow_up'       => 'badge-info',
+        'not_interested'  => 'badge-secondary',
+        'other'           => 'badge-dark',
+        default           => 'badge-light',
+    };
 }

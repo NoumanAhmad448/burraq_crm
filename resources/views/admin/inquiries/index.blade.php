@@ -84,15 +84,15 @@
             <td>{{ $inq->phone }}</td>
             <td>{{ $inq->email }}</td>
             <td>{{ ucfirst($inq?->course?->name) }}</td>
-            <td>{{ ucfirst($inq->status) }}</td>
+            <td><x-status-badge :status="$inq->status" /></td>
             <td>{{ $inq->deleted_at ? 'Yes' : 'No' }}</td>
             <td>
                 <a href="{{ route('inquiries.edit',$inq->id) }}" class="btn btn-sm btn-primary">Edit</a>
                 @if(auth()->user()->is_admin)
                 <a href="{{ route('inquiries.logs', $inq->id) }}"
-   class="btn btn-sm btn-info">
-    Logs
-</a>
+                                class="btn btn-sm btn-info">
+                                    Logs
+                </a>
 
                 @if(!$inq->deleted_at)
                 <form method="POST" action="{{ route('inquiries.delete',$inq->id) }}" style="display:inline;">

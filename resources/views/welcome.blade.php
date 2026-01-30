@@ -324,7 +324,7 @@
             data: {
                 labels: ['Paid', 'Pending', 'Overdue'],
                 datasets: [{
-                    data: [{{ $totalPaid_g }}, {{ $pending }}],
+                    data: [{{ $totalPaid_g }}, {{ $pending }}, {{ $totalOverdue_count }}],
                     backgroundColor: [
                         '#0d6efd', // Paid (Blue)
                         '#dc3545', // Pending (Red)
