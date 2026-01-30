@@ -88,16 +88,15 @@
         'route' => null,
         'roles' => ['admin'],
     ],
-
-    // [
-    //     'title' => 'Total Income (This Month)',
-    //     'count' => show_payment($total_income_m),
-    //     'icon' => 'img/fa-fa-check-circle.png',
-    //     'bg' => 'bg-info',
-    //     'amount_color' => 'success',
-    //     'route' => 'students.index',
-    //     'roles' => ['admin'],
-    // ],
+    [
+        'title' => 'Total Income (This Month)',
+        'count' => show_payment($total_income_m),
+        'icon' => 'img/fa-fa-check-circle.png',
+        'bg' => 'bg-info',
+        'amount_color' => 'success',
+        'route' => 'students.index',
+        'roles' => ['admin'],
+    ],
     [
         'title' => 'Total Income',
         'count' => show_payment($total_income),

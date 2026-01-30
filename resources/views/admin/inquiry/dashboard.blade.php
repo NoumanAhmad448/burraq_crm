@@ -113,32 +113,33 @@
          {{-- CHARTS --}}
         <div class="row">
 
-            {{-- STATUS WISE --}}
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-primary text-white text-center">
-                        <i class="fa fa-pie-chart"></i>
-                        <strong>Status Wise Inquiries</strong>
+           <div class="row align-items-stretch">
+                {{-- STATUS WISE --}}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-primary text-white text-center">
+                            <i class="fa fa-pie-chart"></i>
+                            <strong>Status Wise Inquiries</strong>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <canvas id="statusChart"></canvas>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <canvas id="statusChart" height="250"></canvas>
+                </div>
+
+                {{-- MONTHLY TREND --}}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-success text-white text-center">
+                            <i class="fa fa-bar-chart"></i>
+                            <strong>Monthly Inquiry Trend</strong>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            {{-- MONTHLY TREND --}}
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-success text-white text-center">
-                        <i class="fa fa-bar-chart"></i>
-                        <strong>Monthly Inquiry Trend</strong>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="monthlyChart" height="250"></canvas>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
