@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\StudentCoursePaymentController;
@@ -41,12 +42,12 @@ Route::middleware(config('middlewares.auth'))->group(function () {
     )->name('students.course.detail');
     Route::get(
         'enrolled-course/{enrolledCourseId}/payment/create',
-        [StudentController::class, 'createPayment']
+        [PaymentController::class, 'createPayment']
     )->name('enrolled.course.payment.create');
 
     Route::post(
         'enrolled-course/payment/store',
-        [StudentController::class, 'storePayment']
+        [PaymentController::class, 'storePayment']
     )->name('enrolled.course.payment.store');
 
     // routes/web.php

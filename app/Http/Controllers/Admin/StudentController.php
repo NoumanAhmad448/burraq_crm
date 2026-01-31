@@ -11,7 +11,6 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Models\EnrolledCoursePayment;
-use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
@@ -372,49 +371,5 @@ class StudentController extends Controller
         ));
     }
 
-    public function createPayment($enrolledCourseId)
-    {
-        $enrolledCourse = EnrolledCourse::with(['course', 'payments', 'student'])
-            ->findOrFail($enrolledCourseId);
-
-        $totalPaid = $enrolledCourse->payments->sum('amount');
-
-        return view('admin.students.payment_create', compact(
-            'enrolledCourse',
-            'totalPaid'
-        ));
-    }
-    public function storePayment(Request $request)
-    {
-        $request->validate([
-            'enrolled_course_id' => 'required|exists:crm_enrolled_courses,id',
-            'amount' => 'required|numeric|min:1',
-            'paid_at' => 'required|date',
-        ]);
-
-        $enrolledCourse = EnrolledCourse::with(['course', 'payments'])
-            ->findOrFail($request->enrolled_course_id);
-
-        $alreadyPaid = $enrolledCourse->payments->sum('amount');
-        $courseFee = $enrolledCourse->course->fee;
-
-        if (($alreadyPaid + $request->amount) > $courseFee) {
-            return back()->withErrors([
-                'amount' => 'Payment exceeds total course fee'
-            ]);
-        }
-
-        Payment::create([
-            'enrolled_course_id' => $enrolledCourse->id,
-            'amount' => $request->amount,
-            'paid_at' => $request->paid_at,
-        ]);
-
-        return redirect()
-            ->route('students.course.detail', [
-                $enrolledCourse->student_id,
-                $enrolledCourse->id
-            ])
-            ->with('success', 'Payment added successfully');
-    }
+    
 }
