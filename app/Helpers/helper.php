@@ -235,27 +235,7 @@ if (!function_exists('server_logs')) {
         ) {
 
         recordLogs($e);
-        if(is_array($e) && count($e) > 1){
-        // Log::channel("slack")->error("Exception caught: " . $e[1]->getMessage(),[
-        //     "exception" => $e[1]
-        // ]);
-
-        if (config("app.debug")) {
-            if (count($e) > 1 && $e[0]) {
-                custom_dump($e[1]->getMessage());
-                custom_dump("-----------------------");
-            }
-            if (count($request) > 1 && $request[0]) {
-                custom_dump($request[1]->all());
-                custom_dump("-----------------------");
-            }
-            if ($config) {
-                custom_dump("memory_limit" . ini_get("memory_limit"));
-                custom_dump("-----------------------");
-                custom_dump("upload_max_filesize=>" . ini_get("upload_max_filesize"));
-                custom_dump("-----------------------");
-            }
-        } else if ($return_response) {
+        if ($return_response) {
             $response = ['error', config("setting.err_msg")];
 
             // Safely get request values
@@ -269,7 +249,6 @@ if (!function_exists('server_logs')) {
 
             return back()->with($response);
         }
-    }
     }
 }
 
