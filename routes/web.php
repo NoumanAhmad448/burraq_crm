@@ -8,7 +8,7 @@ use App\Http\Controllers\CourseEx2Controller;
 use App\Http\Controllers\CourseEx3Controller;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DescriptionController;
+use App\Http\Controllers\Ajax\CnicValidationController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ExResController;
 use App\Http\Controllers\OtherFilesController;
@@ -47,6 +47,8 @@ use App\Views\GuestView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
+
+Route::post('/ajax/validate-cnic', [CnicValidationController::class, 'check']);
 
 Route::domain(config("app.url"))->post('/back', function () {
     return redirect()->route('index');
