@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\EnrolledCourseDuePaymentCache;
-use App\Classes\EnrolledCoursePaidCache;
-use App\Classes\EnrolledCourseStudentFilter;
+use App\Classes\ConfirmCompletedStatus;
 use App\Classes\LyskillsCarbon;
-use App\Classes\PendingPaidEnrolledCourseCache;
-use App\Classes\StudentEnrolledCourseCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
@@ -16,16 +12,14 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Models\EnrolledCoursePayment;
-use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Services\StudentEnrolledCourseResolver;
 
 class StudentController extends Controller
 {
-
-
     /**
      * Show create form + students list
      */
@@ -34,41 +28,14 @@ class StudentController extends Controller
         // dd($request->all());
         $type = $request->get('type');
         extract(studentMonthYear($request));
-        if ($type == 'deleted') {
-            $enrolledCourses = EnrolledCourseStudentFilter::query($month, $year);
-        }
-        else if ($type == 'unpaid') {
-            $enrolledCourses = EnrolledCourseDuePaymentCache::get($month, $year);
-        }
-        else if ($type == 'paid') {
-            $enrolledCourses = EnrolledCoursePaidCache::get($month, $year);
-        }
-        else if ($type == 'overdue') {
-            $enrolledCourses = PendingPaidEnrolledCourseCache::get($month, $year);
-        }
-        else if ($type === 'certificate_issued') {
-           $enrolledCourses = EnrolledCourse::with([
-                'student',
-                'payments',
-                'certificate' => fn ($q) => $q->where('generated_count', '>', 0)
-            ])
-            ->whereHas('certificate', fn ($q) =>
-                $q->whereNotNull('generated_count')
-                ->where('generated_count', '>', 0)
-            )
-            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
-                        ->where('is_deleted', 0)
+        $enrolledCourses = StudentEnrolledCourseResolver::resolve(
+            $type,
+            $month,
+            $year,
+            $status,
+        );
 
-            ->latest()
-            ->get();
-
-        }
-        else {
-        $enrolledCourses = StudentEnrolledCourseCache::get($month, $year);
-        }
-
-        // dd($enrolledCourses);
-        $all_courses = Course::where('is_deleted', 0)->get();
+        $all_courses = StudentEnrolledCourseResolver::allCourses();
 
         return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year"));
     }
@@ -151,7 +118,6 @@ class StudentController extends Controller
         DB::beginTransaction();
 
         try {
-
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
             // $courses = Course::where('is_deleted', 0)->get();
             $student = $this->studentForm($request);
@@ -166,6 +132,15 @@ class StudentController extends Controller
 
 
             DB::commit();
+
+            if($student && $student->status == "Completed"){
+                $confirm = new ConfirmCompletedStatus($student->id);
+                $enrolledCourses = $confirm->handle();
+                if ($enrolledCourses->isNotEmpty()) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Student has not completed all payments.');
+                }
+            }
 
             // Main recipients
             $toEmails = config("setting.student_emails");
@@ -328,11 +303,20 @@ class StudentController extends Controller
          DB::beginTransaction();
 
         $student = Student::findOrFail($id);
-        // dd($request->all());
         $this->studentForm($request, true, $student);
 
         $this->updateEnrolledCourses($request, $student);
+        if($student && $request->status == "Completed"){
+            // dd($student->status);
+            $confirm = new ConfirmCompletedStatus($id);
 
+            $enrolledCourses = $confirm->handle();
+            // dd($enrolledCourses);
+            if ($enrolledCourses->isNotEmpty()) {
+                DB::rollback();
+                return back()->with('error', 'Student has not completed all payments.');
+            }
+        }
         DB::commit();
 
         if ($request->print) {
@@ -358,6 +342,15 @@ class StudentController extends Controller
         // dd(Student::where('id', $id)->first());
 
         return redirect()->back()->with('success', 'Student deleted successfully');
+    }
+    /**
+     * Soft delete student (ADMIN ONLY)
+     */
+    public function activate($id)
+    {
+        Student::where('id', $id)->update(['is_deleted' => 0]);
+
+        return redirect()->back()->with('success', 'Student activated successfully');
     }
 
     /**
@@ -402,49 +395,4 @@ class StudentController extends Controller
         ));
     }
 
-    public function createPayment($enrolledCourseId)
-    {
-        $enrolledCourse = EnrolledCourse::with(['course', 'payments', 'student'])
-            ->findOrFail($enrolledCourseId);
-
-        $totalPaid = $enrolledCourse->payments->sum('amount');
-
-        return view('admin.students.payment_create', compact(
-            'enrolledCourse',
-            'totalPaid'
-        ));
-    }
-    public function storePayment(Request $request)
-    {
-        $request->validate([
-            'enrolled_course_id' => 'required|exists:crm_enrolled_courses,id',
-            'amount' => 'required|numeric|min:1',
-            'paid_at' => 'required|date',
-        ]);
-
-        $enrolledCourse = EnrolledCourse::with(['course', 'payments'])
-            ->findOrFail($request->enrolled_course_id);
-
-        $alreadyPaid = $enrolledCourse->payments->sum('amount');
-        $courseFee = $enrolledCourse->course->fee;
-
-        if (($alreadyPaid + $request->amount) > $courseFee) {
-            return back()->withErrors([
-                'amount' => 'Payment exceeds total course fee'
-            ]);
-        }
-
-        Payment::create([
-            'enrolled_course_id' => $enrolledCourse->id,
-            'amount' => $request->amount,
-            'paid_at' => $request->paid_at,
-        ]);
-
-        return redirect()
-            ->route('students.course.detail', [
-                $enrolledCourse->student_id,
-                $enrolledCourse->id
-            ])
-            ->with('success', 'Payment added successfully');
-    }
 }

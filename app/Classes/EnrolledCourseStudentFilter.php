@@ -10,11 +10,14 @@ class EnrolledCourseStudentFilter
     /**
      * Build the filtered query
      */
-    public static function query(?int $month = null, ?int $year = null): Builder
+    public static function query(?int $month = null, ?int $year = null, $status="")
     {
         return EnrolledCourse::with(['student', 'payments'])
-            ->whereHas('student', function ($query) use ($month, $year) {
-                $query->where('is_deleted', 1)
+            ->whereHas('student', function ($query) use ($month, $year, $status) {
+                $query->when($status, function($q, $status){
+                    $q->where("status", empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status);
+                })
+                ->where('is_deleted', 1)
                       ->when(!is_null($month), function ($q) use ($month) {
                           $q->whereMonth('registration_date', $month);
                       })
@@ -22,7 +25,7 @@ class EnrolledCourseStudentFilter
                           $q->whereYear('registration_date', $year);
                       });
             })
-            ->latest('created_at');
+            ->latest('created_at')->get();
     }
 
     /**

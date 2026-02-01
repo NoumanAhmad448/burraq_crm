@@ -26,11 +26,17 @@
                     <td>{{ $job->name }}</td>
                     <td>{{ $job->w_name }}</td>
                     <td>
-                        @if($job->status === 'successed')
-                            <span class="badge badge-success">Success</span>
-                        @else
-                            <span class="badge badge-danger">Failed</span>
-                        @endif
+                            <span class="badge
+                           @if ($job->status === config('constants.successed'))
+                                badge-success
+                            @elseif ($job->status === config('constants.error'))
+                                badge-danger
+                            @elseif ($job->status === config('constants.running'))
+                                badge-warning
+                            @else
+                                badge-secondary
+                            @endif
+                            ">{{ humanize($job->status) }}</span>
                     </td>
                     <td>{{ $job->message }}</td>
                     <td>{{ \App\Classes\LyskillsCarbon::parse($job->starts_at)->format('d M Y H:i:s') }}</td>

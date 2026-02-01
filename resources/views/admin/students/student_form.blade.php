@@ -29,18 +29,22 @@
                     <label>Name *</label>
                     <input type="text" name="name" class="form-control" required placeholder="Student Full Name (Mandatory)"
                         value="@if($is_update) {{ $student->name }}@else{{ old('name')}}@endif">
+                        <input type="hidden" id="student_id" value="@if($is_update){{$student->id}}@endif" />
                 </div>
 
                 <div class="col-md-4">
                     <label>Father Name</label>
                     <input type="text" name="father_name" class="form-control" placeholder="Father Name"
+                        placeholder="12345-1234567-1"
                         value="@if($is_update) {{ $student->father_name }}@else{{ old('father_name')}}@endif">
                 </div>
 
                 <div class="col-md-4">
                     <label>CNIC</label>
-                    <input type="text" name="cnic" class="form-control" placeholder="CNIC"
+                    <input type="text"     id="cnic" name="cnic" class="form-control" placeholder="CNIC"
                         value="@if($is_update) {{ $student->cnic }}@else{{ old('cnic')}}@endif">
+                    <small class="text-muted">Format: 12345-1234567-1</small>
+                    <div id="cnic-message" style="display:none;"></div>
                 </div>
 
                 <div class="col-md-4 mt-2">
@@ -69,6 +73,7 @@
 
                         $payment_slip_path = $is_update && $student ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_slip_path : "";
                     @endphp
+
                 <div class="col-md-4 mt-2">
                     <label>Payment Method</label>
 
@@ -86,7 +91,7 @@
                     <select name="status" id="student_status" class="form-control">
                         <option value="Enrolled" {{ old('status', $is_update && $student->status ? $student->status : '')  == 'Enrolled' ? 'selected' : '' }}>Enrolled</option>
                         <option value="Dropped" {{ old('status', $is_update && $student->status ? $student->status : '') == 'Dropped' ? 'selected' : '' }}>Dropped</option>
-                        <option value="Refund"  {{ old('status', $is_update && $student->status ? $student->status : '')== 'Refund' ? 'selected' : '' }}>Refund</option>
+                        <option value="Completed"  {{ old('status', $is_update && $student->status ? $student->status : '')== 'Completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </div>
 
@@ -114,8 +119,6 @@
                             value="{{ old('registration_date', $student->registration_date ?? '') }}">
                     </div>
                 </div>
-
-
                 {{-- <div class="col-md-4 mt-2">
                     <label>Admission Date</label>
                     <input type="text" name="admission_date" class="form-control datepicker"
@@ -364,6 +367,48 @@ $(document).ready(function() {
         // On change
         statusSelect.addEventListener('change', toggleReasonBox);
     });
+</script>
+<script>
+$(document).ready(function () {
+    $('#cnic').on('blur', function () {
+    let cnic = $(this).val().trim();
+    let studentId = $('#student_id').val().trim() == "" ? null : $('#student_id').val().trim(); // hidden input on edit
+
+    if (!cnic) return;
+
+    $.ajax({
+        url: '/ajax/validate-cnic',
+        type: 'POST',
+        data: {
+            cnic: cnic,
+            student_id: studentId,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (response) {
+            $('#cnic-message')
+                .removeClass()
+                .addClass('alert alert-success')
+                .html(response.message)
+                .show();
+        },
+        error: function (xhr) {
+            let res = xhr.responseJSON;
+            let alertClass = 'alert-danger';
+
+            if (res?.type === 'warning') {
+                alertClass = 'alert-warning';
+            }
+
+            $('#cnic-message')
+                .removeClass()
+                .addClass('alert ' + alertClass)
+                .html(res?.message ?? 'Something went wrong')
+                .show();
+        }
+    });
+});
+
+});
 </script>
 
 {{-- ================= END CREATE STUDENT FORM ================= --}}

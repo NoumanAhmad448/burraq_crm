@@ -9,7 +9,14 @@ $menuGroups = [
                 'title' => 'Students',
                 'icon'  => 'fa-users',
                 'route' => route('students.index'),
-                'img'   => 'student1.jpg',
+                'img'   => 'user.png',
+                'access_roles' => ['admin', 'hr', 'admission_officer'],
+            ],
+            [
+                'title' => 'Completed Students',
+                'icon'  => 'fa-users',
+                'route' => route('students.index', ["status" => "Completed"]),
+                'img'   => 'user.png',
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
             [
@@ -24,12 +31,12 @@ $menuGroups = [
                 'route' => route('inquiries.index'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
-            // [
-            //     'title' => 'Inquiries Dashboard',
-            //     'icon'  => 'fa-question-circle',
-            //     'route' => route('admin.inquiry.dashboard'),
-            //     'access_roles' => ['admin', 'hr', 'admission_officer'],
-            // ],
+            [
+                'title' => 'Inquiries Dashboard',
+                'icon'  => 'fa-question-circle',
+                'route' => route('admin.inquiry.dashboard'),
+                'access_roles' => ['admin', 'hr', 'admission_officer'],
+            ],
         ],
     ],
 

@@ -4,13 +4,13 @@ use App\Models\CourseStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\LyskillsCarbon;
 use App\Helpers\UploadData;
-use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
+
 
 if (! function_exists('custom_dump')) {
     function custom_dump($input): void
@@ -234,27 +234,8 @@ if (!function_exists('server_logs')) {
         $return_response = true,
         ) {
 
-        if(is_array($e) && count($e) > 1){
-        // Log::channel("slack")->error("Exception caught: " . $e[1]->getMessage(),[
-        //     "exception" => $e[1]
-        // ]);
-
-        if (config("app.debug")) {
-            if (count($e) > 1 && $e[0]) {
-                custom_dump($e[1]->getMessage());
-                custom_dump("-----------------------");
-            }
-            if (count($request) > 1 && $request[0]) {
-                custom_dump($request[1]->all());
-                custom_dump("-----------------------");
-            }
-            if ($config) {
-                custom_dump("memory_limit" . ini_get("memory_limit"));
-                custom_dump("-----------------------");
-                custom_dump("upload_max_filesize=>" . ini_get("upload_max_filesize"));
-                custom_dump("-----------------------");
-            }
-        } else if ($return_response) {
+        recordLogs($e);
+        if ($return_response) {
             $response = ['error', config("setting.err_msg")];
 
             // Safely get request values
@@ -268,7 +249,6 @@ if (!function_exists('server_logs')) {
 
             return back()->with($response);
         }
-    }
     }
 }
 
@@ -295,6 +275,10 @@ if (! function_exists('throw_exception')) {
             Notification::route("slack", config("health.notifications.slack.webhook_url"))->notify(new SlackErrorNotification($msg));
         }
     }
+}
+
+function isNotProduction(){
+    return  !app()->environment(config("app.live_env"));
 }
 
   function uploadPhoto($img)
@@ -386,7 +370,33 @@ if (!function_exists('studentMonthYear')) {
         // Calculate start and end of month
         $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
         $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
-
-        return compact('month', 'year', 'startOfMonth', 'endOfMonth');
+        $status = $request->get("status");
+        return compact('month', 'year', 'startOfMonth', 'endOfMonth', "status");
     }
+}
+
+function recordLogs($message){
+    Log::error($message);
+
+}
+
+
+function humanize($value)
+{
+    return Str::of($value)
+        ->replace('_', ' ')
+        ->title(); // Capitalize each word
+}
+
+function statusBadgeClass($status)
+{
+    return match ($status) {
+        'pending'         => 'badge-warning',
+        'resolved'        => 'badge-success',
+        'contacted'       => 'badge-primary',
+        'follow_up'       => 'badge-info',
+        'not_interested'  => 'badge-secondary',
+        'other'           => 'badge-dark',
+        default           => 'badge-light',
+    };
 }

@@ -94,7 +94,7 @@
             ($is_update ?? false) ? ($payment->payment_method ?? null) : null
         );
     @endphp
-    <div class="form-group">
+        <div class="form-group">
 
     <label>Payment Method</label>
     <select name="payment_method" class="form-control">
@@ -125,8 +125,6 @@
             class="form-control datepicker"
             value="{{ $paymentDate }}">
     </div>
-
-
     <div class="form-group">
         <label>Payment Slip (Optional)</label>
         <label class="file-upload-card">

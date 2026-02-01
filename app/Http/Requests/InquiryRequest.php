@@ -18,7 +18,8 @@ class InquiryRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|string',
             'note' => 'nullable|string',
-            'status' => 'required|in:pending,resolved,other',
+            'status' => 'required',
+            'due_date' => 'nullable|date',
             'course_id' => 'required|exists:crm_courses,id',
         ];
     }

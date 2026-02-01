@@ -17,54 +17,56 @@ class InquiryController extends Controller
     public function index()
     {
 
-    $type = request('type', 'all');
+        $type = request('type', 'all');
 
-    $query = Inquiry::withTrashed()->latest();
+        $query = Inquiry::withTrashed()->latest();
 
 
-        switch ($type) {
-        case 'pending':
-            $query->where('status', 'pending');
-            break;
+            switch ($type) {
+            case 'pending':
+                $query->where('status', 'pending');
+                break;
 
-        case 'contacted':
-            $query->where('status', 'contacted');
-            break;
+            case 'contacted':
+                $query->where('status', 'contacted');
+                break;
 
-        case 'follow_up':
-            $query->where('status', 'follow_up');
-            break;
+            case 'follow_up':
+                $query->where('status', 'follow_up');
+                break;
 
-        case 'not_interested':
-            $query->where('status', 'not_interested');
-            break;
+            case 'not_interested':
+                $query->where('status', 'not_interested');
+                break;
 
-        case 'not_contacted':
-            $query->whereNull('status');
-            break;
+            case 'not_contacted':
+                $query->whereNull('status');
+                break;
 
-        // month-based (later refinement)
-        case 'this_month_pending':
-            $query->where('status', 'pending')
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year);
-            break;
+            // month-based (later refinement)
+            case 'this_month_pending':
+                $query->where('status', 'pending')
+                    ->whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year);
+                break;
 
-        case 'this_month_contacted':
-            $query->where('status', 'contacted')
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year);
-            break;
+            case 'this_month_contacted':
+                $query->where('status', 'contacted')
+                    ->whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year);
+                break;
 
-        case 'all':
-        default:
-            // no filter
-            break;
-    }
+            case 'all':
+            default:
+                // no filter
+                break;
+        }
 
-    $inquiries = $query->get();
+        $inquiries = $query->when(request('due_date'), function ($q) {
+                        $q->whereDate('due_date', request('due_date'));
+                    })->get();
 
-        $courses = Course::all();
+        $courses = Course::latest()->get();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));
     }
 
@@ -81,11 +83,9 @@ class InquiryController extends Controller
                 ['created_by' => Auth::id()]
             ));
 
-            debug_logs('Inquiry created', $request->all());
-
             return redirect()->route('inquiries.index')->with('success', "Saved...");;
         } catch (Exception $e) {
-            // dd($e->getMessage());
+            server_logs($e->getMessage());
             return redirect()
                 ->route('inquiries.index')
                 ->with('error', $e->getMessage());
@@ -95,7 +95,7 @@ class InquiryController extends Controller
     public function edit($id)
     {
         $inquiry = Inquiry::withTrashed()->findOrFail($id);
-        $courses = Course::all();
+        $courses = Course::latest()->get();
 
         return view('admin.inquiries.edit', compact('inquiry', 'courses'));
     }
@@ -112,7 +112,7 @@ class InquiryController extends Controller
 
             return redirect()->route('inquiries.index')->with('success', "Updated...");;
         } catch (Exception $e) {
-            // dd($e->getMessage());
+            server_logs($e->getMessage());
             return redirect()
                 ->route('inquiries.index')
                 ->with('error', $e->getMessage());
@@ -126,8 +126,6 @@ class InquiryController extends Controller
         $inquiry->deleted_by = Auth::id();
         $inquiry->save();
         $inquiry->delete();
-
-        debug_logs('Inquiry deleted', ['id' => $id]);
 
         return back();
     }
