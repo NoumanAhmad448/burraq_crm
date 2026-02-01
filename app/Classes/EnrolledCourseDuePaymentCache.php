@@ -31,9 +31,8 @@ class EnrolledCourseDuePaymentCache
                 ->where('is_deleted', 0)
                 ->whereHas('student', function($q, $status){
                     $q->where('is_deleted', 0)->where("status", empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status);
-                });
                 })
-                ->get()
+                                ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments->sum('paid_amount');
                     return $totalPaid < $enrolledCourse->total_fee;
