@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\ConfirmCompletedStatus;
 use App\Classes\LyskillsCarbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,11 +28,11 @@ class StudentController extends Controller
         // dd($request->all());
         $type = $request->get('type');
         extract(studentMonthYear($request));
-
         $enrolledCourses = StudentEnrolledCourseResolver::resolve(
             $type,
             $month,
-            $year
+            $year,
+            $status,
         );
 
         $all_courses = StudentEnrolledCourseResolver::allCourses();
@@ -91,6 +92,12 @@ class StudentController extends Controller
         if (!empty($request->registration_date)) {
             $data['registration_date'] = $request->registration_date;
         }
+        if (!empty($request->status)) {
+            $data['status'] = $request->status;
+        }
+        if (!empty($request->drop_reason)) {
+            $data['drop_reason'] = $request->drop_reason;
+        }
         // dump($request);
         // dd($data);
 
@@ -111,7 +118,6 @@ class StudentController extends Controller
         DB::beginTransaction();
 
         try {
-
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
             // $courses = Course::where('is_deleted', 0)->get();
             $student = $this->studentForm($request);
@@ -120,12 +126,21 @@ class StudentController extends Controller
 
 
             // dd($student);
-            // dd($request);
+            // dd($request->name);
             /* ---------- ENROLL COURSES ---------- */
             $this->updateEnrolledCourses($request, $student);
 
 
             DB::commit();
+
+            if($student && $student->status == "Completed"){
+                $confirm = new ConfirmCompletedStatus($student->id);
+                $enrolledCourses = $confirm->handle();
+                if ($enrolledCourses->isNotEmpty()) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Student has not completed all payments.');
+                }
+            }
 
             // Main recipients
             $toEmails = config("setting.student_emails");
@@ -288,11 +303,20 @@ class StudentController extends Controller
          DB::beginTransaction();
 
         $student = Student::findOrFail($id);
-        // dd($request->all());
         $this->studentForm($request, true, $student);
 
         $this->updateEnrolledCourses($request, $student);
+        if($student && $request->status == "Completed"){
+            // dd($student->status);
+            $confirm = new ConfirmCompletedStatus($id);
 
+            $enrolledCourses = $confirm->handle();
+            // dd($enrolledCourses);
+            if ($enrolledCourses->isNotEmpty()) {
+                DB::rollback();
+                return back()->with('error', 'Student has not completed all payments.');
+            }
+        }
         DB::commit();
 
         if ($request->print) {
@@ -371,5 +395,4 @@ class StudentController extends Controller
         ));
     }
 
-    
 }

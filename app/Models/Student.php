@@ -27,11 +27,12 @@ class Student extends Model
         'role',
         'is_deleted',
         'payment_slip_path',
+        'status',
+        'drop_reason',
     ];
 
     public function enrolledCourses()
     {
         return $this->hasMany(EnrolledCourse::class, 'student_id')->where("is_deleted", 0);
     }
-
 }
