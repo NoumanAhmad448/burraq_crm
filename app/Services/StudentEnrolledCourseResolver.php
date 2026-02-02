@@ -20,7 +20,7 @@ class StudentEnrolledCourseResolver
 
             'unpaid' => EnrolledCourseDuePaymentCache::get($month, $year, 1, $status),
 
-            'paid' => EnrolledCoursePaidCache::get($month, $year, $status,1 ,$status),
+            'paid' => EnrolledCoursePaidCache::get($month, $year, 1 ,$status),
 
             'overdue' => PendingPaidEnrolledCourseCache::get($month, $year, 1,$status),
 
