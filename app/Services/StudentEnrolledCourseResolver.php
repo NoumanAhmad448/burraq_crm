@@ -13,20 +13,20 @@ use App\Classes\EnrolledCoursePaidCache;
 
 class StudentEnrolledCourseResolver
 {
-    public static function resolve(string|null $type, ?int $month, ?int $year)
+    public static function resolve(string|null $type, ?int $month, ?int $year, $status)
     {
         return match ($type) {
-            'deleted' => EnrolledCourseStudentFilter::query($month, $year),
+            'deleted' => EnrolledCourseStudentFilter::query($month, $year, $status),
 
-            'unpaid' => EnrolledCourseDuePaymentCache::get($month, $year),
+            'unpaid' => EnrolledCourseDuePaymentCache::get($month, $year, 1, $status),
 
-            'paid' => EnrolledCoursePaidCache::get($month, $year),
+            'paid' => EnrolledCoursePaidCache::get($month, $year, $status,1 ,$status),
 
-            'overdue' => PendingPaidEnrolledCourseCache::get($month, $year),
+            'overdue' => PendingPaidEnrolledCourseCache::get($month, $year, 1,$status),
 
             'certificate_issued' => self::certificateIssued(),
 
-            default => StudentEnrolledCourseCache::get($month, $year),
+            default => StudentEnrolledCourseCache::get($month, $year, 1, $status),
         };
     }
 

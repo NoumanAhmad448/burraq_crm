@@ -16,10 +16,11 @@
                     <tr>
                         <th>#</th>
                         <th>Action</th>
-                        <th>Old Data</th>
-                        <th>New Data</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                        <th>Due Date</th>
                         <th>Action By</th>
-                        <th>IP</th>
+                        {{-- <th>IP</th> --}}
                         <th>Date</th>
                     </tr>
                 </thead>
@@ -39,19 +40,25 @@
                                 @endif
                             </td>
                             <td>
-                                <details>
-                                <summary class="text-primary cursor-pointer">View</summary>
-                                    <pre class="mt-2">{{ json_encode($log->old_data, JSON_PRETTY_PRINT) }}</pre>
-                                </details>
+                                @php $data = $log->new_data; @endphp
+                                {{-- <details> --}}
+                                {{-- <summary class="text-primary cursor-pointer">View</summary> --}}
+                                    {{-- <pre class="mt-2">{{ dump(json_encode($log->old_data, JSON_PRETTY_PRINT)) }}</pre> --}}
+                                {{-- </details> --}}
+                                {{  array_key_exists("status", $data) ? humanize($data["status"]) : null }}
                             </td>
                             <td>
-                                <details>
+                                {{-- <details>
                                 <summary class="text-primary cursor-pointer">View</summary>
-                                <pre class="mt-2">{{ json_encode($log->new_data, JSON_PRETTY_PRINT) }}</pre>
-                                </details>
+                                <pre class="mt-2">{{ dump(json_encode($log->new_data, JSON_PRETTY_PRINT)["status"]) }}</pre>
+                                </details> --}}
+                                {{ array_key_exists("note", $data) ? $data["note"] : null }}
+                            </td>
+                            <td>
+                                {{ array_key_exists("due_date", $data) ? $data["due_date"] : null }}
                             </td>
                             <td>{{ $log?->user?->name }}</td>
-                            <td>{{ $log->ip_address }}</td>
+                            {{-- <td>{{ $log->ip_address }}</td> --}}
                             <td>{{ $log->created_at }}</td>
                         </tr>
                     @endforeach

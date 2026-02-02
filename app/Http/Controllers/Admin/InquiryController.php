@@ -62,9 +62,11 @@ class InquiryController extends Controller
                 break;
         }
 
-        $inquiries = $query->get();
+        $inquiries = $query->when(request('due_date'), function ($q) {
+                        $q->whereDate('due_date', request('due_date'));
+                    })->get();
 
-        $courses = Course::all();
+        $courses = Course::latest()->get();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));
     }
 
@@ -81,8 +83,6 @@ class InquiryController extends Controller
                 ['created_by' => Auth::id()]
             ));
 
-            debug_logs('Inquiry created', $request->all());
-
             return redirect()->route('inquiries.index')->with('success', "Saved...");;
         } catch (Exception $e) {
             server_logs($e->getMessage());
@@ -95,7 +95,7 @@ class InquiryController extends Controller
     public function edit($id)
     {
         $inquiry = Inquiry::withTrashed()->findOrFail($id);
-        $courses = Course::all();
+        $courses = Course::latest()->get();
 
         return view('admin.inquiries.edit', compact('inquiry', 'courses'));
     }

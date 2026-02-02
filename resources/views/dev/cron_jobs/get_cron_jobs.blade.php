@@ -1,5 +1,4 @@
 @extends('dev.dev_main')
-{{ debug_logs($cron_jobs) }}
 
 @section('content')
     <div class="table-responsive mt-2">

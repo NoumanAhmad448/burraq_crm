@@ -14,11 +14,11 @@ class EnrolledCoursePaidCache
      * @param int|null $year
      * @param int $ttlSeconds
      */
-    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1)
+    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1, $status="")
     {
         $cacheKey = self::cacheKey($month, $year);
 
-        return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year) {
+        return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
             return EnrolledCourse::with([
                     'student',
@@ -33,7 +33,8 @@ class EnrolledCoursePaidCache
                     }
                 ])
                 ->where('is_deleted', 0)
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
+                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0)->where("status",  empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status)
+)
                 ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments->sum('paid_amount');

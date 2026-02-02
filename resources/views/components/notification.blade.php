@@ -30,11 +30,11 @@
                     class="dropdown-item notification-link @if($n->readForUser(auth()->user()->id)) text-muted @endif)"
                     data-id="{{ $n->id }}">
 
-                <strong>{{ ucfirst(str_replace('_', ' ', $n->type)) }}</strong>
+                <strong>{{ humanize($n->type) }}</strong>
                 <strong class="ml-5"> {{ showWebPageDate($n->created_at) }}</strong>
                 <br>
                 <span class="text-muted">
-                    {{ $n->count }} students overdue
+                    {{ $n->count }} {{ humanize($n->type) }}
                 </span>
             </a>
             <hr/>

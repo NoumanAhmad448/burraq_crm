@@ -21,6 +21,8 @@ class Inquiry extends Model
         'updated_by',
         'deleted_by',
         'course_id',
+            'due_date',
+
     ];
 
     public function course()

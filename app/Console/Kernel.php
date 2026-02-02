@@ -32,6 +32,10 @@ class Kernel extends ConsoleKernel
             ->daily()
             ->withoutOverlapping()
             ->runInBackground();
+        $schedule->command('cron:follow-up-inquiries-due-today')
+        ->dailyAt('02:00')
+        ->withoutOverlapping()
+        ->runInBackground();
         $schedule->command('cron:delete-old-notifications')->dailyAt('02:00');
         $schedule->command('env:check-consistency')->everyMinute();
         $schedule->command('app:check-debug')->everyMinute();

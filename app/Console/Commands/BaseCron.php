@@ -25,6 +25,10 @@ abstract class BaseCron extends Command
         );
 
         try {
+            $this->cronJob->update([
+                config('table.status')  => config('constants.running'),
+                config('table.starts_at') => LyskillsCarbon::now(),
+            ]);
             // Execute the actual cron logic
             $erro_message = $this->runCron();
 

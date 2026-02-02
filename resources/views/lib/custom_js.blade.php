@@ -9,9 +9,9 @@
             if (index < items.length) {
                 loader = $('.menu-loader' + index);
 
-                    loader.addClass('d-none');
+                loader.addClass('d-none');
 
-                    items[index].classList.remove('d-none');
+                items[index].classList.remove('d-none');
 
                 index++;
 
@@ -30,9 +30,26 @@
 </script>
 <script>
     $(function() {
-            flatpickr('.datepicker', {
-                dateFormat: 'Y-m-d'
-            });
+        flatpickr('.datepicker', {
+            dateFormat: 'Y-m-d'
+        });
 
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.select').each(function() {
+            if (!$(this).hasClass('select2-hidden-accessible')) {
+                $(this).select2({
+                    width: '100%'
+                });
+
+                // 👇 THIS is the key line
+                $(this).next('.select2-container')
+                    .find('.select2-selection')
+                    .addClass('form-control');
+            }
+        });
     });
 </script>

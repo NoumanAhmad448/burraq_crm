@@ -370,8 +370,8 @@ if (!function_exists('studentMonthYear')) {
         // Calculate start and end of month
         $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
         $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
-
-        return compact('month', 'year', 'startOfMonth', 'endOfMonth');
+        $status = $request->get("status");
+        return compact('month', 'year', 'startOfMonth', 'endOfMonth', "status");
     }
 }
 

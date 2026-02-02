@@ -501,4 +501,16 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
 .amount-purple  { color: #6f42c1; }
 
 
+/* Fix vertical alignment for Select2 (default theme) */
+.select2-container .select2-selection--single {
+    display: flex;
+    align-items: center;   /* ⭐ vertical centering */
+    min-height: 38px;      /* match normal input height */
+    padding: 0 8px;
+}
+
+.select2-container .select2-selection__rendered {
+    line-height: normal;  /* remove hard-coded line-height */
+    padding-left: 0;
+}
 

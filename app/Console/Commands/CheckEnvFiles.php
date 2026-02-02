@@ -40,7 +40,7 @@ class CheckEnvFiles extends BaseCron
             $missingKeys = array_diff($baseKeys, $envKeys);
             if (!empty($missingKeys)) {
                 $this->error("File '{$envFile}' is missing keys: " . implode(', ', $missingKeys));
-                $message .= "File '{$envFile}' is missing keys: " . implode(', ', $missingKeys);
+                $message .= "File '{$envFile}' is missing keys: " . implode(', ', $missingKeys) . " ";
             } else {
                 $this->info("File '{$envFile}' has all required keys.");
             }
@@ -49,7 +49,7 @@ class CheckEnvFiles extends BaseCron
             $duplicates = $this->checkDuplicateKeysInEnvFile($envFilePath);
             if (is_array($duplicates)) {
                 $this->error("File '{$envFile}' has duplicate keys: " . implode(', ', $duplicates));
-                $message .= "File '{$envFile}' has duplicate keys: " . implode(', ', $duplicates);
+                $message .= "File '{$envFile}' has duplicate keys: " . implode(', ', $duplicates) . " ";
             } else {
                 $this->info("No duplicate keys found in '{$envFile}'.");
             }
