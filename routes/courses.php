@@ -31,6 +31,6 @@ Route::get('students/{student_id}/courses/{enrolledCourseId}/payments',
     Route::get('course-payments/{student_id}/courses/{enrolledCourseId}/{payment_id}/update', [EnrolledCoursePaymentController::class, 'get'])->name('course_payments.get');
 
     // Soft Delete Payment
-    Route::post('course-payments/{payment}/delete', [EnrolledCoursePaymentController::class, 'destroy'])->name('course_payments.delete');
+    Route::get('course-payments/{payment}/delete', [EnrolledCoursePaymentController::class, 'destroy'])->name('course_payments.delete');
 });
 

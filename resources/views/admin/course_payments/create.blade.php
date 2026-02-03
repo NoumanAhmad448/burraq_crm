@@ -58,8 +58,11 @@
                                 <form action="{{ route('course_payments.delete', $payment->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
-                                    <x-delete :route="route('students.course.payments_logs', $student_id)" title="Payments Logs of the course"/>
+                                    <x-delete :route="route('course_payments.delete', $payment->id)" title="Delete Payment"/>
                                 </form>
+                                <a class="btn btn-outline-success" href="{{route('students.course.payments_logs', $student_id)}}" title="Payments Logs of the course">
+                                    Logs
+                                </a>
                             @endif
                         </td>
                     </tr>
