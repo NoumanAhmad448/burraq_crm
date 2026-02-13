@@ -5,7 +5,8 @@
 @section('footer')
 @if(Route::currentRouteName() !== 'login')
         <footer class="text-center bg-website p-3">
-            CRM All rights are reserved.
+            <p>CRM All rights are reserved.</p>
+            <p class="text-center">Powered By <a class="text-white border-bottom border-black" href="https://sites.google.com/view/noumanwebsitebuilder/home"> Nouman Website Builder </a></p>
         </footer>
     @endif
 
