@@ -397,6 +397,6 @@ function statusBadgeClass($status)
         'follow_up'       => 'badge-info',
         'not_interested'  => 'badge-secondary',
         'other'           => 'badge-dark',
-        default           => 'badge-light',
+        default           => 'badge-primary',
     };
 }

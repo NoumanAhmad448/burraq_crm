@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Models\Student;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Email;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 
 
@@ -38,6 +38,14 @@ class RuleServiceProvider extends ServiceProvider
 
         Gate::define('is-admin', function ($user, Student $student) {
             return auth()->user()->isAdmin();
+        });
+
+        Blade::directive('notempty', function ($expression) {
+            return "<?php if(!empty($expression)): ?>";
+        });
+
+        Blade::directive('endnotempty', function () {
+            return "<?php endif; ?>";
         });
     }
 }
