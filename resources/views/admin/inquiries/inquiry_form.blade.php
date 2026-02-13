@@ -60,10 +60,11 @@
                         </select>
                     </div>
                 </div>
-
+                @include("admin.inquiries.social_source")
+                
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Source <span class="text-danger">*</span></label>
+                        <label>Status <span class="text-danger">*</span></label>
                         <select name="status" class="form-control select">
                             <x-select-options :items="['pending', 'resolved', 'contacted', 'follow_up', 'not_interested', 'other']" :selected="$is_update ? $inquiry?->status : ''" />
                         </select>
@@ -83,9 +84,7 @@
                 <div class="col-12">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea name="note" class="form-control" rows="4">
-                            {{ $is_update ? $inquiry->note : old('note') }}
-                        </textarea>
+                        <textarea name="note" class="form-control" rows="4">{{$is_update ? $inquiry->note : old('note')}}</textarea>
                     </div>
                 </div>
             </div>

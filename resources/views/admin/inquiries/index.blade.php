@@ -29,6 +29,7 @@
             <th>Phone</th>
             <th>Email</th>
             <th>Course</th>
+            <th>Status</th>
             <th>Source</th>
             <th>Deleted</th>
             <th>Action</th>
@@ -42,6 +43,7 @@
             <td>{{ $inq->email }}</td>
             <td>{{ ucfirst($inq?->course?->name) }}</td>
             <td><x-status-badge :status="$inq->status" /></td>
+            <td><x-status-badge :status="$inq->source" /></td>
             <td>{{ $inq->deleted_at ? 'Yes' : 'No' }}</td>
             <td>
                 <a href="{{ route('inquiries.edit',$inq->id) }}" class="btn btn-sm btn-primary">Edit</a>

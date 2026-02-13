@@ -6,6 +6,8 @@
     $class = statusBadgeClass($status);
 @endphp
 
+@notempty($status)
 <span class="badge rounded-pill p-3 w-20 {{ $class }}" style="width: 71%">
     {{ $label }}
 </span>
+@endnotempty
