@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Classes\ConfirmCompletedStatus;
 use App\Classes\LyskillsCarbon;
+use App\Classes\StudentForm;
+use App\Classes\StudentPayment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentStoreRequest;
@@ -40,76 +42,7 @@ class StudentController extends Controller
         return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year"));
     }
 
-    private function studentForm($request, $is_update = false, $student = null)
-    {
-        $photoPath = null;
-        $payment_slip_path = null;
 
-        if ($request->hasFile('photo')) {
-            $img = $request->file('photo');
-            $photoPath = uploadPhoto($img);
-        }
-
-        if ($request->hasFile('payment_slip_path')) {
-            $payment_slip_path = uploadPhoto($request->file('payment_slip_path'));
-        }
-        if(!empty($request->total_fee) || !empty($request->paid_fee)){
-            $remainingFee = $request->total_fee - $request->paid_fee;
-        }
-        $data = [
-            'name'           => $request->name,
-            'father_name'    => $request->father_name,
-            'cnic'           => $request->cnic,
-            'mobile'         => $request->mobile,
-            'email'          => $request->email,
-        ];
-
-        if(!empty($request->admission_date)){
-            $data['admission_date'] = $request->admission_date;
-        }
-          if (!empty($request->due_date)) {
-            $data['due_date'] = $request->due_date;
-        }
-
-        if (!empty($request->total_fee)) {
-            $data['total_fee'] = $request->total_fee;
-        }
-
-        if (!empty($request->paid_fee)) {
-            $data['paid_fee'] = $request->paid_fee;
-        }
-
-        if (isset($remainingFee)) {
-            $data['remaining_fee'] = $remainingFee;
-        }
-        if ($photoPath) {
-            $data['photo'] = $photoPath;
-        }
-        if ($payment_slip_path) {
-            $data['payment_slip_path'] = $payment_slip_path;
-        }
-        // dd($request->registration_date);
-        if (!empty($request->registration_date)) {
-            $data['registration_date'] = $request->registration_date;
-        }
-        if (!empty($request->status)) {
-            $data['status'] = $request->status;
-        }
-        if (!empty($request->drop_reason)) {
-            $data['drop_reason'] = $request->drop_reason;
-        }
-        // dump($request);
-        // dd($data);
-
-        if ($is_update == false) {
-            $student = Student::create($data);
-        } else {
-            // dd($data);
-            $student->update($data);
-        }
-        // dd($student);
-        return $student;
-    }
     /**
      * Store new student
      */
@@ -120,7 +53,7 @@ class StudentController extends Controller
         try {
             /* ---------- IMAGE UPLOAD (STRICTLY AS PROVIDED) ---------- */
             // $courses = Course::where('is_deleted', 0)->get();
-            $student = $this->studentForm($request);
+            $student = StudentForm::studentForm($request);
 
             /* ---------- STUDENT CREATE ---------- */
 
@@ -133,7 +66,7 @@ class StudentController extends Controller
 
             DB::commit();
 
-            if($student && $student->status == "Completed"){
+            if ($student && $student->status == "Completed") {
                 $confirm = new ConfirmCompletedStatus($student->id);
                 $enrolledCourses = $confirm->handle();
                 if ($enrolledCourses->isNotEmpty()) {
@@ -156,12 +89,11 @@ class StudentController extends Controller
                 $mail->cc($toEmails);
 
                 $mail->send(new StudentFeeReceiptMail($student));
-            }else{
+            } else {
                 Log::warning('Student fee receipt email NOT sent: No primary recipient emails found.', [
                     'student_id' => $student->id ?? null,
                     'student_email' => $student->email ?? null,
                 ]);
-
             }
 
             /* ---------- CHECKBOX LOGIC ---------- */
@@ -237,7 +169,7 @@ class StudentController extends Controller
                             'total_fee'  => $courseData['total_fee'],
                             'admission_date' => $courseData['admission_date'],
                             'due_date' => $courseData['due_date'],
-                                                'is_deleted'  => 0,
+                            'is_deleted'  => 0,
 
                         ]);
                     } else {
@@ -255,44 +187,11 @@ class StudentController extends Controller
                     $currentEnrolledCourseIds[] = $enrolled_course->id;
                     // dd($enrolled_course);
                     /* ---------- PAYMENT AGAINST ENROLLED COURSE ---------- */
-                    if (!empty($courseData['paid_amount']) && $courseData['paid_amount'] > 0 && $enrolled_course) {
-                        if (array_key_exists("payId", $courseData) && $courseData['payId'] && EnrolledCoursePayment::find($courseData['payId'])) {
-                            EnrolledCoursePayment::find($courseData['payId'])?->update(
-                                [
-                                    'paid_amount' => $courseData['paid_amount'],
-                                    'paid_at' => now(),
-                                    'payment_by' => auth()->user()->id,
-                                    'payment_slip_path'  => $student->payment_slip_path,
-                                    'payment_date' => $request->payment_date,
-                                    'payment_method' => $request->payment_method,
-                                ]
-                            );
-                        } else {
-                            EnrolledCoursePayment::create([
-                                'enrolled_course_id' => $enrolled_course?->id,
-                                'paid_amount'        => $courseData['paid_amount'],
-                                'paid_at'            => LyskillsCarbon::now(),
-                                'payment_by'         => auth()->user()->id,
-                                'payment_slip_path'  => $student->payment_slip_path,
-                                'payment_date' => $request->payment_date,
-                                'payment_method' => $request->payment_method,
-
-                            ]);
-                        }
-                    }
+                    StudentPayment::payment($courseData, $enrolled_course, $student, $request);
                 }
             }
 
-            if(!empty($currentEnrolledCourseIds)){
-                EnrolledCourse::where('student_id', $student->id)
-                    ->whereNotIn('id', $currentEnrolledCourseIds)
-                    ->update([
-                        'is_deleted'  => 1,
-                        'deleted_by'  => auth()->id(),
-                        'deleted_at'  => now(),
-                    ]);
-            }
-
+            StudentPayment::delPreCourse($currentEnrolledCourseIds, $student);
         }
     }
     /**
@@ -300,13 +199,13 @@ class StudentController extends Controller
      */
     public function update(StudentStoreRequest $request, $id)
     {
-         DB::beginTransaction();
+        DB::beginTransaction();
 
         $student = Student::findOrFail($id);
-        $this->studentForm($request, true, $student);
+        StudentForm::studentForm($request, true, $student);
 
         $this->updateEnrolledCourses($request, $student);
-        if($student && $request->status == "Completed"){
+        if ($student && $request->status == "Completed") {
             // dd($student->status);
             $confirm = new ConfirmCompletedStatus($id);
 
@@ -394,5 +293,4 @@ class StudentController extends Controller
             'totalPaid'
         ));
     }
-
 }
