@@ -29,7 +29,7 @@ class FollowUpInquiryDueTodayCron extends BaseCron
     {
         $count = Inquiry::query()
             ->where('status', 'follow_up')
-            ->whereDate('due_date', Carbon::today())
+            ->whereDate('due_date', '>', Carbon::today())
             ->count();
 
         if ($count > 0) {
