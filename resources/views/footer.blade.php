@@ -79,6 +79,7 @@
             <div class="row py-3 text-center">
                 <div class="col">
                     <p class="text-center">&copy; Copyright {{ date('Y') }}- Burraq CRM. All Rights Are Reserved.</p>
+                    <p class="text-center">Powered By <a class="text-white border-bottom border-black" href="https://sites.google.com/view/noumanwebsitebuilder/home"> Nouman Website Builder </a></p>
                 </div>
             </div>
             @endif
