@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Classes\ConfirmCompletedStatus;
 use App\Classes\LyskillsCarbon;
+use App\Classes\StudentActDel;
 use App\Classes\StudentForm;
 use App\Classes\StudentPayment;
 use App\Http\Controllers\Controller;
@@ -232,14 +233,7 @@ class StudentController extends Controller
      */
     public function delete($id)
     {
-        // dd("here");
-        if (!auth()->user()->is_admin) {
-            abort(403);
-        }
-
-        Student::where('id', $id)->update(['is_deleted' => 1]);
-        // dd(Student::where('id', $id)->first());
-
+        StudentActDel::action($id);
         return redirect()->back()->with('success', 'Student deleted successfully');
     }
     /**
@@ -247,7 +241,7 @@ class StudentController extends Controller
      */
     public function activate($id)
     {
-        Student::where('id', $id)->update(['is_deleted' => 0]);
+        StudentActDel::action($id, 0);
 
         return redirect()->back()->with('success', 'Student activated successfully');
     }
