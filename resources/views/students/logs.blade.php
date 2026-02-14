@@ -24,11 +24,7 @@
             @foreach ($logs as $log)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>
-                        <span class="badge bg-{{ $log->action === 'created' ? 'success' : 'warning' }}">
-                            {{ ucfirst($log->action) }}
-                        </span>
-                    </td>
+                    @include("students.log_status")
                     <td>
                         {{ $log?->user?->name ?? 'System' }}
                     </td>

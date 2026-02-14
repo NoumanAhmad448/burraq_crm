@@ -16,6 +16,17 @@ class CrmStudentObserver
     {
         $this->log($student, 'updated');
     }
+    public function updating(CrmStudent $student): void
+    {
+        if ($student->isDirty('is_deleted')) {
+
+            if ($student->is_deleted) {
+                $this->log($student, 'deleted');
+            }else{
+                $this->log($student, 'Activated');
+            }
+        }
+    }
 
     protected function log(CrmStudent $student, string $action): void
     {
