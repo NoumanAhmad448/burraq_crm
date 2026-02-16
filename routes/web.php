@@ -296,3 +296,4 @@ if (trim(config('app.env')) == config("setting.roles.dev")) {
 }
 
 
+require __DIR__.'/inquiry_dashboard.php';

@@ -20,7 +20,7 @@
     </div>
 @endif
 
-<x-inquiry_filters/>
+<x-inquiry_filters :courses="$courses"/>
 
 <table class="table table-bordered databelle mt-4" id="databelle">
     <thead>

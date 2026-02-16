@@ -80,7 +80,7 @@
     <div class="form-group">
         <label>Source <span class="text-danger"></span></label>
         <select name="source" class="form-control select">
-            <x-select-options :items="$sources" :selected="$is_update ? $inquiry?->source : ''" />
+            <x-select-options :items="$sources" :selected="$is_update ? $inquiry?->source : ''" :default="true"/>
         </select>
     </div>
 </div>
