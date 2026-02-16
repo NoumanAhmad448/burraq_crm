@@ -14,13 +14,12 @@ use Illuminate\Http\Request;
 class InquiryController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
         $type = request('type', 'all');
 
         $query = Inquiry::withTrashed()->latest();
-
 
             switch ($type) {
             case 'pending':
@@ -62,9 +61,15 @@ class InquiryController extends Controller
                 break;
         }
 
-        $inquiries = $query->when(request('due_date'), function ($q) {
+        $query->when(request('due_date'), function ($q) {
                         $q->whereDate('due_date', request('due_date'));
-                    })->get();
+                    });
+
+        if ($request->course_id) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        $inquiries = $query->get();
 
         $courses = Course::latest()->get();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));

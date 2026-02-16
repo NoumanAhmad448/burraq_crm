@@ -46,7 +46,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Interested Course</label>
+                        <label>Interested Course <span class="text-danger">*</span></label>
                         <select name="course_id" class="form-control select">
                             <option value="">Select Course</option>
                             @foreach ($courses as $course)
@@ -64,7 +64,7 @@
                 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Status <span class="text-danger">*</span></label>
+                        <label>Status</label>
                         <select name="status" class="form-control select">
                             <x-select-options :items="['pending', 'resolved', 'contacted', 'follow_up', 'not_interested', 'other']" :selected="$is_update ? $inquiry?->status : ''" />
                         </select>
