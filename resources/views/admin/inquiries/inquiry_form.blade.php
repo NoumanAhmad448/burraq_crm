@@ -77,6 +77,13 @@
                             value="{{ $is_update && $inquiry?->due_date ? $inquiry->due_date : old('due_date') }}">
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Created Date</label>
+                        <input type="text" name="created_at" class="form-control datepicker"
+                            value="{{ $is_update && $inquiry?->created_at ? $inquiry->created_at : old('created_at') }}">
+                    </div>
+                </div>
             </div>
 
 

@@ -50,29 +50,23 @@
                                 <td>{{ $course->student->father_name }}</td>
                                 <td>{{ show_payment($course?->total_fee) }}</td>
                                 @php
-                                $paid_payment = $course?->payments()?->where("is_deleted", 0)?->sum("paid_amount")
+                                $paid_payment = $course?->payments()?->where("is_deleted", 0)->whereNull("type")?->sum("paid_amount");
+                                $refunded_payment = $course?->payments()?->where("type","refunded")?->where("is_deleted", 0);
                                 @endphp
-                                <td>{{ show_payment($paid_payment) }}</td>
+                                <td>
+                                    @if($refunded_payment->count())
+                                        @php
+                                            $paid_payment = (float)$paid_payment - (float)$refunded_payment->sum("paid_amount");
+                                            @endphp
+                                    @endif
+                                    {{ show_payment($paid_payment) }}
+                                </td>
                                 <td>
                                     {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
                                 {{-- <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td> --}}
                                 {{-- <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td> --}}
-                                <td>
-                                    <small @if($course->total_fee - $paid_payment <= 0) class="btn btn-success btn-rounded"
-                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $course->total_fee - $paid_payment > 0) class="btn btn-danger btn-rounded"
-                                    @elseif($paid_payment > 0 && $course->total_fee - $paid_payment > 0) class="btn btn-warning"
-                                    @else class="btn btn-danger" @endif>
-
-                                    @if($course->total_fee <= $paid_payment)
-                                        Paid
-                                    @elseif(\Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->due_date)) && $paid_payment < $course->total_fee)
-                                        Overdue
-                                    @elseif($paid_payment > 0 && $course->total_fee > $paid_payment)
-                                        Unpaid
-                                    @endif
-                                    </small>
-                                </td>
+                                @include("payment_status")
                                 <td>
                                 @if($course)
                                         <a href="{{ route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) }}"

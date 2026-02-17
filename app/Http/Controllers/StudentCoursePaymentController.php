@@ -15,7 +15,6 @@ class StudentCoursePaymentController extends Controller
             ])
             ->where('student_id', $student->id)
             ->get();
-
         return view('students.course-payments', compact('student', 'enrolledCourses'));
     }
 }

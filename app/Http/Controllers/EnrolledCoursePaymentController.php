@@ -86,9 +86,10 @@ class EnrolledCoursePaymentController extends Controller
                 "enrolled_course_id" => $enrolledCourse->id,
                 'payment_date' => $data["payment_date"],
                 'payment_method' => $data["payment_method"],
+                'type' => $data["type"],
             ];
 
-        // dd($request->payment_id);
+        // dd($request->type);
         // Create or update payment
         if($request?->payment_id){
             $payment = EnrolledCoursePayment::find($request->payment_id);
@@ -103,6 +104,7 @@ class EnrolledCoursePaymentController extends Controller
     // Update Payment
     public function update(Request $request, EnrolledCoursePayment $payment)
     {
+        dd("here");
         // Only allow updating paid_amount and payment_slip_path
         $payment->paid_amount = $request->input('paid_amount', $payment->paid_amount);
 

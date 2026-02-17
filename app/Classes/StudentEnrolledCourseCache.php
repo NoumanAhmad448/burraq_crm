@@ -14,7 +14,7 @@ class StudentEnrolledCourseCache
      * @param int|null $year
      * @param int $ttlSeconds
      */
-    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1, $status="")
+    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1, $status = "")
     {
         $cacheKey = self::cacheKey($month, $year);
 
@@ -23,15 +23,11 @@ class StudentEnrolledCourseCache
             return EnrolledCourse::with(['student', 'payments'])
                 ->where('is_deleted', 0)
                 ->whereHas('student', function ($q) use ($month, $year, $status) {
-                    $q->where('is_deleted', 0)
-                    ->where("status",  empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status)
-                      ->when(!is_null($month), fn ($qq) =>
-                          $qq->whereMonth('registration_date', $month)
-                      )
-                      ->when(!is_null($year), fn ($qq) =>
-                          $qq->whereYear('registration_date', $year)
-                      );
+                    $q = $q->where('is_deleted', "<>", 1);
+                    $q = (new EnrolledCourse)->regDate($q, $month, $year);
+                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
                 })
+                ->getCourse()
                 ->latest()
                 ->get();
         });

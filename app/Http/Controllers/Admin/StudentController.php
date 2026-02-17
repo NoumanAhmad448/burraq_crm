@@ -39,9 +39,7 @@ class StudentController extends Controller
         );
 
         $all_courses = StudentEnrolledCourseResolver::allCourses();
-        // if ($request->course_id) {
-        //     $query->where('course_id', $request->course_id);
-        // }
+        
         return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year"));
     }
 
