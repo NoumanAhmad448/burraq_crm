@@ -37,12 +37,12 @@ $menuGroups = [
                 'route' => route('admin.inquiry.dashboard'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
-            // [
-            //     'title' => 'Inquiries Leeds',
-            //     'icon'  => 'fa-question-circle',
-            //     'route' => route('inquiry_dashboard.index'),
-            //     'access_roles' => ['admin', 'hr', 'admission_officer'],
-            // ],
+            [
+                'title' => 'Inquiries Leeds',
+                'icon'  => 'fa-question-circle',
+                'route' => route('inquiry_dashboard.index'),
+                'access_roles' => ['admin', 'hr', 'admission_officer'],
+            ],
             [
                 'title' => 'Course Dashboard',
                 'icon'  => 'fa-question-circle',
