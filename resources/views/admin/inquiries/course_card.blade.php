@@ -4,7 +4,7 @@
 
             <div class="card shadow-sm stat-card">
                 <div class="card-body">
-                    <div>
+                    <a href="{{ route("students.index", array_merge(request()->all(), ['course_id' => $data["course_id"]])) }}">
                         <h6 class="text-uppercase text-muted small mb-1">
                             {{ $data['course_name'] }}
                         </h6>
@@ -13,7 +13,7 @@
                         </h2>
                         <p class="mb-0">Revenue: {{ show_payment($data['revenue'], 2) }}</p>
                         <p class="mb-0">Conversion: {{ $data['conversion'] }}%</p>
-                    </div>
+                    </a>
                 </div>
             </div>
 

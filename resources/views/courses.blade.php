@@ -1,4 +1,6 @@
+@empty($design)
 <div class="col-md-3">
+@endif
     {{-- <label>Select Course</label> --}}
     <select name="course_id" class="form-control select">
         <option value="">-- All Courses --</option>
@@ -8,4 +10,6 @@
             </option>
         @endforeach
     </select>
+@empty ($design)
 </div>
+@endif
