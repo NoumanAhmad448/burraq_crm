@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Contracts\InquiryDashboardContract as ContractsInquiryDashboardContract;
 use App\Models\Inquiry;
-use App\Models\Course;
+use Illuminate\Http\Request;
+use App\Classes\LyskillsCarbon;
+use App\Classes\StartEndDateFilter;
 
 class InquiryDashboardController extends Controller
 {
@@ -17,10 +19,25 @@ class InquiryDashboardController extends Controller
     }
 
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
+        $query = Inquiry::query();
+
+        /* ========================
+           COURSE FILTER
+        ======================== */
+        if ($request->course_id) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        /* ========================
+           DATE FILTER
+        ======================== */
+        $query = StartEndDateFilter::date($request, $query);
+        $query = StartEndDateFilter::handle($request, $query);
+
         // Group inquiries by course_id and count
-        $inquiryCounts = Inquiry::selectRaw('course_id, COUNT(*) as total')
+        $inquiryCounts = $query->selectRaw('course_id, COUNT(*) as total')
             ->groupBy('course_id')
             ->with('course')
             ->get();

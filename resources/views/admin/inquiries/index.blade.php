@@ -21,6 +21,8 @@
 @endif
 
 <x-inquiry_filters :courses="$courses"/>
+@include('admin.inquiries.leed_filter')
+
 
 <table class="table table-bordered databelle mt-4" id="databelle">
     <thead>

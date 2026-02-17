@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\InqStatus;
+use App\Classes\StartEndDateFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InquiryRequest;
 use App\Models\Course;
@@ -17,53 +19,17 @@ class InquiryController extends Controller
     public function index(Request $request)
     {
 
-        $type = request('type', 'all');
 
-        $query = Inquiry::withTrashed()->latest();
+        $query = InqStatus::handle();
 
-            switch ($type) {
-            case 'pending':
-                $query->where('status', 'pending');
-                break;
-
-            case 'contacted':
-                $query->where('status', 'contacted');
-                break;
-
-            case 'follow_up':
-                $query->where('status', 'follow_up');
-                break;
-
-            case 'not_interested':
-                $query->where('status', 'not_interested');
-                break;
-
-            case 'not_contacted':
-                $query->whereNull('status');
-                break;
-
-            // month-based (later refinement)
-            case 'this_month_pending':
-                $query->where('status', 'pending')
-                    ->whereMonth('created_at', now()->month)
-                    ->whereYear('created_at', now()->year);
-                break;
-
-            case 'this_month_contacted':
-                $query->where('status', 'contacted')
-                    ->whereMonth('created_at', now()->month)
-                    ->whereYear('created_at', now()->year);
-                break;
-
-            case 'all':
-            default:
-                // no filter
-                break;
-        }
-
+        /* ========================
+           DATE FILTER
+        ======================== */
+        $query = StartEndDateFilter::date($request, $query);
+        $query = StartEndDateFilter::handle($request, $query);
         $query->when(request('due_date'), function ($q) {
-                        $q->whereDate('due_date', request('due_date'));
-                    });
+                    $q->whereDate('due_date', request('due_date'));
+                });
 
         if ($request->course_id) {
             $query->where('course_id', $request->course_id);
@@ -71,7 +37,7 @@ class InquiryController extends Controller
 
         $inquiries = $query->get();
 
-        $courses = Course::latest()->get();
+        $courses = Course::latestCourse();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));
     }
 

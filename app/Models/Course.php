@@ -19,4 +19,12 @@ class Course extends Model
     {
         return $this->hasMany(EnrolledCourse::class);
     }
+    public function leads()
+    {
+        return $this->hasMany(Inquiry::class, "course_id");
+    }
+
+    public static function latestCourse(){
+        return self::latest()->get();
+    }
 }

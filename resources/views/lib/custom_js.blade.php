@@ -31,7 +31,8 @@
 <script>
     $(function() {
         flatpickr('.datepicker', {
-            dateFormat: 'Y-m-d'
+            dateFormat: 'Y-m-d',
+            allowInput: true
         });
 
     });

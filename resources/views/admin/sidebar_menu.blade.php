@@ -43,6 +43,12 @@ $menuGroups = [
                 'route' => route('inquiry_dashboard.index'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
+            [
+                'title' => 'Course Dashboard',
+                'icon'  => 'fa-question-circle',
+                'route' => route('course_dashboard.index'),
+                'access_roles' => ['admin', 'hr', 'admission_officer'],
+            ],
         ],
     ],
 
