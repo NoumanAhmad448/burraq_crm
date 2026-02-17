@@ -18,8 +18,7 @@
             <div class="card-header">
                 <strong>Students List</strong>
             </div>
-
-        <x-student-filters :month="$month" :year="$year"/>
+            @include("components.student-filters")
             <div class="card-body">
                 <table class="table table-bordered crm_students" id="crm_students">
                     <thead>
