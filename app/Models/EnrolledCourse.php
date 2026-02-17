@@ -54,7 +54,7 @@ class EnrolledCourse extends Model
         return $this->hasMany(Certificate::class, 'enrolled_course_id');
     }
 
-     // Format admission date using LyskillsCarbon
+    // Format admission date using LyskillsCarbon
     public function getFormattedAdmissionDateAttribute()
     {
         if (!$this->admission_date) return null;
@@ -68,41 +68,42 @@ class EnrolledCourse extends Model
         return LyskillsCarbon::parse($this->due_date)->format('d-m-Y');
     }
 
-    public function scopePendingCourses(){
+    public function scopePendingCourses()
+    {
         return $this->whereNotNull('due_date') // past due
-                ->where('due_date', '<', now()); // past due
+            ->where('due_date', '<', now()); // past due
     }
 
     public function scopeTotalActivePayment($query)
     {
         return $query->withSum(['payments as total_paid' => function ($q) {
-                        $q->where('is_deleted', 0);
-                    }], 'paid_amount');
+            $q->where('is_deleted', 0);
+        }], 'paid_amount');
     }
     public function scopeTotalIncome($query)
     {
         return $query->whereHas('student', function ($q) {
-        $q->where('is_deleted', 0);
-    })->where('is_deleted', 0)->sum("total_fee");
+            $q->where('is_deleted', 0);
+        })->where('is_deleted', 0)->sum("total_fee");
     }
     public function scopeTotalMonthlyIncome($query, $month, $year)
     {
         return $query->whereHas('student', function ($q) {
-                $q->where('is_deleted', 0);
-            })->where('is_deleted', 0)->
-            when($month, function ($query) use ($month) {
-                $query->whereMonth('admission_date', $month);
-            })
+            $q->where('is_deleted', 0);
+        })->where('is_deleted', 0)->when($month, function ($query) use ($month) {
+            $query->whereMonth('admission_date', $month);
+        })
             ->when($year, function ($query) use ($year) {
                 $query->whereYear('admission_date', $year);
-            })->
-            sum("total_fee");
+            })->sum("total_fee");
     }
 
-    public function scopeActiveCourse($query){
+    public function scopeActiveCourse($query)
+    {
         return $query->where('is_deleted', 0);
     }
-    public function scopePaidStudentsOnly($query){
+    public function scopePaidStudentsOnly($query)
+    {
         return $query->whereRaw(
             '(SELECT COALESCE(SUM(paid_amount), 0)
             FROM crm_course_payments as payments
@@ -110,5 +111,30 @@ class EnrolledCourse extends Model
             AND payments.is_deleted = 0
             ) < crm_enrolled_courses.total_fee'
         );
+    }
+
+    public function regDate($q, $month, $year, $date = "registration_date")
+    {
+        return $q->when(!is_null($month), function ($q) use ($month, $date) {
+            $q->whereMonth($date, $month);
+        })
+            ->when(!is_null($year), function ($q) use ($year, $date) {
+                $q->whereYear($date, $year);
+            });
+    }
+
+    public function ignoreOrAccept($query, $status)
+    {
+        return $query->when($status, function ($q, $status) {
+            $q->where("status", empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status);
+        });
+    }
+
+    public function scopeGetCourse()
+    {
+        if (request()->course_id) {
+            return $this->where('course_id', request()->course_id);
+        }
+        return $this;
     }
 }

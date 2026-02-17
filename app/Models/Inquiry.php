@@ -22,6 +22,7 @@ class Inquiry extends Model
         'deleted_by',
         'course_id',
         'due_date',
+        'created_at',
         "source",
 
     ];

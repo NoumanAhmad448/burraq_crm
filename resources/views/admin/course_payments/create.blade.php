@@ -27,6 +27,7 @@
                     <th>Amount Paid</th>
                     <th>Payment Slip</th>
                     <th>By</th>
+                    <th>Type</th>
                     <th>Date</th>
                     <th>Actions</th>
                 </tr>
@@ -44,6 +45,9 @@
                             @endif
                         </td>
                         <td>{{ $payment->paidBy->name ?? 'N/A' }}</td>
+                        <td>
+                            {{ $payment->type == "refunded" ? "Refunded Payment" : '' }}
+                        </td>
                         <td>{{ \App\Classes\LyskillsCarbon::parse($payment->created_at)->toFormattedDateString() }}</td>
                         <td>
                             <a href={{ route("course_payments.get", [

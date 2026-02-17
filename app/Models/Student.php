@@ -35,4 +35,5 @@ class Student extends Model
     {
         return $this->hasMany(EnrolledCourse::class, 'student_id')->where("is_deleted", 0);
     }
+    
 }

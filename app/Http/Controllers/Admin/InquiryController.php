@@ -75,7 +75,7 @@ class InquiryController extends Controller
     {
         try {
             $inquiry = Inquiry::findOrFail($id);
-
+            // dd($request->validated());
             $inquiry->update(array_merge(
                 $request->validated(),
                 ['updated_by' => Auth::id()]

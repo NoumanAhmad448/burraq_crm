@@ -20,18 +20,15 @@ class EnrolledCourseDuePaymentCache
                     'student'
                 ])
                 ->whereHas('payments' , function ($q) use ($month, $year) {
-                        $q->where('is_deleted', 0)
-                          ->when(!is_null($month), fn ($qq) =>
-                              $qq->whereMonth('payment_date', $month)
-                          )
-                          ->when(!is_null($year), fn ($qq) =>
-                              $qq->whereYear('payment_date', $year)
-                          );
+                        $q = $q->where('is_deleted', 0);
+                        (new EnrolledCourse)->regDate($q, $month, $year, "payment_date");
                 })
                 ->where('is_deleted', 0)
                 ->whereHas('student', function($q) use($status){
-                    $q->where('is_deleted', 0)->where("status", empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status);
+                    $q = $q->where('is_deleted', 0); 
+                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
                 })
+                ->getCourse()
                 ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments->sum('paid_amount');

@@ -20,6 +20,7 @@ class StoreCoursePaymentRequest extends FormRequest
             'payment_slip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'payment_method' => 'nullable',
             'payment_date' => 'nullable',
+            'type' => 'nullable',
         ];
     }
 }

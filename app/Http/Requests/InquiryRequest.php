@@ -21,6 +21,7 @@ class InquiryRequest extends FormRequest
             'status' => 'required',
             'source' => 'nullable',
             'due_date' => 'nullable|date',
+            'created_at' => 'nullable|date',
             'course_id' => 'required|exists:crm_courses,id',
         ];
     }

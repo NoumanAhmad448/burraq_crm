@@ -17,6 +17,7 @@ class EnrolledCoursePayment extends Model
         'is_deleted',
         'payment_method',
         'payment_date',
+        'type',
     ];
 
     public function enrolledCourse()

@@ -36,7 +36,11 @@ class PendingPaidEnrolledCourseCache
                               $qq->whereYear('payment_date', $year)
                           );
                 })
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0)->where("status",  empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status))
+                ->whereHas('student', function($q) use ($status){
+                    $q = $q->where('is_deleted', 0);
+                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
+                })
+                ->getCourse()
                 ->latest()
                 ->get();
         });
