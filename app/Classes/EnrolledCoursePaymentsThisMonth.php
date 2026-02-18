@@ -20,27 +20,30 @@ class EnrolledCoursePaymentsThisMonth
     {
         $cacheKey = "enrolled_course_payments_this_month_{$startOfMonth}_{$endOfMonth}";
 
-        return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
+        // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
             $paymentsThisMonth = EnrolledCoursePayment::query()
-                    ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
-                    ->active()
-                    ->enrolledCourseInRelation()
-                    ->whereHas('enrolledCourse.student', function ($q) {
-                        $q->active();
-                    })
+                    ->join('enrolled_courses', 'enrolled_courses.id', '=', 'enrolled_course_payments.enrolled_course_id')
+                    ->join('students', 'students.id', '=', 'enrolled_courses.student_id')
+                    ->whereBetween('enrolled_course_payments.payment_date', [$startOfMonth, $endOfMonth])
+                    ->where('enrolled_course_payments.is_deleted', 0)
+                    ->where('enrolled_courses.is_deleted', 0)
+                    ->where('students.is_deleted', 0)
                     ->selectRaw("
-                        SUM(
-                            CASE 
-                                WHEN type = 'refunded' THEN -paid_amount
-                                ELSE paid_amount
-                            END
+                        COALESCE(
+                            SUM(
+                                CASE 
+                                    WHEN enrolled_course_payments.type = 'refunded' 
+                                    THEN -enrolled_course_payments.paid_amount
+                                    ELSE enrolled_course_payments.paid_amount
+                                END
+                            ), 0
                         ) as total
                     ")
                     ->value('total');
 
             return $paymentsThisMonth;
-        });
+        // });
     }
 
     /**
