@@ -18,7 +18,7 @@ class EnrolledCourseTotalUnpaid
     {
         $cacheKey = "enrolled_course_total_unpaid";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
 
             $totalUnpaid = EnrolledCourse::query()
                 ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
@@ -47,7 +47,7 @@ class EnrolledCourseTotalUnpaid
                 });
 
             return $totalUnpaid;
-        });
+        // });
     }
 
     /**

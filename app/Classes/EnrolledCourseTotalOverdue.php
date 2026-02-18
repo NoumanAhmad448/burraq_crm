@@ -18,7 +18,7 @@ class EnrolledCourseTotalOverdue
     {
         $cacheKey = "enrolled_course_total_overdue";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
 
             $totalOverdue = EnrolledCourse::query()
                 ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
@@ -28,7 +28,7 @@ class EnrolledCourseTotalOverdue
                 ->netAmount();
 
             return $totalOverdue;
-        });
+        // });
     }
 
     /**

@@ -40,17 +40,17 @@ class EnrolledCourseTotalPaid
     {
         $cacheKey = "enrolled_course_total_paid_{$startOfMonth}_{$endOfMonth}";
 
-        return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
-            return EnrolledCourse::query()
-                ->where('is_deleted', 0)
-                ->whereHas('student', fn($q) => $q->where('is_deleted', 0))
-                ->select('*')
-                ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
-                    $q->from('enrolled_course_payments')
-                        ->whereColumn('enrolled_course_payments.enrolled_course_id', 'enrolled_courses.id')
-                        ->where('is_deleted', 0)
-                        ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
-                        ->selectRaw("
+        // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
+        return EnrolledCourse::query()
+            ->where('is_deleted', 0)
+            ->whereHas('student', fn($q) => $q->where('is_deleted', 0))
+            ->select('*')
+            ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->from('enrolled_course_payments')
+                    ->whereColumn('enrolled_course_payments.enrolled_course_id', 'enrolled_courses.id')
+                    ->where('is_deleted', 0)
+                    ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                    ->selectRaw("
               COALESCE(
                   SUM(
                       CASE 
@@ -60,11 +60,11 @@ class EnrolledCourseTotalPaid
                   ), 0
               )
           ");
-                }, 'total_paid')
-                ->get()
-                ->filter(fn($course) => $course->total_paid >= $course->total_fee)
-                ->sum('total_paid');
-        });
+            }, 'total_paid')
+            ->get()
+            ->filter(fn($course) => $course->total_paid >= $course->total_fee)
+            ->sum('total_paid');
+        // });
     }
 
     /**

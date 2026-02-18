@@ -18,7 +18,7 @@ class EnrolledCoursePaymentTotal
     {
         $cacheKey = "enrolled_course_payment_total";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
             $totalPaid_g = EnrolledCoursePayment::query()
                 ->where('is_deleted', 0)
                 ->whereHas('enrolledCourse', function ($q) {
@@ -41,7 +41,7 @@ class EnrolledCoursePaymentTotal
 
 
             return $totalPaid_g;
-        });
+        // });
     }
 
     /**
