@@ -20,12 +20,10 @@ class StudentEnrolledCourseCache
 
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
-            return EnrolledCourse::with(['student', 'payments'])
-                ->where('is_deleted', 0)
+            return EnrolledCourse::with(['payments'])
+                ->activeCourse()
                 ->whereHas('student', function ($q) use ($month, $year, $status) {
-                    $q = $q->where('is_deleted', "<>", 1);
-                    $q = (new EnrolledCourse)->regDate($q, $month, $year);
-                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
+                    $q->regDate($month, $year)->active()->ignoreOrAccept($status);
                 })
                 ->getCourse()
                 ->latest()

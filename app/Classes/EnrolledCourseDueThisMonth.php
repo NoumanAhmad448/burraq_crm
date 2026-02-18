@@ -22,20 +22,37 @@ class EnrolledCourseDueThisMonth
 
         return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
-            $dueThisMonth = EnrolledCourse::
-                whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
-                ->whereNotNull('due_date') // past due
-                ->where('due_date', '<', now()) // past due
+            $dueThisMonth = EnrolledCourse::query()
+                ->whereHas('student', fn($q) => $q->where('is_deleted', 0))
+                ->whereNotNull('due_date')
+                ->where('due_date', '<', now())
                 ->where('is_deleted', 0)
-                ->whereHas("payments", function($q)  use($startOfMonth, $endOfMonth){
-                    $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
+                ->whereHas('payments', function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                        ->where('is_deleted', 0);
                 })
-                ->withSum(['payments as total_paid' => function ($q){
-                        $q->where('is_deleted', 0);
-                    }], 'paid_amount')
+                ->select('*')
+                ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->from('enrolled_course_payments')
+                        ->whereColumn('enrolled_course_payments.enrolled_course_id', 'enrolled_courses.id')
+                        ->where('is_deleted', 0)
+                        ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                        ->selectRaw("
+              COALESCE(
+                  SUM(
+                      CASE 
+                          WHEN type = 'refunded' THEN -paid_amount
+                          ELSE paid_amount
+                      END
+                  ), 0
+              )
+          ");
+                }, 'total_paid')
                 ->get()
                 ->sum(function ($course) {
-                    return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
+                    return $course->total_paid < $course->total_fee
+                        ? $course->total_fee - $course->total_paid
+                        : 0;
                 });
 
             return $dueThisMonth;

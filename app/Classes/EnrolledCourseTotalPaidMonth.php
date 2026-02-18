@@ -23,14 +23,27 @@ class EnrolledCourseTotalPaidMonth
         return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
             $totalPaid_m = EnrolledCourse::query()
-                ->where('is_deleted', 0) // course active
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
-                ->withSum(['payments as total_paid' => function ($q) use($startOfMonth,$endOfMonth){
-                    $q->where('is_deleted', 0)->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
-                }], 'paid_amount')
-                ->get()
-                ->filter(fn ($course) => $course->total_paid >= $course->total_fee)
-                ->sum('total_paid');
+            ->active()
+            ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
+            ->select('*')
+            ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->from('enrolled_course_payments')
+                ->whereColumn('enrolled_course_payments.enrolled_course_id', 'crm_enrolled_courses.id')
+                ->where('is_deleted', 0)
+                ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                ->selectRaw("
+                    SUM(
+                        CASE 
+                            WHEN type = 'refunded' THEN -paid_amount
+                            ELSE paid_amount
+                        END
+                    )
+                ");
+            }, 'total_paid')
+            ->get()
+            ->filter(fn ($course) => $course->total_paid >= $course->total_fee)
+            ->sum('total_paid');
+
 
             return $totalPaid_m;
         });

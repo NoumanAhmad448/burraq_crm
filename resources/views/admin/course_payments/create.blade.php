@@ -7,9 +7,9 @@
 @section('content')
     <div class="container">
 
-<a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
-    <i class="fa fa-arrow-left"></i> Back to Students
-</a>
+        <a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
+            <i class="fa fa-arrow-left"></i> Back to Students
+        </a>
         @include('admin.course_payments.payment_form', [
             'is_update' => false,
             'enrolledCourse' => $enrolledCourse,
@@ -39,43 +39,47 @@
                         <td>{{ number_format($payment->paid_amount, 2) }}</td>
                         <td>
                             @if ($payment->payment_slip_path)
-                                <a href="{{ asset(img_path($payment->payment_slip_path)) }}" target="_blank" class="text-primary underscore">View Slip</a>
+                                <a href="{{ asset(img_path($payment->payment_slip_path)) }}" target="_blank"
+                                    class="text-primary underscore">View Slip</a>
                             @else
                                 N/A
                             @endif
                         </td>
                         <td>{{ $payment->paidBy->name ?? 'N/A' }}</td>
                         <td>
-                            {{ $payment->type == "refunded" ? "Refunded Payment" : '' }}
+                            {{ $payment->type == 'refunded' ? 'Refunded Payment' : '' }}
                         </td>
                         <td>{{ \App\Classes\LyskillsCarbon::parse($payment->created_at)->toFormattedDateString() }}</td>
                         <td>
-                            <a href={{ route("course_payments.get", [
-                                    'student_id' => $student_id,
-                                    'enrolledCourseId' => $enrolled_course_id,
-                                    'payment_id' => $payment->id
-                                    ])}} class="btn btn-sm btn-outline-info"
-                            >
-                            Edit
+                            <a href={{ route('course_payments.get', [
+                                'student_id' => $student_id,
+                                'enrolledCourseId' => $enrolled_course_id,
+                                'payment_id' => $payment->id,
+                            ]) }}
+                                class="btn btn-sm btn-outline-info">
+                                Edit
                             </a>
                             @if (!$payment->is_deleted && auth()->user()->is_admin)
                                 <form action="{{ route('course_payments.delete', $payment->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
-                                    <x-delete :route="route('course_payments.delete', $payment->id)" title="Delete Payment"/>
+                                    <x-delete :route="route('course_payments.delete', $payment->id)" title="Delete Payment" />
                                 </form>
-                                <a class="btn btn-outline-success" href="{{route('students.course.payments_logs', $student_id)}}" title="Payments Logs of the course">
+                            @endif
+                            <x-admin>
+                                <a class="btn btn-sm btn-outline-success"
+                                    href="{{ route('students.course.payments_logs', ["payment" => $payment->id]) }}"
+                                    title="Payments Logs of the course">
                                     Logs
                                 </a>
-                            @endif
+                            </x-admin>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <a href="{{ route('students.index') }}" class="btn btn-secondary mb-3">
-    <i class="fa fa-arrow-left"></i> Back to Students
-</a>
-
+            <i class="fa fa-arrow-left"></i> Back to Students
+        </a>
     </div>
 @endsection

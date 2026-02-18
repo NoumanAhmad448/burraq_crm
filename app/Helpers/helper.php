@@ -400,3 +400,7 @@ function statusBadgeClass($status)
         default           => 'badge-primary',
     };
 }
+
+function printQuery($query){
+    dd($query->toSql(), $query->getBindings());
+}

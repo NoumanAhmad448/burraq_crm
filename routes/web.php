@@ -31,7 +31,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OfflinePaymentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaypalController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EnrolledCourseController;
 use App\Http\Controllers\SetttingController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StoreUserController;
@@ -297,3 +297,8 @@ if (trim(config('app.env')) == config("setting.roles.dev")) {
 
 
 require __DIR__.'/inquiry_dashboard.php';
+Route::get('{enrolledCourse}/status', [EnrolledCourseController::class, 'editStatus'])
+    ->name('enrolled-courses.status.edit');
+
+Route::put('{enrolledCourse}/status', [EnrolledCourseController::class, 'updateStatus'])
+    ->name('enrolled-courses.status.update');

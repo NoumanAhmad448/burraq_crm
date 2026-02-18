@@ -46,11 +46,20 @@ class EnrolledCourseTotalPaid
                 ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
                 ->withSum(['payments as total_paid' => function ($q) use ($startOfMonth, $endOfMonth) {
                     $q->where('is_deleted', 0)
-                      ->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
-                }], 'paid_amount')
+                    ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                    ->selectRaw("
+                        SUM(
+                            CASE 
+                                WHEN type = 'refunded' THEN -paid_amount
+                                ELSE paid_amount
+                            END
+                        )
+                    ");
+                }])
                 ->get()
                 ->filter(fn ($course) => $course->total_paid >= $course->total_fee)
                 ->sum('total_paid');
+
         });
     }
 

@@ -16,7 +16,7 @@ class EnrolledCoursePaymentObserver
         return [
             'performed_by'       => $user?->id,
             'performed_by_name'  => $user?->name,
-            'performed_by_email'=> $user?->email,
+            'performed_by_email' => $user?->email,
             'performed_by_role' => $user?->role ?? null,
             'ip_address'         => Request::ip(),
             'user_agent'         => Request::header('User-Agent'),
@@ -42,23 +42,21 @@ class EnrolledCoursePaymentObserver
     public function updating(EnrolledCoursePayment $payment)
     {
         // LOGICAL DELETE
-        if ($payment->isDirty('is_deleted') && $payment->is_deleted == 1) {
+        if ($payment->is_deleted) {
             EnrolledCoursePaymentLog::create(array_merge([
                 'enrolled_course_payment_id' => $payment->id,
                 'action'   => 'deleted',
                 'old_data' => json_encode($payment->getOriginal()),
                 'new_data' => json_encode(['is_deleted' => 1]),
             ], $this->actor()));
-
-            return;
+        } else {
+            // NORMAL UPDATE
+            EnrolledCoursePaymentLog::create(array_merge([
+                'enrolled_course_payment_id' => $payment->id,
+                'action'   => 'updated',
+                'old_data' => json_encode($payment->getOriginal()),
+                'new_data' => json_encode($payment->getDirty()),
+            ], $this->actor()));
         }
-
-        // NORMAL UPDATE
-        EnrolledCoursePaymentLog::create(array_merge([
-            'enrolled_course_payment_id' => $payment->id,
-            'action'   => 'updated',
-            'old_data' => json_encode($payment->getOriginal()),
-            'new_data' => json_encode($payment->getDirty()),
-        ], $this->actor()));
     }
 }

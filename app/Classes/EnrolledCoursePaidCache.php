@@ -21,20 +21,15 @@ class EnrolledCoursePaidCache
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
             return EnrolledCourse::with([
-                    'student',
                     'payments' => function ($q) use ($month, $year) {
-                        $q->where('is_deleted', 0)
-                          ->when(!is_null($month), fn ($qq) =>
-                              $qq->whereMonth('payment_date', $month)
-                          )
-                          ->when(!is_null($year), fn ($qq) =>
-                              $qq->whereYear('payment_date', $year)
-                          );
+                        $q->regDate($month, $year, "payment_date")->active();
                     }
                 ])
-                ->where('is_deleted', 0)
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0)->where("status",  empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status)
-)                ->getCourse()
+                ->activeCourse()
+                ->whereHas('student', function ($q) use($status){
+                        $q->IgnoreOrAccept($status)->active();
+                })
+                ->getCourse()
                 ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments->sum('paid_amount');

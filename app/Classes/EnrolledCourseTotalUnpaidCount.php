@@ -18,19 +18,17 @@ class EnrolledCourseTotalUnpaidCount
     {
         $cacheKey = "enrolled_course_total_unpaid_count";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
 
-            $totalUnpaid_count = EnrolledCourse::with('payments')
-                ->whereHas('student', fn($q) => $q->where("is_deleted", 0))
-                ->where("is_deleted", 0)
+            $totalUnpaid_count = EnrolledCourse::query()
+                ->paidStudentsOnly()
+                ->activeStudentInRelation()
                 ->totalActivePayment()
-                ->get()
-                ->filter(function ($course) {
-                    return $course->total_paid < $course->total_fee; // only positive unpaid
-                })->count();
+                ->activeStatus()
+                ->count();
 
             return $totalUnpaid_count;
-        });
+        // });
     }
 
     /**

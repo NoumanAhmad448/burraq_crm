@@ -20,18 +20,12 @@ class EnrolledCourseTotalOverdue
 
         return Cache::remember($cacheKey, $ttl, function () {
 
-            $totalOverdue = EnrolledCourse::
-                whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
-                ->whereNotNull('due_date') // past due
-                ->where('due_date', '<', now()) // past due
+            $totalOverdue = EnrolledCourse::query()
+                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
+                ->whereNotNull('due_date')
+                ->where('due_date', '<', now())
                 ->where('is_deleted', 0)
-                ->withSum(['payments as total_paid' => function ($q) {
-                        $q->where('is_deleted', 0);
-                    }], 'paid_amount')
-                ->get()
-                ->sum(function ($course) {
-                    return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
-                });
+                ->netAmount();
 
             return $totalOverdue;
         });

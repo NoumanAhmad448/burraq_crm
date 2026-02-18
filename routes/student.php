@@ -55,7 +55,7 @@ Route::middleware(config('middlewares.auth'))->group(function () {
         ->name('students.logs');
 
     Route::get(
-        '/students/{student}/courses/payments',
+        '/students/course//payment/{payment}/logs',
         [StudentCoursePaymentController::class, 'index']
     )->name('students.course.payments_logs');
 });
