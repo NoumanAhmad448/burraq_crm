@@ -22,27 +22,30 @@ class EnrolledCoursePaymentsThisMonth
 
         // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
-            $paymentsThisMonth = EnrolledCoursePayment::query()
-                    ->join('enrolled_courses', 'enrolled_courses.id', '=', 'enrolled_course_payments.enrolled_course_id')
-                    ->join('students', 'students.id', '=', 'enrolled_courses.student_id')
-                    ->whereBetween('enrolled_course_payments.payment_date', [$startOfMonth, $endOfMonth])
-                    ->where('enrolled_course_payments.is_deleted', 0)
-                    ->where('enrolled_courses.is_deleted', 0)
-                    ->where('students.is_deleted', 0)
-                    ->selectRaw("
+        $paymentsThisMonth = EnrolledCoursePayment::query()
+            ->from('crm_course_payments as cp')
+            ->where('cp.is_deleted', 0)
+            ->whereBetween('cp.payment_date', [$startOfMonth, $endOfMonth])
+            ->whereExists(function ($q) {
+                $q->selectRaw(1)
+                    ->from('crm_enrolled_courses as ec')
+                    ->join('crm_students as s', 's.id', '=', 'ec.student_id')
+                    ->whereColumn('ec.id', 'cp.enrolled_course_id')
+                    ->where('ec.is_deleted', 0)
+                    ->where('s.is_deleted', 0);
+            })
+            ->selectRaw("
                         COALESCE(
                             SUM(
-                                CASE 
-                                    WHEN enrolled_course_payments.type = 'refunded' 
-                                    THEN -enrolled_course_payments.paid_amount
-                                    ELSE enrolled_course_payments.paid_amount
-                                END
+                                cp.paid_amount *
+                                (CASE WHEN cp.type = 'refunded' THEN -1 ELSE 1 END)
                             ), 0
                         ) as total
-                    ")
-                    ->value('total');
+                    ");
 
-            return $paymentsThisMonth;
+
+
+        return $paymentsThisMonth->value('total');
         // });
     }
 

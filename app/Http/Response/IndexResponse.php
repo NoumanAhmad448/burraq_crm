@@ -32,6 +32,7 @@ class IndexResponse implements IndexContracts
 {
     public function toResponse($request)
     {
+
         try {
 
         $settings = Setting::first();
@@ -59,11 +60,11 @@ class IndexResponse implements IndexContracts
         $totalFee = EnrolledCourseTotalFee::get();
 
         // Get cached payments for this month
-        // $paymentsThisMonth = EnrolledCoursePaymentsThisMonth::get($startOfMonth, $endOfMonth);
+        $paymentsThisMonth = EnrolledCoursePaymentsThisMonth::get($startOfMonth, $endOfMonth);
 
         $totalPaid_g = EnrolledCoursePaymentTotal::get();
 
-        // $totalPaid = EnrolledCourseTotalPaid::getTotalPaidMonth($startOfMonth, $endOfMonth);
+        $totalPaid = EnrolledCourseTotalPaid::getTotalPaidMonth($startOfMonth, $endOfMonth);
 
 
         $pending   = max($totalFee - $totalPaid_g, 0);
@@ -82,7 +83,7 @@ class IndexResponse implements IndexContracts
 
         $activeCourses = Course::whereHas('enrolledCourses')->count();
 
-        // $totalUnpaid = EnrolledCourseTotalUnpaid::get();
+        $totalUnpaid = EnrolledCourseTotalUnpaid::get();
 
 
         $totalUnpaid_count = EnrolledCourseTotalUnpaidCount::get();
