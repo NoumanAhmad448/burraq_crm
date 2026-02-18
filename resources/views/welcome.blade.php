@@ -19,35 +19,35 @@
              'route' => 'students.index',
          ],
 
-         [
-             'title' => 'Students (This Month)',
-             'count' => $studentsThisMonth->sum('total'),
-             'icon' => 'img/fa-fa-users.png',
-             'bg' => 'bg-primary',
-             'amount_color' => 'purple',
-             'route' => 'students.index',
-             'route_keys' => ['month' => $month, 'year' => $year],
-         ],
+        //  [
+        //      'title' => 'Students (This Month)',
+        //      'count' => $studentsThisMonth,
+        //      'icon' => 'img/fa-fa-users.png',
+        //      'bg' => 'bg-primary',
+        //      'amount_color' => 'purple',
+        //      'route' => 'students.index',
+        //      'route_keys' => ['month' => $month, 'year' => $year],
+        //  ],
 
-         [
-             'title' => 'Total Overdue Students',
-             'count' => $totalOverdue_count,
-             'icon' => 'img/fa-fa-users_o.png',
-             'bg' => 'bg-danger',
-             'amount_color' => 'purple',
-             'route' => 'students.index',
-             'route_keys' => ['type' => 'overdue'],
-         ],
+        //  [
+        //      'title' => 'Total Overdue Students',
+        //      'count' => $totalOverdue_count,
+        //      'icon' => 'img/fa-fa-users_o.png',
+        //      'bg' => 'bg-danger',
+        //      'amount_color' => 'purple',
+        //      'route' => 'students.index',
+        //      'route_keys' => ['type' => 'overdue'],
+        //  ],
 
-         [
-             'title' => 'Total Pending Students',
-             'count' => $totalUnpaid_count,
-             'icon' => 'img/fa-fa-users-u.png',
-             'bg' => 'bg-primary',
-             'amount_color' => 'success',
-             'route' => 'students.index',
-             'route_keys' => ['type' => 'unpaid'],
-         ],
+        //  [
+        //      'title' => 'Total Pending Students',
+        //      'count' => $totalUnpaid_count,
+        //      'icon' => 'img/fa-fa-users-u.png',
+        //      'bg' => 'bg-primary',
+        //      'amount_color' => 'success',
+        //      'route' => 'students.index',
+        //      'route_keys' => ['type' => 'unpaid'],
+        //  ],
         //  [
         //      'title' => 'Total Payments (This Month)',
         //      'count' => show_payment($paymentsThisMonth),
@@ -261,7 +261,7 @@
 <x-admin>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
+    {{-- <script>
         /* ---------- Students This Month ---------- */
         new Chart(document.getElementById('studentsMonthChart'), {
             type: 'bar',
@@ -354,7 +354,7 @@
                 }
             }
         });
-    </script>
+    </script> --}}
     <script>
         $(document).ready(function() {
             $('#toggle-amounts').click(function() {

@@ -18,7 +18,7 @@ class EnrolledCourseTotalOverdueCount
     {
         $cacheKey = "enrolled_course_total_overdue_count";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
 
             $totalOverdue_count = EnrolledCourse::query()->
                  pendingCourses()
@@ -29,7 +29,7 @@ class EnrolledCourseTotalOverdueCount
                 ->paidStudentsOnly()->count();
 
             return $totalOverdue_count;
-        });
+        // });
     }
 
     /**
