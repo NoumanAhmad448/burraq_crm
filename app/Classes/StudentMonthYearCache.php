@@ -21,10 +21,10 @@ class StudentMonthYearCache
             $month = null;
             $year = null;
         }
-        return Cache::remember(
-            self::cacheKey($month, $year),
-            now()->addSeconds($ttlSeconds),
-            function () use ($month, $year) {
+        // // return Cache::remember(
+        //     self::cacheKey($month, $year),
+        //     now()->addSeconds($ttlSeconds),
+        //     function () use ($month, $year) {
 
                 return Student::where('is_deleted', 0)
                     ->when(!is_null($month), fn ($q) =>
@@ -34,8 +34,8 @@ class StudentMonthYearCache
                         $q->whereYear('registration_date', $year)
                     )
                     ->count();
-            }
-        );
+            // }
+        // );
     }
 
     /**

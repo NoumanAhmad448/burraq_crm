@@ -32,7 +32,6 @@ class IndexResponse implements IndexContracts
 {
     public function toResponse($request)
     {
-        return redirect()->route("students.index");
         try {
 
         $settings = Setting::first();
@@ -61,46 +60,47 @@ class IndexResponse implements IndexContracts
 
         // Get cached payments for this month
         // $paymentsThisMonth = EnrolledCoursePaymentsThisMonth::get($startOfMonth, $endOfMonth);
-        dd("here");
 
-        // $totalPaid_g = EnrolledCoursePaymentTotal::get();
+        $totalPaid_g = EnrolledCoursePaymentTotal::get();
 
         // $totalPaid = EnrolledCourseTotalPaid::getTotalPaidMonth($startOfMonth, $endOfMonth);
 
 
-        // $pending   = max($totalFee - $totalPaid_g, 0);
+        $pending   = max($totalFee - $totalPaid_g, 0);
 
-        // $totalStudents = Student::count();
-        // $activeStudents = StudentMonthYearCache::get($request, $month, $year);
 
-        // $activeEnrolledStudents = Student::where('is_deleted', 0)
-        //     ->whereHas('enrolledCourses')
-        //     ->count();
+        $totalStudents = Student::count();
+        $activeStudents = StudentMonthYearCache::get($request, $month, $year);
 
-        // // Courses
-        // $totalCourses = Course::count();
-        // $activeCourses = Course::where('is_deleted', 0)->count();
+        $activeEnrolledStudents = Student::where('is_deleted', 0)
+            ->whereHas('enrolledCourses')
+            ->count();
 
-        // $activeCourses = Course::whereHas('enrolledCourses')->count();
+        // Courses
+        $totalCourses = Course::count();
+        $activeCourses = Course::where('is_deleted', 0)->count();
+
+        $activeCourses = Course::whereHas('enrolledCourses')->count();
 
         // $totalUnpaid = EnrolledCourseTotalUnpaid::get();
 
-        // $totalUnpaid_count = EnrolledCourseTotalUnpaidCount::get();
+
+        $totalUnpaid_count = EnrolledCourseTotalUnpaidCount::get();
 
         // $pendingThisMonth = EnrolledCoursePendingThisMonth::get($startOfMonth, $endOfMonth);
 
         // $totalOverdue = EnrolledCourseTotalOverdue::get();
 
-        // $totalOverdue_count = EnrolledCourseTotalOverdueCount::get();
+        $totalOverdue_count = EnrolledCourseTotalOverdueCount::get();
 
         // $dueThisMonth = EnrolledCourseDueThisMonth::get($startOfMonth, $endOfMonth);
 
-        // $enrolledCourses = EnrolledCourseWithCertificate::get();
+        $enrolledCourses = EnrolledCourseWithCertificate::get();
 
-        // $cert_count = $enrolledCourses->count();
+        $cert_count = $enrolledCourses->count();
 
-        // $total_income = EnrolledCourse::totalIncome();
-        // $total_income_m = EnrolledCourse::totalMonthlyIncome($month, $year);
+        $total_income = EnrolledCourse::totalIncome();
+        $total_income_m = EnrolledCourse::totalMonthlyIncome($month, $year);
         // $totalPaid_m = EnrolledCourseTotalPaidMonth::get($startOfMonth, $endOfMonth);
             return $request->wantsJson()
                 ? response()->json([
@@ -109,31 +109,31 @@ class IndexResponse implements IndexContracts
                     config('setting.welcome_blade', 'dashboard.welcome'),
                     compact(
                         'settings',
-                        // 'totalStudents',
-                        // 'activeStudents',
-                        // 'totalCourses',
-                        // 'activeCourses',
-                        // 'activeEnrolledStudents',
-                        // 'studentsThisMonth',
-                        // 'studentsYearly',
+                        'totalStudents',
+                        'activeStudents',
+                        'totalCourses',
+                        'activeCourses',
+                        'activeEnrolledStudents',
+                        'studentsThisMonth',
+                        'studentsYearly',
                         // 'paymentsThisMonth',
-                        // 'annualPayments',
-                        // 'totalFee',
-                        // 'totalPaid_g',
+                        'annualPayments',
+                        'totalFee',
+                        'totalPaid_g',
                         // 'totalPaid',
                         // 'totalOverdue',
                         // 'totalUnpaid',
-                        // 'cert_count',
-                        // 'pending',
+                        'cert_count',
+                        'pending',
                         // 'pendingThisMonth',
                         // 'dueThisMonth',
-                        // 'month',
-                        // 'year',
+                        'month',
+                        'year',
                         // 'totalPaid_m',
-                        // 'totalOverdue_count',
-                        // 'totalUnpaid_count',
-                        // 'total_income',
-                        // 'total_income_m',
+                        'totalOverdue_count',
+                        'totalUnpaid_count',
+                        'total_income',
+                        'total_income_m',
                     )
                 );
 
