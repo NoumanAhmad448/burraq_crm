@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use App\Models\EnrolledCourse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class EnrolledCourseDueThisMonth
@@ -20,43 +20,48 @@ class EnrolledCourseDueThisMonth
     {
         $cacheKey = "enrolled_course_due_this_month_{$startOfMonth}_{$endOfMonth}";
 
-        return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
+        // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
-            $dueThisMonth = EnrolledCourse::query()
-                ->whereHas('student', fn($q) => $q->where('is_deleted', 0))
-                ->whereNotNull('due_date')
-                ->where('due_date', '<', now())
-                ->where('is_deleted', 0)
-                ->whereHas('payments', function ($q) use ($startOfMonth, $endOfMonth) {
-                    $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
-                        ->where('is_deleted', 0);
-                })
-                ->select('*')
-                ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
-                    $q->from('enrolled_course_payments')
-                        ->whereColumn('enrolled_course_payments.enrolled_course_id', 'enrolled_courses.id')
-                        ->where('is_deleted', 0)
-                        ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
-                        ->selectRaw("
-              COALESCE(
-                  SUM(
-                      CASE 
-                          WHEN type = 'refunded' THEN -paid_amount
-                          ELSE paid_amount
-                      END
-                  ), 0
-              )
-          ");
-                }, 'total_paid')
-                ->get()
-                ->sum(function ($course) {
-                    return $course->total_paid < $course->total_fee
-                        ? $course->total_fee - $course->total_paid
-                        : 0;
-                });
+        $dueThisMonth = DB::table('crm_enrolled_courses as ec')
+            ->join('crm_students as s', function ($join) {
+                $join->on('s.id', '=', 'ec.student_id')
+                    ->where('s.is_deleted', 0);
+            })
+            ->leftJoin(DB::raw("
+                (
+                    SELECT 
+                        enrolled_course_id,
+                        COALESCE(
+                            SUM(
+                                CASE 
+                                    WHEN type = 'refunded' THEN -paid_amount
+                                    ELSE paid_amount
+                                END
+                            ), 0
+                        ) as total_paid
+                    FROM crm_course_payments
+                    WHERE is_deleted = 0
+                    AND payment_date BETWEEN '{$startOfMonth}' AND '{$endOfMonth}'
+                    GROUP BY enrolled_course_id
+                ) as p
+            "), 'p.enrolled_course_id', '=', 'ec.id')
+                    ->where('ec.is_deleted', 0)
+                    ->whereNull('ec.status')
+                    ->whereNotNull('ec.due_date')
+                    ->where('ec.due_date', '<', now())
+                    ->selectRaw("
+                SUM(
+                    GREATEST(
+                        ec.total_fee - COALESCE(p.total_paid, 0),
+                    0)
+                ) as total_outstanding
+            ")
+            ->value('total_outstanding');
 
-            return $dueThisMonth;
-        });
+
+
+        return $dueThisMonth;
+        // });
     }
 
     /**

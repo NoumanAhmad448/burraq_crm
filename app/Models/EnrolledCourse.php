@@ -172,15 +172,4 @@ class EnrolledCourse extends Model
         return $this->totalPaid() >= $this->total_fee;
     }
 
-    public function scopeNetAmount($query)
-    {
-        return $query->selectRaw("
-        SUM(
-            CASE 
-                WHEN type = 'refunded' THEN -paid_amount
-                ELSE paid_amount
-            END
-        )
-    ");
-    }
 }
