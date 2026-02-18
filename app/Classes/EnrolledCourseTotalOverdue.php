@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use App\Models\EnrolledCourse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class EnrolledCourseTotalOverdue
@@ -20,12 +20,15 @@ class EnrolledCourseTotalOverdue
 
         // return Cache::remember($cacheKey, $ttl, function () {
 
-            $totalOverdue = EnrolledCourse::query()
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
-                ->whereNotNull('due_date')
-                ->where('due_date', '<', now())
-                ->where('is_deleted', 0)
-                ->netAmount();
+            $totalOverdue = DB::table('crm_enrolled_courses as ec')
+                ->join('crm_students as s', function ($join) {
+                    $join->on('s.id', '=', 'ec.student_id')
+                        ->where('s.is_deleted', 0);
+                })
+                ->where('ec.is_deleted', 0)
+                ->whereNull('ec.status')
+                ->where('ec.due_date', '<', now())
+                ->count();
 
             return $totalOverdue;
         // });

@@ -41,7 +41,7 @@ class IndexResponse implements IndexContracts
             // // dd($startOfMonth->format("Y-m-d"));
 
             /* ---------- Students This Month ---------- */
-            // $studentsThisMonth = StudentCache::studentsThisMonth($month, $year);
+            $studentsThisMonth = StudentCache::studentsThisMonth($startOfMonth, $endOfMonth);
             // // /* ---------- Students Yearly ---------- */
             $studentsYearly = StudentsYearly::get($year);
             // dd($studentsYearly);
@@ -80,25 +80,23 @@ class IndexResponse implements IndexContracts
 
             $activeCourses = Course::whereHas('enrolledCourses')->count();
 
-            // $totalUnpaid = EnrolledCourseTotalUnpaid::get();
+            $totalUnpaid = EnrolledCourseTotalUnpaid::get();
 
+            $totalUnpaid_count = EnrolledCourseTotalUnpaidCount::get();
+            $pendingThisMonth = EnrolledCoursePendingThisMonth::get($startOfMonth, $endOfMonth);
 
-            // $totalUnpaid_count = EnrolledCourseTotalUnpaidCount::get();
+            $totalOverdue = EnrolledCourseTotalOverdue::get();
+            $totalOverdue_count = EnrolledCourseTotalOverdueCount::get();
+            $dueThisMonth = EnrolledCourseDueThisMonth::get($startOfMonth, $endOfMonth);
 
-            // $pendingThisMonth = EnrolledCoursePendingThisMonth::get($startOfMonth, $endOfMonth);
-
-            // $totalOverdue = EnrolledCourseTotalOverdue::get();
-
-            // $totalOverdue_count = EnrolledCourseTotalOverdueCount::get();
-
-            // $dueThisMonth = EnrolledCourseDueThisMonth::get($startOfMonth, $endOfMonth);
             $enrolledCourses = EnrolledCourseWithCertificate::get();
 
             $cert_count = $enrolledCourses->count();
 
             $total_income = EnrolledCourse::totalIncome();
             $total_income_m = EnrolledCourse::totalMonthlyIncome($month, $year);
-            // $totalPaid_m = EnrolledCourseTotalPaidMonth::get($startOfMonth, $endOfMonth);
+            $totalPaid_m = EnrolledCourseTotalPaidMonth::get($startOfMonth, $endOfMonth);
+            // dd("hit");
 
 
             return view(
@@ -119,38 +117,20 @@ class IndexResponse implements IndexContracts
                     'year',
                     'total_income',
                     'total_income_m',
+                    "studentsThisMonth",
+                    "totalOverdue_count",
+                    "totalUnpaid",
+                    "totalUnpaid_count",
+                    "pendingThisMonth",
+                    "totalOverdue",
+                    "dueThisMonth",
+                    "totalPaid_m",
+                    "paymentsThisMonth",
+                    "totalPaid",
 
 
                 )
             );
-
-
-            //     'settings',
-            //     'activeStudents',
-            //     'totalCourses',
-            //     'activeCourses',
-            //     'activeEnrolledStudents',
-            //     // 'studentsThisMonth',
-            //     'studentsYearly',
-            //     // 'paymentsThisMonth',
-            //     'annualPayments',
-            //     'totalFee',
-            //     'totalPaid_g',
-            //     // 'totalPaid',
-            //     // 'totalOverdue',
-            //     // 'totalUnpaid',
-            //     'cert_count',
-            //     'pending',
-            //     // 'pendingThisMonth',
-            //     // 'dueThisMonth',
-            //     'month',
-            //     'year',
-            //     // 'totalPaid_m',
-            //     'totalOverdue_count',
-            //     'totalUnpaid_count',
-            //     'total_income',
-            //     'total_income_m',
-            // )
 
         } catch (Exception $e) {
             server_logs([true, $e], [true, $request]);

@@ -17,25 +17,19 @@ class StudentCache
      * @param int $ttl Time to live in minutes
      * @return \Illuminate\Support\Collection
      */
-    public static function studentsThisMonth($month = null, $year = null, $ttl = 1)
+    public static function studentsThisMonth($startOfMonth = null, $endOfMonth = null, $ttl = 1)
     {
 
         // Cache key
-        $cacheKey = "students_this_month_{$year}_{$month}";
+        $cacheKey = "students_this_month_{$endOfMonth}_{$startOfMonth}";
 
         // Return cached value or execute closure
         // return Cache::remember($cacheKey, $ttl, function () use ($month, $year) {
-            return CRMStudent::where('is_deleted', 0)
-            ->when(!empty($month), function ($query) use ($month) {
-                $query->whereMonth('registration_date', $month);
-            })
-            ->when(!empty($year), function ($query) use ($year) {
-                $query->whereYear('registration_date', $year);
-            })
-            ->selectRaw('DATE(registration_date) as date, COUNT(*) as total')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->sum("total");
+            return CRMStudent::active()
+                ->whereBetween('registration_date', [$startOfMonth, $endOfMonth])
+                ->selectRaw('DATE(registration_date) as date, COUNT(*) as total')
+                ->groupByRaw('DATE(registration_date)')
+                ->orderBy('date')->get();
 
         // });
     }

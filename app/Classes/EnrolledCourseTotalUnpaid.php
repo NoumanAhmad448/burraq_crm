@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Models\EnrolledCourse;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class EnrolledCourseTotalUnpaid
 {
@@ -20,33 +21,42 @@ class EnrolledCourseTotalUnpaid
 
         // return Cache::remember($cacheKey, $ttl, function () {
 
-            $totalUnpaid = EnrolledCourse::query()
-                ->whereHas('student', fn ($q) => $q->where('is_deleted', 0))
-                ->where('is_deleted', 0)
-                ->select('*')
-                ->selectSub(function ($q) {
-                    $q->from('enrolled_course_payments')
-                    ->whereColumn('enrolled_course_payments.enrolled_course_id', 'enrolled_courses.id')
-                    ->where('is_deleted', 0)
-                    ->selectRaw("
-                        COALESCE(
-                            SUM(
-                                CASE 
-                                    WHEN type = 'refunded' THEN -paid_amount
-                                    ELSE paid_amount
-                                END
-                            ), 0
-                        )
-                    ");
-                }, 'total_paid')
-                ->get()
-                ->sum(function ($course) {
-                    return $course->total_paid < $course->total_fee
-                        ? $course->total_fee - $course->total_paid
-                        : 0;
-                });
 
-            return $totalUnpaid;
+        $paymentsSub = DB::table('crm_course_payments as p')
+            ->selectRaw("
+                    p.enrolled_course_id,
+                    SUM(
+                        CASE
+                            WHEN p.type = 'refunded' THEN -p.paid_amount
+                            ELSE p.paid_amount
+                        END
+                    ) as total_paid
+                ")
+            ->where('p.is_deleted', 0)
+            ->groupBy('p.enrolled_course_id');
+
+        $totalUnpaid = DB::table('crm_enrolled_courses as ec')
+            ->join('crm_students as s', function ($join) {
+                $join->on('s.id', '=', 'ec.student_id')
+                    ->where('s.is_deleted', 0);
+            })
+            ->leftJoinSub($paymentsSub, 'payments', function ($join) {
+                $join->on('payments.enrolled_course_id', '=', 'ec.id');
+            })
+            ->where('ec.is_deleted', 0)
+            ->selectRaw("
+                    SUM(
+                        CASE
+                            WHEN COALESCE(payments.total_paid, 0) < ec.total_fee
+                            THEN ec.total_fee - COALESCE(payments.total_paid, 0)
+                            ELSE 0
+                        END
+                    ) as total_outstanding
+                ")
+            ->value('total_outstanding');
+
+
+        return $totalUnpaid;
         // });
     }
 

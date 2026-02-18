@@ -83,4 +83,18 @@ class EnrolledCoursePayment extends Model
                 $q->whereYear($date, $year);
             });
     }
+
+    public function scopeNetAmount($query)
+    {
+        return $query->selectRaw("
+            COALESCE(
+                SUM(
+                    CASE 
+                        WHEN type = 'refunded' THEN -paid_amount
+                        ELSE paid_amount
+                    END
+                ), 0
+            ) AS amount
+        ");
+    }
 }
