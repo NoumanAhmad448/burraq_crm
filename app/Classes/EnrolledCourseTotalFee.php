@@ -18,7 +18,7 @@ class EnrolledCourseTotalFee
     {
         $cacheKey = "enrolled_course_total_fee";
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        // return Cache::remember($cacheKey, $ttl, function () {
 
             $totalFee = EnrolledCourse::where("is_deleted", 0)
                 ->whereHas("student", function($query){
@@ -27,7 +27,7 @@ class EnrolledCourseTotalFee
                 ->sum('total_fee');
 
             return $totalFee;
-        });
+        // });
     }
 
     /**
