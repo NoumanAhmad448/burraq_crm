@@ -23,15 +23,21 @@ class EnrolledCoursePaymentsThisMonth
         return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
             $paymentsThisMonth = EnrolledCoursePayment::query()
-                ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
-                ->where('is_deleted', 0) // payment active
-                ->whereHas('enrolledCourse', function ($q) {
-                    $q->where('is_deleted', 0); // course active
-                })
-                ->whereHas('enrolledCourse.student', function ($q) {
-                    $q->where('is_deleted', 0); // student active
-                })
-                ->sum('paid_amount');
+                    ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                    ->active()
+                    ->enrolledCourseInRelation()
+                    ->whereHas('enrolledCourse.student', function ($q) {
+                        $q->active();
+                    })
+                    ->selectRaw("
+                        SUM(
+                            CASE 
+                                WHEN type = 'refunded' THEN -paid_amount
+                                ELSE paid_amount
+                            END
+                        ) as total
+                    ")
+                    ->value('total');
 
             return $paymentsThisMonth;
         });

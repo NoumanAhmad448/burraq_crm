@@ -20,12 +20,12 @@ class EnrolledCourseTotalOverdueCount
 
         return Cache::remember($cacheKey, $ttl, function () {
 
-            $totalOverdue_count = EnrolledCourse
-                ::pendingCourses()->with('student', 'payments')
+            $totalOverdue_count = EnrolledCourse::query()->
+                 pendingCourses()
                 ->whereHas('student', function ($query) {
-                        $query->where('is_deleted', 0);
-                    })
-                ->activeCourse()
+                    $query->active();
+                })
+                ->activeStatus()
                 ->paidStudentsOnly()->count();
 
             return $totalOverdue_count;

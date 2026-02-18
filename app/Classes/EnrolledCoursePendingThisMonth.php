@@ -22,19 +22,35 @@ class EnrolledCoursePendingThisMonth
 
         return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
-            $pendingThisMonth = EnrolledCourse::with('payments', 'student')
-                ->whereHas('student', fn($q) => $q->where('is_deleted', 0)) // only active students
-                ->where("is_deleted", 0)
-                ->whereHas("payments", function($q)  use($startOfMonth, $endOfMonth){
-                    $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
+            $pendingThisMonth = EnrolledCourse::query()
+                ->where('is_deleted', 0)
+                ->whereHas('student', fn($q) => $q->where('is_deleted', 0))
+                ->whereHas('payments', function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                        ->where('is_deleted', 0);
                 })
-                ->withSum(['payments as total_paid' => function ($q){
-                        $q->where('is_deleted', 0);
-                    }], 'paid_amount')
+                ->select('*')
+                ->selectSub(function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->from('enrolled_course_payments')
+                        ->whereColumn('enrolled_course_payments.enrolled_course_id', 'crm_enrolled_courses.id')
+                        ->where('is_deleted', 0)
+                        ->whereBetween('payment_date', [$startOfMonth, $endOfMonth])
+                        ->selectRaw("
+              SUM(
+                  CASE 
+                      WHEN type = 'refunded' THEN -paid_amount
+                      ELSE paid_amount
+                  END
+              )
+          ");
+                }, 'total_paid')
                 ->get()
                 ->sum(function ($course) {
-                    return $course->total_paid < $course->total_fee ? $course->total_fee - $course->total_paid  : 0; // only positive unpaid
+                    return $course->total_paid < $course->total_fee
+                        ? $course->total_fee - $course->total_paid
+                        : 0;
                 });
+
 
             return $pendingThisMonth;
         });

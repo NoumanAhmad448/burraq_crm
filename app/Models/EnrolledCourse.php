@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class EnrolledCourse extends Model
 {
     protected $table = 'crm_enrolled_courses';
+    public const REFUNDED = "refunded";
+    public const COMPLETED = "Completed";
 
     protected $fillable = [
         'student_id',
@@ -18,6 +20,9 @@ class EnrolledCourse extends Model
         'is_deleted',
         'deleted_by',
         'deleted_at',
+        'status',
+        'status_note',
+        'status_updated_at',
     ];
 
     public function course()
@@ -28,11 +33,6 @@ class EnrolledCourse extends Model
     public function payments()
     {
         return $this->hasMany(EnrolledCoursePayment::class, 'enrolled_course_id')->where("is_deleted", 0);
-    }
-
-    public function totalPaid()
-    {
-        return $this->payments()->sum('amount');
     }
 
     public function remainingAmount()
@@ -47,6 +47,10 @@ class EnrolledCourse extends Model
     public function activeStudent()
     {
         return $this->belongsTo(Student::class)->where("is_deleted", 0);
+    }
+    public function scopeactiveStudentInRelation($query)
+    {
+        return $query->whereHas('student', fn($q) => $q->active());
     }
 
     public function certificate()
@@ -68,16 +72,16 @@ class EnrolledCourse extends Model
         return LyskillsCarbon::parse($this->due_date)->format('d-m-Y');
     }
 
-    public function scopePendingCourses()
+    public function scopePendingCourses($query)
     {
-        return $this->whereNotNull('due_date') // past due
+        return $query->whereNotNull('due_date') // past due
             ->where('due_date', '<', now()); // past due
     }
 
     public function scopeTotalActivePayment($query)
     {
         return $query->withSum(['payments as total_paid' => function ($q) {
-            $q->where('is_deleted', 0);
+            $q->active()->noRefundedPayments();
         }], 'paid_amount');
     }
     public function scopeTotalIncome($query)
@@ -100,7 +104,7 @@ class EnrolledCourse extends Model
 
     public function scopeActiveCourse($query)
     {
-        return $query->where('is_deleted', 0);
+        return $query->where('is_deleted', "<>", 1);
     }
     public function scopePaidStudentsOnly($query)
     {
@@ -113,7 +117,7 @@ class EnrolledCourse extends Model
         );
     }
 
-    public function regDate($q, $month, $year, $date = "registration_date")
+    public function scopeRegDate($q, $month, $year, $date = "registration_date")
     {
         return $q->when(!is_null($month), function ($q) use ($month, $date) {
             $q->whereMonth($date, $month);
@@ -123,18 +127,60 @@ class EnrolledCourse extends Model
             });
     }
 
-    public function ignoreOrAccept($query, $status)
+    public function scopeignoreOrAccept($query, $status)
     {
         return $query->when($status, function ($q, $status) {
-            $q->where("status", empty($status) ? "<>" : "=", empty($status) ? "Completed" : $status);
+            $q->where("status", empty($status) ? "<>" : "=", empty($status) ? self::COMPLETED : $status);
         });
     }
 
-    public function scopeGetCourse()
+    public function scopeGetCourse($query)
     {
         if (request()->course_id) {
-            return $this->where('course_id', request()->course_id);
+            return $query->where('course_id', request()->course_id);
         }
-        return $this;
+        return $query;
+    }
+
+    public function scopeCanBeRefunded()
+    {
+        return $this->payments()
+            ->where('status', self::REFUNDED)
+            ->exists();
+    }
+    public function scopeRefundedPayment()
+    {
+        return $this
+            ->where('status', self::REFUNDED);
+    }
+    public function scopeActiveStatus($query)
+    {
+        return $query
+            ->whereNull('status')
+            ->activeCourse();
+    }
+
+    public function totalPaid()
+    {
+        return $this->payments()
+            ->where('status', '!=', 'refunded')
+            ->sum('paid_amount');
+    }
+
+    public function scopeIsFullyPaid()
+    {
+        return $this->totalPaid() >= $this->total_fee;
+    }
+
+    public function scopeNetAmount($query)
+    {
+        return $query->selectRaw("
+        SUM(
+            CASE 
+                WHEN type = 'refunded' THEN -paid_amount
+                ELSE paid_amount
+            END
+        )
+    ");
     }
 }

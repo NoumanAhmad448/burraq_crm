@@ -15,31 +15,21 @@ class PendingPaidEnrolledCourseCache
      * @param int|null $year
      * @param int $ttlSeconds
      */
-    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1, $status="")
+    public static function get(?int $month = null, ?int $year = null, int $ttlSeconds = 1, $status = "")
     {
         $cacheKey = self::cacheKey($month, $year);
 
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
             return EnrolledCourse::pendingCourses()
-                ->activeCourse()
                 ->paidStudentsOnly()
-                ->with([
-                    'student'
-                ])
-                ->whereHas('payments' , function ($q) use ($month, $year) {
-                        $q->where('is_deleted', 0)
-                          ->when(!is_null($month), fn ($qq) =>
-                              $qq->whereMonth('payment_date', $month)
-                          )
-                          ->when(!is_null($year), fn ($qq) =>
-                              $qq->whereYear('payment_date', $year)
-                          );
+                ->whereHas('payments', function ($q) use ($month, $year) {
+                    $q->active()->RegDate($month, $year, "payment_date");
                 })
-                ->whereHas('student', function($q) use ($status){
-                    $q = $q->where('is_deleted', 0);
-                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
+                ->whereHas('student', function ($q) use ($status) {
+                    $q->active()->ignoreOrAccept($status);
                 })
+                ->activeStatus()
                 ->getCourse()
                 ->latest()
                 ->get();

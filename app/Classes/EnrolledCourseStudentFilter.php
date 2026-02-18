@@ -12,13 +12,14 @@ class EnrolledCourseStudentFilter
      */
     public static function query(?int $month = null, ?int $year = null, $status = "")
     {
-        return EnrolledCourse::with(['student', 'payments'])
+        return EnrolledCourse::with(['payments'])
             ->whereHas('student', function ($query) use ($month, $year, $status) {
-                $this->ignoreOrAccept($query, $status)
-                    ->where('is_deleted', 1)
-                    ->$this->regDate($month, $year);
+                $query->ignoreOrAccept($status)
+                    ->inactive()
+                    ->regDate($month, $year);
             })
-            ->latest('created_at');
+            ->latest('created_at')
+            ->get();
     }
 
     /**

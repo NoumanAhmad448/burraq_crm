@@ -97,6 +97,16 @@ class EnrolledCoursePaymentController extends Controller
         }else{
             EnrolledCoursePayment::create($data);
         }
+        if($data["type"] == "refunded" && $enrolledCourse->status != "refunded"){
+            $enrolledCourse->update([
+                "status" => "refunded",
+            ]);
+        }
+        if($data["type"] != "refunded" && $enrolledCourse->status == "refunded"){
+            $enrolledCourse->update([
+                "status" => null,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }
@@ -104,7 +114,6 @@ class EnrolledCoursePaymentController extends Controller
     // Update Payment
     public function update(Request $request, EnrolledCoursePayment $payment)
     {
-        dd("here");
         // Only allow updating paid_amount and payment_slip_path
         $payment->paid_amount = $request->input('paid_amount', $payment->paid_amount);
 
@@ -129,6 +138,15 @@ class EnrolledCoursePaymentController extends Controller
         // dd($payment);
         $payment->is_deleted = true;
         $payment->save();
+        $course_id = $payment->enrolled_course_id;
+        $enrolledCourse = EnrolledCourse::find($course_id);
+
+        if(EnrolledCoursePayment::noRefundedPayments($course_id)->exists() && $enrolledCourse->status == EnrolledCoursePayment::REFUNDED){
+            $enrolledCourse->update([
+                "status" => null
+            ]);
+        }
+
 
         return redirect()->back()->with('success', 'Payment deleted successfully.');
     }

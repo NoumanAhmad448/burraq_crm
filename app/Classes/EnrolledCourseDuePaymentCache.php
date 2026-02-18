@@ -13,20 +13,15 @@ class EnrolledCourseDuePaymentCache
     public static function get(?int $month = null, ?int $year = null, $ttl=1, $status="")
     {
         $cacheKey = self::cacheKey($month, $year);
-
         return Cache::remember($cacheKey, $ttl, function () use($month, $year, $status) {
-
-            return EnrolledCourse::with([
-                    'student'
-                ])
-                ->whereHas('payments' , function ($q) use ($month, $year) {
-                        $q = $q->where('is_deleted', 0);
-                        (new EnrolledCourse)->regDate($q, $month, $year, "payment_date");
+            $date = "registration_date";
+            return EnrolledCourse::
+                whereHas('payments' , function ($q) use ($month, $year,$date) {
+                    $q->regDate($month, $year, $date)->active();
                 })
-                ->where('is_deleted', 0)
+                ->activeCourse()
                 ->whereHas('student', function($q) use($status){
-                    $q = $q->where('is_deleted', 0); 
-                    (new EnrolledCourse)->ignoreOrAccept($q, $status);
+                    $q->ignoreOrAccept($status)->active();
                 })
                 ->getCourse()
                 ->get()

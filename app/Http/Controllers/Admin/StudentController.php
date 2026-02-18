@@ -39,7 +39,6 @@ class StudentController extends Controller
         );
 
         $all_courses = StudentEnrolledCourseResolver::allCourses();
-        
         return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year"));
     }
 

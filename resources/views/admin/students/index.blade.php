@@ -104,6 +104,11 @@
                                             title="Payments Logs of the course">
                                                 <i class="fa fa-credit-card"></i>
                                             </a>
+                                            <a href="{{ route('enrolled-courses.status.edit', $course->id) }}"
+                                            class="btn btn-sm btn-secondary mt-1 ml-1"
+                                            title="Course Enrollement">
+                                                <i class="fa fa-credit-card"></i>
+                                            </a>
 
                                             <x-delete :route="route('students.delete', $course->student->id)"
                                                 title="Delete the student permanently"/>
