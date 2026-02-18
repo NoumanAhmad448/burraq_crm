@@ -43,7 +43,6 @@
             data-toggle="collapse" data-target="#mainNavbar">
         <i class="fa fa-bars"></i>
     </button>
-
     {{-- Center / Main menu --}}
     <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav mx-auto" id="side_menu">
