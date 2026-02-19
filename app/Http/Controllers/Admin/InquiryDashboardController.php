@@ -8,74 +8,109 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Classes\LyskillsCarbon;
+use App\Models\Student;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class InquiryDashboardController extends Controller
 {
+    // Helper function to get date range
+    function getDateRange($month, $year, $lastMonths, $startDate, $endDate)
+    {
+        if ($month && $year) {
+            $start = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $end   = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        } elseif ($lastMonths) {
+            $end   = Carbon::now()->endOfDay();
+            $start = Carbon::now()->subMonths($lastMonths)->startOfDay();
+        } elseif ($startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end   = Carbon::parse($endDate)->endOfDay();
+        } elseif ($endDate) {
+            $start = $end = Carbon::parse($endDate);
+        } else {
+            $start = $end = null;
+        }
+        return [$start, $end];
+    }
+
     public function index(Request $request)
     {
-        $coursesQuery = Course::with([
-            'enrolledCourses' => function ($q) use ($request) {
-                $q->where('is_deleted', '!=', 1);
+        // Get filters from request
+        $month       = $request->month;
+        $year        = $request->year;
+        $lastMonths  = $request->last_months;
+        $startDate   = $request->start_date;
+        $endDate     = $request->end_date;
+        $courseId    = $request->course_id ?? null;
 
-                $q = StartEndDateFilter::handle($request, $q, 'admission_date');
-                $q = StartEndDateFilter::date($request, $q, 'admission_date');
+        // Enrollment filter range
+        [$enrollStart, $enrollEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
 
-                $q->with(['payments' => function ($q2) {
-                    $q2->where('is_deleted', '!=', 1);
-                }]);
-            },
-            'leads' => function ($q) use ($request) {
-                $q->whereNull('deleted_at');
+        // Payment filter range
+        [$paymentStart, $paymentEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
 
-                $q = StartEndDateFilter::handle($request, $q, 'created_at');
-                $q = StartEndDateFilter::date($request, $q, 'created_at');
-            }
-        ]);
+        // Lead filter range
+        [$leadStart, $leadEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
 
-        // Apply course filter if provided
-        $coursesQuery->when($request->course_id, fn($q) => $q->where('id', $request->course_id));
+        $dashboardRaw = DB::table('crm_courses as c')
+            ->leftJoin('crm_enrolled_courses as ec', function ($join) use ($enrollStart, $enrollEnd) {
+                $join->on('ec.course_id', '=', 'c.id')
+                    ->where('ec.is_deleted', '!=', 1);
 
-        // dd($coursesQuery->toSql());
-        $courses = $coursesQuery->where('is_deleted', '!=', 1)->get();
-        // dd($courses->count());
-        $dashboardData = [];
-
-        foreach ($courses as $course) {
-
-           $enrolledQuery = $course->enrolledCourses;
-            $studentsCount = $enrolledQuery->count();
-
-            // Calculate revenue
-            $revenue = 0;
-            foreach ($enrolledQuery as $enrollment) {
-                $normalPayments = $enrollment->payments
-                    ->where('type', '!=', 'refunded')
-                    ->sum('paid_amount');
-                $refundedPayments = $enrollment->payments
-                    ->where('type', 'refunded')
-                    ->sum('paid_amount');
-
-                if (is_null($enrollment->status)) {
-                    $revenue += $normalPayments;
-                } elseif ($enrollment->status === 'refunded') {
-                    $revenue += ($normalPayments - $refundedPayments);
+                if ($enrollStart && $enrollEnd) {
+                    $join->whereBetween('ec.admission_date', [$enrollStart, $enrollEnd]);
                 }
-            }
+            })
+            ->leftJoin('crm_students as s', function ($join) {
+                $join->on('s.id', '=', 'ec.student_id')
+                    ->where('s.is_deleted', '!=', 1);
+            })
+            ->leftJoin('crm_course_payments as p', function ($join) use ($paymentStart, $paymentEnd) {
+                $join->on('p.enrolled_course_id', '=', 'ec.id')
+                    ->where('p.is_deleted', '!=', 1);
 
-            $leadsQuery = $course->leads;
-            $leadsCount = $leadsQuery->count();
+                if ($paymentStart && $paymentEnd) {
+                    $join->whereBetween('p.payment_date', [$paymentStart, $paymentEnd]);
+                }
+            })
+            ->leftJoin('crm_inquiries as l', function ($join) use ($leadStart, $leadEnd) {
+                $join->on('l.course_id', '=', 'c.id')
+                    ->whereNull('l.deleted_at');
 
-            $conversion = $leadsCount > 0 ? round(($studentsCount / $leadsCount) * 100, 2) : 0;
+                if ($leadStart && $leadEnd) {
+                    $join->whereBetween('l.created_at', [$leadStart, $leadEnd]);
+                }
+            })
+            ->when($courseId, fn($q) => $q->where('c.id', $courseId))
+            ->where('c.is_deleted', '!=', 1)
+            ->groupBy('c.id', 'c.name')
+            ->selectRaw("
+            c.id as course_id,
+            c.name as course_name,
+            COUNT(DISTINCT s.id) as students,
+            SUM(CASE WHEN p.type != 'refunded' THEN p.paid_amount ELSE 0 END)
+            - SUM(CASE WHEN p.type = 'refunded' THEN p.paid_amount ELSE 0 END) AS revenue,
+            COUNT(DISTINCT l.id) as leads,
+            CASE 
+                WHEN COUNT(DISTINCT l.id) > 0
+                THEN ROUND((COUNT(DISTINCT s.id) / COUNT(DISTINCT l.id)) * 100, 2)
+                ELSE 0
+            END as conversion
+        ")
+                ->get();
 
-            $dashboardData[] = [
-                'course_name' => $course->name,
-                'course_id' => $course->id,
-                'students' => $studentsCount,
-                'revenue' => $revenue,
-                'conversion' => $conversion,
-                'leads' => $leadsCount
-            ];
-        }
+            // Format for dashboard
+            $dashboardData = $dashboardRaw->map(fn($row) => [
+                'course_name' => $row->course_name,
+                'course_id'   => $row->course_id,
+                'students'    => (int) $row->students,
+                'revenue'     => (float) $row->revenue,
+                'conversion'  => (float) $row->conversion,
+                'leads'       => (int) $row->leads
+            ])->toArray();
+
 
         // Limit cards display
         $displayCourses = $dashboardData;
