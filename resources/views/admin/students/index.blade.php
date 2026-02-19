@@ -50,15 +50,9 @@
                                 <td>{{ $course->student->father_name }}</td>
                                 <td>{{ show_payment($course?->total_fee) }}</td>
                                 @php
-                                $paid_payment = $course?->payments()?->where("is_deleted", 0)->whereNull("type")?->sum("paid_amount");
-                                $refunded_payment = $course?->payments()?->where("type","refunded")?->where("is_deleted", 0);
+                                    $paid_payment = $course?->payments()?->totalPaid();
                                 @endphp
                                 <td>
-                                    @if($refunded_payment->count())
-                                        @php
-                                            $paid_payment = (float)$paid_payment - (float)$refunded_payment->sum("paid_amount");
-                                            @endphp
-                                    @endif
                                     {{ show_payment($paid_payment) }}
                                 </td>
                                 <td>

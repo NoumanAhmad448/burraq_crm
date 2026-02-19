@@ -10,7 +10,7 @@ class EnrolledCourseController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $enrollment = EnrolledCourse::with('payments')->where("id", $id);
-        $total_paid = $enrollment->first()->payments()->netAmount()->value("amount");
+        $total_paid = $enrollment->first()->payments()->totalPaid();
         // dd($enrollment);
         $request->validate([
             'status' => 'nullable|in:active,dropped,refunded,completed',

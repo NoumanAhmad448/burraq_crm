@@ -101,7 +101,7 @@ class EnrolledCoursePayment extends Model
     public function scopeTotalPaid($query)
     {
         return $query
-            ->where('type', '!=', self::REFUNDED)
-            ->sum('paid_amount');
+            ->where('is_deleted', 0)
+            ->netamount()->value("amount");
     }
 }

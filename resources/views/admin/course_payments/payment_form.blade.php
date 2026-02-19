@@ -1,5 +1,5 @@
 @php
-    $paid_amount = $enrolledCourse?->payments()->where('is_deleted', 0)->sum('paid_amount');
+    $paid_amount = $enrolledCourse?->payments()->totalPaid();
 @endphp
 <div class="form-group mx-auto">
     <table class="table table-bordered w-50">
