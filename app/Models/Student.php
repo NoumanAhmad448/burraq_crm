@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Student extends Model
 {
@@ -37,18 +38,22 @@ class Student extends Model
         return $this->hasMany(EnrolledCourse::class, 'student_id')->where("is_deleted", 0);
     }
 
-    public function scopeRegDate($q, $month, $year, $date = "registration_date")
+    public function scopeRegDate($query, $month, $year, $date = "registration_date")
     {
-        return $q->when(!is_null($month), function ($q) use ($month, $date) {
-            $q->whereMonth($date, $month);
-        })
-            ->when(!is_null($year), function ($q) use ($year, $date) {
-                $q->whereYear($date, $year);
-            });
+        if (!is_null($month) && !is_null($year)) {
+
+            $start = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $end   = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+            return $query->whereBetween($date, [
+                $start->startOfDay(),
+                $end->endOfDay()
+            ]);
+        }
     }
 
     public function scopeIgnoreOrAccept($query, $status)
-    {   
+    {
         if (empty($status)) {
             return $query->where('status', '<>', self::COMPLETED);
         }
@@ -56,11 +61,13 @@ class Student extends Model
         return $query->where('status', $status);
     }
 
-    public function scopeActive($query){
-        return $query->where('is_deleted', "<>" , 1)->orWhereNull('is_deleted');
+    public function scopeActive($query)
+    {
+        return $query->where('is_deleted', 0)->orWhereNull('is_deleted');
     }
 
-    public function scopeInactive($query){
+    public function scopeInactive($query)
+    {
         return $query->where('is_deleted', 1);
     }
 }

@@ -97,4 +97,11 @@ class EnrolledCoursePayment extends Model
             ) AS amount
         ");
     }
+
+    public function scopeTotalPaid($query)
+    {
+        return $query
+            ->where('is_deleted', 0)
+            ->netamount()->value("amount");
+    }
 }

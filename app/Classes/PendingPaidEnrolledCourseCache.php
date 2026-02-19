@@ -21,16 +21,11 @@ class PendingPaidEnrolledCourseCache
 
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
-            return EnrolledCourse::pendingCourses()
+            return
+                EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
+                ->pendingCourses()
                 ->paidStudentsOnly()
-                ->whereHas('payments', function ($q) use ($month, $year) {
-                    $q->active()->RegDate($month, $year, "payment_date");
-                })
-                ->whereHas('student', function ($q) use ($status) {
-                    $q->active()->ignoreOrAccept($status);
-                })
                 ->activeStatus()
-                ->getCourse()
                 ->latest()
                 ->get();
         });

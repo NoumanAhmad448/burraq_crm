@@ -10,6 +10,8 @@ class EnrolledCourse extends Model
     protected $table = 'crm_enrolled_courses';
     public const REFUNDED = "refunded";
     public const COMPLETED = "Completed";
+    public const DROPPED = "dropped";
+    public const DELETED = "deleted";
 
     protected $fillable = [
         'student_id',
@@ -153,23 +155,15 @@ class EnrolledCourse extends Model
         return $this
             ->where('status', self::REFUNDED);
     }
+    public function scopeDroppedCourse()
+    {
+        return $this
+            ->where('status', self::DROPPED);
+    }
     public function scopeActiveStatus($query)
     {
         return $query
             ->whereNull('status')
             ->activeCourse();
     }
-
-    public function totalPaid()
-    {
-        return $this->payments()
-            ->where('status', '!=', 'refunded')
-            ->sum('paid_amount');
-    }
-
-    public function scopeIsFullyPaid()
-    {
-        return $this->totalPaid() >= $this->total_fee;
-    }
-
 }

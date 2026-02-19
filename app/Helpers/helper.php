@@ -401,6 +401,9 @@ function statusBadgeClass($status)
     };
 }
 
-function printQuery($query){
+function printQuery($query, $skip_binding = true){
+    if($skip_binding){
+        dd($query->toSql());
+    }
     dd($query->toSql(), $query->getBindings());
 }

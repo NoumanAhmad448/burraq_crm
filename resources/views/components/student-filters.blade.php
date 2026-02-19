@@ -25,6 +25,9 @@
                     <option value="overdue" {{ request('type') == 'overdue' ? 'selected' : '' }}>
                         Overdue
                     </option>
+                    <option value="dropped" {{ request('type') == 'dropped' ? 'selected' : '' }}>
+                        Dropped
+                    </option>
                     {{-- <option value="certificate_issued" {{ request('type') == 'certificate_issued' ? 'selected' : '' }}>
                             Certificate Issued
                         </option> --}}
