@@ -10,20 +10,13 @@ class EnrolledCourseDuePaymentCache
     /**
      * Get enrolled courses with due payment (cached for 1 minute)
      */
-    public static function get(?int $month = null, ?int $year = null, $ttl=1, $status="")
+    public static function get(?int $month = null, ?int $year = null, $ttl = 1, $status = "")
     {
         $cacheKey = self::cacheKey($month, $year);
-        return Cache::remember($cacheKey, $ttl, function () use($month, $year, $status) {
+        return Cache::remember($cacheKey, $ttl, function () use ($month, $year, $status) {
             $date = "registration_date";
-            return EnrolledCourse::
-                whereHas('payments' , function ($q) use ($month, $year,$date) {
-                    $q->regDate($month, $year, $date)->active();
-                })
-                ->activeCourse()
-                ->whereHas('student', function($q) use($status){
-                    $q->ignoreOrAccept($status)->active();
-                })
-                ->getCourse()
+            return
+                self::commonLogic($month, $year, $status, $date)
                 ->get()
                 ->filter(function ($enrolledCourse) {
                     $totalPaid = $enrolledCourse->payments->sum('paid_amount');
@@ -42,5 +35,26 @@ class EnrolledCourseDuePaymentCache
         return 'due_enrolled_courses_payment_'
             . ($month ?? 'all') . '_'
             . ($year ?? 'all');
+    }
+
+    public static function commonLogic($month, $year, $status, $date)
+    {
+        $query = EnrolledCourse::query()->whereHas('payments', function ($q) use ($month, $year, $date) {
+            $q->regDate($month, $year, $date)->active();
+        })
+            ->activeCourse();
+        if (EnrolledCourse::DROPPED == $status) {
+            $query->droppedCourse();
+            $query->whereHas('student', function ($q) {
+                $q->active();
+            });
+        } else {
+            $query->whereHas('student', function ($q) use ($status) {
+                $q->ignoreOrAccept($status)->active();
+            });
+        }
+
+        $query->getCourse();
+        return $query;
     }
 }

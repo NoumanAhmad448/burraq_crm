@@ -10,6 +10,7 @@ use App\Classes\PendingPaidEnrolledCourseCache;
 use App\Classes\StudentEnrolledCourseCache;
 use App\Classes\EnrolledCourseDuePaymentCache;
 use App\Classes\EnrolledCoursePaidCache;
+use App\Classes\DropCourseCache;
 
 class StudentEnrolledCourseResolver
 {
@@ -23,6 +24,8 @@ class StudentEnrolledCourseResolver
             'paid' => EnrolledCoursePaidCache::get($month, $year, 1 ,$status),
 
             'overdue' => PendingPaidEnrolledCourseCache::get($month, $year, 1,$status),
+
+            'dropped' => DropCourseCache::get($month, $year, 1,$status),
 
             'certificate_issued' => self::certificateIssued(),
 

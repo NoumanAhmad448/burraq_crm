@@ -90,8 +90,13 @@ class InquiryDashboardController extends Controller
             c.id as course_id,
             c.name as course_name,
             COUNT(DISTINCT s.id) as students,
-            SUM(CASE WHEN p.type != 'refunded' THEN p.paid_amount ELSE 0 END)
-            - SUM(CASE WHEN p.type = 'refunded' THEN p.paid_amount ELSE 0 END) AS revenue,
+            COALESCE(
+                    SUM(
+                        p.paid_amount *
+                        (CASE WHEN p.type = 'refunded' THEN -1 ELSE 1 END)
+                    ), 0
+                )
+            AS revenue,
             COUNT(DISTINCT l.id) as leads,
             CASE 
                 WHEN COUNT(DISTINCT l.id) > 0
@@ -99,7 +104,7 @@ class InquiryDashboardController extends Controller
                 ELSE 0
             END as conversion
         ")
-                ->get();
+        ->get();
 
             // Format for dashboard
             $dashboardData = $dashboardRaw->map(fn($row) => [

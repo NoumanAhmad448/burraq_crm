@@ -117,6 +117,13 @@ $menuGroups = [
                 'img'   => 'deleted_course.png',
                 'access_roles' => ['admin'],
             ],
+            [
+                'title' => 'Dropped Courses',
+                'icon'  => 'fa-trash',
+                'route' => route('students.index', ['type' => 'dropped']),
+                'img'   => 'deleted_course.png',
+                'access_roles' => ['admin'],
+            ],
         ],
     ],
 

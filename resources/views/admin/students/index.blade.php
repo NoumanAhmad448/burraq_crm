@@ -68,7 +68,7 @@
                                 {{-- <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td> --}}
                                 @include("payment_status")
                                 <td>
-                                @if($course)
+                                    @if($course)
                                         <a href="{{ route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) }}"
                                             class="underscore text-primary">
                                             {{ \Str::limit($course->course->name, 30) }} <br/>

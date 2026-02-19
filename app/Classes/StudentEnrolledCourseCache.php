@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-use App\Models\EnrolledCourse;
 use Illuminate\Support\Facades\Cache;
 
 class StudentEnrolledCourseCache
@@ -20,12 +19,7 @@ class StudentEnrolledCourseCache
 
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
-            return EnrolledCourse::with(['payments'])
-                ->activeCourse()
-                ->whereHas('student', function ($q) use ($month, $year, $status) {
-                    $q->regDate($month, $year)->active()->ignoreOrAccept($status);
-                })
-                ->getCourse()
+            return EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
                 ->latest()
                 ->get();
         });

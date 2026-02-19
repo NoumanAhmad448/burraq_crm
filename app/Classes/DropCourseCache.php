@@ -2,13 +2,12 @@
 
 namespace App\Classes;
 
-use App\Models\EnrolledCourse;
 use Illuminate\Support\Facades\Cache;
 
-class EnrolledCoursePaidCache
+class DropCourseCache
 {
     /**
-     * Get fully paid enrolled courses filtered by payment month/year (cached)
+     * Get enrolled courses filtered by student registration month/year (cached)
      *
      * @param int|null $month
      * @param int|null $year
@@ -21,13 +20,9 @@ class EnrolledCoursePaidCache
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
             return EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
-                ->get()
-                ->filter(function ($enrolledCourse) {
-                    $totalPaid = $enrolledCourse->payments->sum('paid_amount');
-                    return $totalPaid >= $enrolledCourse->total_fee;
-                })
-                ->sortByDesc('created_at')
-                ->values();
+                ->droppedCourse()
+                ->latest()
+                ->get();
         });
     }
 
@@ -36,7 +31,7 @@ class EnrolledCoursePaidCache
      */
     protected static function cacheKey(?int $month, ?int $year): string
     {
-        return 'enrolled_courses_paid_'
+        return 'student_dropped_courses_'
             . ($month ?? 'all') . '_'
             . ($year ?? 'all');
     }

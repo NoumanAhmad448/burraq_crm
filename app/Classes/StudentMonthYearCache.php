@@ -3,7 +3,6 @@
 namespace App\Classes;
 
 use App\Models\Student;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class StudentMonthYearCache
@@ -17,7 +16,7 @@ class StudentMonthYearCache
      */
     public static function get(Request $request, ?int $month = null, ?int $year = null, int $ttlSeconds = 1): int
     {
-        if(empty($request->get("month")) && empty($request->get("year"))){
+        if (empty($request->get("month")) && empty($request->get("year"))) {
             $month = null;
             $year = null;
         }
@@ -25,16 +24,12 @@ class StudentMonthYearCache
         //     self::cacheKey($month, $year),
         //     now()->addSeconds($ttlSeconds),
         //     function () use ($month, $year) {
-
-                return Student::where('is_deleted', 0)
-                    ->when(!is_null($month), fn ($q) =>
-                        $q->whereMonth('registration_date', $month)
-                    )
-                    ->when(!is_null($year), fn ($q) =>
-                        $q->whereYear('registration_date', $year)
-                    )
-                    ->count();
-            // }
+        $query = Student::active()
+                        ->regDate($month, $year);
+        // \printQuery($query);
+        return $query
+            ->count();
+        // }
         // );
     }
 

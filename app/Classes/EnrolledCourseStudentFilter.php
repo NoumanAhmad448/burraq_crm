@@ -12,12 +12,7 @@ class EnrolledCourseStudentFilter
      */
     public static function query(?int $month = null, ?int $year = null, $status = "")
     {
-        return EnrolledCourse::with(['payments'])
-            ->whereHas('student', function ($query) use ($month, $year, $status) {
-                $query->ignoreOrAccept($status)
-                    ->inactive()
-                    ->regDate($month, $year);
-            })
+        return self::commonLogic($month, $year, $status)
             ->latest('created_at')
             ->get();
     }
@@ -29,5 +24,15 @@ class EnrolledCourseStudentFilter
     {
         return self::query($month, $year)->get();
     }
-    
+
+    public static function commonLogic($month, $year, $status)
+    {
+        return
+            EnrolledCourse::with(['payments'])
+                ->whereHas('student', function ($query) use ($month, $year, $status) {
+                    $query->ignoreOrAccept($status)
+                        ->inactive()
+                        ->regDate($month, $year);
+                });
+    }
 }

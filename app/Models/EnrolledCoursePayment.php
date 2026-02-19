@@ -97,4 +97,11 @@ class EnrolledCoursePayment extends Model
             ) AS amount
         ");
     }
+
+    public function scopeTotalPaid($query)
+    {
+        return $query
+            ->where('type', '!=', self::REFUNDED)
+            ->sum('paid_amount');
+    }
 }
