@@ -69,4 +69,8 @@ class Inquiry extends Model
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year);
     }
+
+    public function scopeDateFilter($q, $created_at, $start, $end){
+        return $q->whereBetween($created_at, [$start, $end]);
+    }
 }

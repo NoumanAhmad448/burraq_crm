@@ -18,12 +18,13 @@ class StartEndDateFilter
 
             $start = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $end   = Carbon::createFromDate($year, $month, 1)->endOfMonth();
-
-            $query->whereBetween($created_at, [
-                $start->startOfDay(),
-                $end->endOfDay()
-            ]);
             // dd($query);
+        }
+
+        elseif ($year) {
+            $date = Carbon::createFromDate($year, 1, 1);
+            $start = $date->copy()->startOfYear();
+            $end   = $date->copy()->endOfYear();
         }
         /*
         |--------------------------------------------------------------------------
@@ -34,10 +35,8 @@ class StartEndDateFilter
             $start = LyskillsCarbon::now()
                 ->subMonths($lastMonths)
                 ->startOfDay();
-
-            $query->whereBetween($created_at, [$start, $end]);
-            // dd($query);
-        }
+         }
+        $query->dateFilter($created_at, $start, $end);
         return $query;
     }
 
@@ -53,10 +52,10 @@ class StartEndDateFilter
 
         // Case 2: Start and End Date (Inclusive)
         if ($startDate && $endDate) {
-            $query->whereBetween($created_at, [
-                LyskillsCarbon::parse($startDate)->startOfDay(),
-                LyskillsCarbon::parse($endDate)->endOfDay()
-            ]);
+            $start = LyskillsCarbon::parse($startDate)->startOfDay();
+            $end = LyskillsCarbon::parse($endDate)->endOfDay();
+
+            $query->dateFilter($created_at, $start, $end);
         }
         return $query;
     }
