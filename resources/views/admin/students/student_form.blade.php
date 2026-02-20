@@ -90,7 +90,6 @@
                     <label for="status">Student Status</label>
                     <select name="status" id="student_status" class="form-control">
                         <option value="Enrolled" {{ old('status', $is_update && $student->status ? $student->status : '')  == 'Enrolled' ? 'selected' : '' }}>Enrolled</option>
-                        <option value="Dropped" {{ old('status', $is_update && $student->status ? $student->status : '') == 'Dropped' ? 'selected' : '' }}>Dropped</option>
                         <option value="Completed"  {{ old('status', $is_update && $student->status ? $student->status : '')== 'Completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </div>

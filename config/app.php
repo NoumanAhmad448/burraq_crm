@@ -193,6 +193,7 @@ return [
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         App\Providers\RuleServiceProvider::class,
         App\Providers\HealthServiceProvider::class,
+        App\Providers\ObserverProvider::class,
         // Mostafaznv\Recaptcha\RecaptchaServiceProvider::class,
     ],
 

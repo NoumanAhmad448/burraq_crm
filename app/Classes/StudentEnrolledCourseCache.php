@@ -19,9 +19,10 @@ class StudentEnrolledCourseCache
 
         return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
-            return EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
-                ->latest()
-                ->get();
+            $query = EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
+                ->latest();
+                // \printQuery($query);
+                return $query->get();
         });
     }
 

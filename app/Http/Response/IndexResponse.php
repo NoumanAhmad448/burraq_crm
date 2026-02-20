@@ -48,7 +48,7 @@ class IndexResponse implements IndexContracts
 
             // /* ---------- Payments This Month ---------- */
 
-            $dueThisMonth = EnrolledCourseDue::get($month, $year);
+            // $dueThisMonth = EnrolledCourseDue::get($month, $year);
 
             // /* ---------- Annual Payments ---------- */
             $annualPayments = EnrolledCoursePaymentYearly::get($year);
