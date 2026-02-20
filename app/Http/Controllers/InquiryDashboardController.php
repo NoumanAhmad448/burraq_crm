@@ -37,10 +37,12 @@ class InquiryDashboardController extends Controller
         $query = StartEndDateFilter::handle($request, $query);
 
         // Group inquiries by course_id and count
-        $inquiryCounts = $query->selectRaw('course_id, COUNT(*) as total')
+        $query = $query->selectRaw('course_id, COUNT(*) as total')
             ->groupBy('course_id')
-            ->with('course')
-            ->get();
+            ->with('course');
+        // \printQuery($query);
+
+        $inquiryCounts = $query->get();
 
         return view('admin.inquiries.dashboard', compact('inquiryCounts'));
     }
