@@ -38,6 +38,10 @@ class StartEndDateFilter
                 ->subMonths($lastMonths)
                 ->startOfDay();
          }
+
+         if(empty($start) && empty($end)){
+            return $query;
+         }
         $query->dateFilter($created_at, $start, $end);
         return $query;
     }

@@ -130,6 +130,13 @@ $menuGroups = [
                 'img'   => 'deleted_course.png',
                 'access_roles' => ['admin'],
             ],
+            [
+                'title' => 'Dropped Groups',
+                'icon'  => 'fa-trash',
+                'route' => route('admin.groups.trashed'),
+                'img'   => 'deleted_course.png',
+                'access_roles' => ['admin'],
+            ],
         ],
     ],
 
