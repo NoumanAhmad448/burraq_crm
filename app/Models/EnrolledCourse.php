@@ -25,8 +25,6 @@ class EnrolledCourse extends Model
         'status',
         'status_note',
         'status_updated_at',
-        'group_id',
-        'instructor_id',
     ];
 
     public function instructor()

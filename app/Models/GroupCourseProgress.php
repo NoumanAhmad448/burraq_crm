@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GroupCourseProgress extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'group_course_progress';
 
     protected $fillable = [
         'group_id',
-        'course_id',
-        'instructor_id',
-        'progress_pct'
+        'progress_pct',
+        "module",
     ];
 
     public function group()

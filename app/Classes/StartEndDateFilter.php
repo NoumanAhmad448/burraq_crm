@@ -12,6 +12,8 @@ class StartEndDateFilter
         $month       = $request->month;
         $year        = $request->year;
         $lastMonths  = $request->last_months;
+        $start = null;
+        $end = null;
         // dd($lastMonths);
         // Case 3: Month + Year Filter
         if ($month && $year) {
