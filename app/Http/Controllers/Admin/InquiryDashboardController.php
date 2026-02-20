@@ -21,6 +21,10 @@ class InquiryDashboardController extends Controller
         if ($month && $year) {
             $start = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $end   = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        } elseif ($year) {
+            $date = Carbon::createFromDate($year, 1, 1);
+            $start = $date->copy()->startOfYear();
+            $end   = $date->copy()->endOfYear();
         } elseif ($lastMonths) {
             $end   = Carbon::now()->endOfDay();
             $start = Carbon::now()->subMonths($lastMonths)->startOfDay();
@@ -32,6 +36,8 @@ class InquiryDashboardController extends Controller
         } else {
             $start = $end = null;
         }
+        // dump($start);
+        // dd($end);
         return [$start, $end];
     }
 
@@ -53,6 +59,23 @@ class InquiryDashboardController extends Controller
 
         // Lead filter range
         [$leadStart, $leadEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
+
+        $dateCondition = '';
+
+        if ($enrollStart && $enrollEnd) {
+            $dateCondition = " AND ec2.admission_date BETWEEN '{$enrollStart}' AND '{$enrollEnd}' ";
+        }
+
+        $subquery = "(
+                SELECT count(DISTINCT ec2.id)
+                FROM crm_enrolled_courses ec2
+                INNER JOIN crm_course_payments p
+                    ON p.enrolled_course_id = ec2.id
+                    AND p.is_deleted != 1
+                WHERE ec2.course_id = c.id
+                AND ec2.is_deleted = 0
+                  {$dateCondition}
+            )";
 
         $dashboardRaw = DB::table('crm_courses as c')
             ->leftJoin('crm_enrolled_courses as ec', function ($join) use ($enrollStart, $enrollEnd) {
@@ -89,7 +112,7 @@ class InquiryDashboardController extends Controller
             ->selectRaw("
             c.id as course_id,
             c.name as course_name,
-            COUNT(DISTINCT s.id) as students,
+            {$subquery} as students,
             COALESCE(
                     SUM(
                         p.paid_amount *
@@ -100,21 +123,22 @@ class InquiryDashboardController extends Controller
             COUNT(DISTINCT l.id) as leads,
             CASE 
                 WHEN COUNT(DISTINCT l.id) > 0
-                THEN ROUND((COUNT(DISTINCT s.id) / COUNT(DISTINCT l.id)) * 100, 2)
+                THEN ROUND(({$subquery} / COUNT(DISTINCT l.id)) * 100, 2)
                 ELSE 0
             END as conversion
-        ")
-        ->get();
-
-            // Format for dashboard
-            $dashboardData = $dashboardRaw->map(fn($row) => [
-                'course_name' => $row->course_name,
-                'course_id'   => $row->course_id,
-                'students'    => (int) $row->students,
-                'revenue'     => (float) $row->revenue,
-                'conversion'  => (float) $row->conversion,
-                'leads'       => (int) $row->leads
-            ])->toArray();
+        ");
+        // \printQuery($dashboardRaw);
+        $dashboardRaw =  $dashboardRaw->get();
+        // dd($dashboardRaw);
+        // Format for dashboard
+        $dashboardData = $dashboardRaw->map(fn($row) => [
+            'course_name' => $row->course_name,
+            'course_id'   => $row->course_id,
+            'students'    => (int) $row->students,
+            'revenue'     => (float) $row->revenue,
+            'conversion'  => (float) $row->conversion,
+            'leads'       => (int) $row->leads
+        ])->toArray();
 
 
         // Limit cards display

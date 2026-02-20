@@ -31,6 +31,12 @@ class StudentController extends Controller
         // dd($request->all());
         $type = $request->get('type');
         extract(studentMonthYear($request));
+        // dump($month);
+        // dump($year);
+        // dump($startOfMonth);
+        // dump($endOfMonth);
+        // dump($status);
+        // dd("all");
         $enrolledCourses = StudentEnrolledCourseResolver::resolve(
             $type,
             $month,

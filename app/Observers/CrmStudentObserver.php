@@ -9,21 +9,21 @@ class CrmStudentObserver
 {
     public function created(CrmStudent $student): void
     {
-        $this->log($student, 'created');
+        $this->log($student, Observer::CREATED);
     }
 
     public function updated(CrmStudent $student): void
     {
-        $this->log($student, 'updated');
+        $this->log($student, Observer::UDPATED);
     }
     public function updating(CrmStudent $student): void
     {
         if ($student->isDirty('is_deleted')) {
 
             if ($student->is_deleted) {
-                $this->log($student, 'deleted');
+                $this->log($student, Observer::DELETED);
             }else{
-                $this->log($student, 'Activated');
+                $this->log($student, Observer::ACTIVED);
             }
         }
     }

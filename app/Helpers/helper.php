@@ -367,9 +367,13 @@ if (!function_exists('studentMonthYear')) {
             $year = (int) Carbon::create()->year($year)->year;
         }
 
+        $startOfMonth = null;
+        $endOfMonth = null;
         // Calculate start and end of month
-        $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
-        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+        if(!empty($month) && !empty($year)){
+            $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+            $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+        }
         $status = $request->get("status");
         return compact('month', 'year', 'startOfMonth', 'endOfMonth', "status");
     }
@@ -403,7 +407,10 @@ function statusBadgeClass($status)
 
 function printQuery($query, $skip_binding = true){
     if($skip_binding){
-        dd($query->toSql());
+        echo "<pre>";
+        print_r($query->toSql());
+        echo "</pre>";
+        dd("hit");
     }
     dd($query->toSql(), $query->getBindings());
 }

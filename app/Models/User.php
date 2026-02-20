@@ -39,7 +39,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_role',
         "role",
         "language",
-        "role",
         "profile_photo_path",
         "is_deleted"
     ];
@@ -98,9 +97,15 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if the user has the 'instructor' role.
      */
-    public function isInstructor(): bool
+    public function scopeInstructor($query): bool
     {
-        return $this->role === config('settings.roles.instructor') || $this->instructor === 1;
+        return $query->where('role', config('settings.roles.instructor'));
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(User::class, 'instructor_id')
+                    ->instructor();
     }
 
     /**
