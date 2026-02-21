@@ -20,7 +20,7 @@ class UserFormRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $userId,
             'password' => $userId ? 'nullable|string|min:6' : 'required|string|min:6',
-            'role' => 'required|in:admission_officer,hr_role,admin,print_certificate',
+            'role' => 'required|in:admission_officer,hr_role,admin,print_certificate,instructor',
             'is_admin' => 'nullable|boolean',
         ];
     }

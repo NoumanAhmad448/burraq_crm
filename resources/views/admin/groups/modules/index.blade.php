@@ -6,6 +6,8 @@
 
 @section('content')
 <div class="container">
+            <a class="btn btn-lg btn-success" href="{{ route("admin.groups.index") }}">Back To Group Module</a>
+
     <h3>Modules for Group: {{ $group->group_name }}</h3>
 
     @include('messages') {{-- Include success/error messages --}}
@@ -69,6 +71,7 @@
                             </form>
 
                             {{-- Delete Form --}}
+                            <x-admin>
                             <form method="POST" action="{{ route('admin.group.modules.destroy', [$group->id, $module->id]) }}" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
@@ -77,6 +80,10 @@
                                     Delete
                                 </button>
                             </form>
+                                <a href="{{ route('admin.logs.modules', $module->id) }}"
+                                    class="btn btn-primary btn-sm ml-2">Logs</a>
+
+                            </x-admin>
                         </td>
                     </tr>
                     @endforeach

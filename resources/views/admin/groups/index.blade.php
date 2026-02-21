@@ -6,38 +6,13 @@
 
 @section('content')
     <div class="container">
-        <h3>Assign Instructors</h3>
+        <h2>Assign Instructors</h2>
 
-        <!-- Assign Instructor Form -->
-        <form method="POST" action="{{ route('admin.group.assign_instructor', $group->id ?? 0) }}">
-            @csrf
-            <label>Assign Instructors</label>
-            <select name="instructors[]" multiple class="form-control select">
-                @foreach (App\Models\User::where('role', config('settings.roles.instructor'))->get() as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }} -- {{ $user->email }} </option>
-                @endforeach
-            </select>
-            <button class="btn btn-success mt-2">Assign</button>
-        </form>
+        @include("admin.groups.ins_form")
         <hr>
-        <h3>Assign Student to Group</h3>
 
         <!-- Assign Student Form -->
-        <form method="POST" action="{{ route('admin.group.assign_student', $group->id ?? 0) }}">
-            @csrf
-            <label>Assign Student to Group</label>
-            <select name="enrolled_course_id" class="form-control select">
-                @foreach (App\Models\EnrolledCourse::all() as $enrolled)
-                    <option value="{{ $enrolled->id }}">
-                        {{ $enrolled->student->name }} -
-                        {{ $enrolled->student->email }} -
-                        {{ $enrolled->student->mobile }} -
-                        {{ $enrolled->course->name ?? 'N/A' }}
-                    </option>
-                @endforeach
-            </select>
-            <button class="btn btn-primary mt-2">Assign</button>
-        </form>
+        @include("admin.groups.ass_stu")
         <hr>
         <div class="d-flex justify-content-between">
             <h3>Groups</h3>
@@ -68,23 +43,34 @@
                             @endforeach
                         </td>
                         <td>{{ $group->status }}</td>
-                        <td>
+                        <td class="text-center">
+                        <div class="d-flex justify-content-center gap-4 flex-wrap"          style="gap: 3px;">
+
                             <a href="{{ route('admin.group.modules', $group->id) }}" class="btn btn-sm btn-primary">
                                 Manage Modules
                             </a>
                             <x-admin>
                                 <a href="{{ route('admin.groups.edit', $group->id) }}"
-                                    class="btn btn-primary btn-sm">Edit</a>
+                                    class="btn btn-primary btn-sm ml-2">Edit</a>
+                                <a href="{{ route('admin.group.students', $group->id) }}"
+                                    class="btn btn-primary btn-sm ml-2">Group Students</a>
+                                <a href="{{ route('admin.logs.groups', $group->id) }}"
+                                    class="btn btn-primary btn-sm ml-2">Group Logs</a>
+                                {{-- <a href="{{ route('admin.logs.group_enrollments', $group->id) }}"
+                                    class="btn btn-primary btn-sm ml-2">Group Students</a> --}}
+
                                 <form method="POST" action="{{ route('admin.groups.destroy', $group->id) }}"
                                     style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
+                                    <button type="submit" class="btn btn-danger btn-sm ml-2"
                                         onclick="return confirm('Are you sure you want to delete this group?')">
                                         Delete
                                     </button>
                                 </form>
+
                             </x-admin>
+                        </div>
                         </td>
 
                     </tr>
@@ -95,12 +81,7 @@
 @endsection
 
 @section('page-js')
-    <script>
-        $(document).ready(function() {
-            new simpleDatatables.DataTable("#crm_groups", {
-                searchable: true,
-                perPage: 10
-            });
-        });
-    </script>
+        @include("export_to_excel", ["id"=>"#crm_groups"
+])
+
 @endsection

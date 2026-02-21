@@ -28,7 +28,7 @@ class Group extends Model
             'group_id',                   // foreign key on pivot table for this model
             'crm_enrolled_course_id'      // foreign key on pivot table for related model
         )->withTimestamps()
-            //  ->whereNull('group_enrollments.deleted_at')
+             ->wherePivotNull('group_enrollments.deleted_at')
             ;  // ignore soft deleted
     }
     public function instructors()
@@ -41,5 +41,20 @@ class Group extends Model
 
     public function modules(){
         return $this->hasMany(GroupCourseProgress::class, "group_id");
+    }
+
+    public function getStatusAttribute()
+    {
+        $total = $this->modules()->count();
+
+        if ($total === 0) {
+            return 0;
+        }
+
+        $completed = $this->modules()
+            ->where('progress_pct', 1)
+            ->count();
+
+        return round(($completed / $total) * 100) . "%";
     }
 }

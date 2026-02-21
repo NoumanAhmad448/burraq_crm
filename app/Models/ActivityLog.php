@@ -13,11 +13,14 @@ class ActivityLog extends Model
         'model_id',
         'old_values',
         'new_values',
+        'metadata',
     ];
 
     protected $casts = [
         'old_values' => 'array',
         'new_values' => 'array',
+        'metadata'   => 'array',
+
     ];
 
     public function user()
