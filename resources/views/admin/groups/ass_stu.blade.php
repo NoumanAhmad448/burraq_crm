@@ -1,6 +1,6 @@
 <!-- Assign Student Form -->
 <h2 class="mt-2">Assign Student to Group</h2>
-<form method="POST" action="{{ route('admin.group.assign_student', $group->id ?? 0) }}" class="form-group">
+<form method="POST" action="{{ route('admin.group.assign_student') }}" class="form-group">
     @csrf
     <div class="form-group">
         @include('admin.groups.group_listing')

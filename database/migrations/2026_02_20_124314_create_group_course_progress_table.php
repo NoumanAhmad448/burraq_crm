@@ -15,19 +15,10 @@ return new class extends Migration
                 ->constrained('groups')
                 ->cascadeOnDelete();
 
-            $table->foreignId('course_id')
-                ->constrained('crm_courses')
-                ->cascadeOnDelete();
-
-            $table->integer('instructor_id');
-
             $table->decimal('progress_pct', 5, 2)->default(0);
 
             $table->timestamps();
 
-            $table->index('group_id');
-            $table->index('course_id');
-            $table->index('instructor_id');
 
         });
     }

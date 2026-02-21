@@ -54,7 +54,8 @@ class EnrollmentController extends Controller
 
     public function assignStudent(AssignStudentRequest $request)
     {
-        $group = Group::find($request->input("group_id"));
+        // dd($request->all());
+        $group = Group::findorFail($request->input("group_id"));
         $enrolledCourseId = $request->input('enrolled_course_id');
 
         $enrollment = GroupEnrollment::withTrashed()
@@ -83,7 +84,7 @@ class EnrollmentController extends Controller
     {
         $students = $group->enrolledCourses()->get();
         // dd($students);
-        $groups = Group::withTrashed()->get();
+        $groups = Group::all();
         return view('admin.groups.students', compact("groups", 'group', 'students'));
     }
 
