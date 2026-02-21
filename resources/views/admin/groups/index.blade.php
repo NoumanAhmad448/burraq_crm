@@ -6,6 +6,7 @@
 
 @section('content')
     <div class="container">
+        @include("messages")
         <x-admin>
             <h2>Assign Instructors</h2>
             @include('admin.groups.ins_form')
