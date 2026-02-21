@@ -15,19 +15,19 @@ return new class extends Migration
     {
 
 
-        Schema::table('crm_enrolled_courses', function (Blueprint $table) {
-            if (Schema::hasColumn('crm_enrolled_courses', 'instructor_id')) {
-                $table->dropForeign(['instructor_id']); // if there was a foreign key
-                $table->dropColumn('instructor_id');
-            }
-        });
+        // Schema::table('crm_enrolled_courses', function (Blueprint $table) {
+        //     if (Schema::hasColumn('crm_enrolled_courses', 'instructor_id')) {
+        //         $table->dropForeign(['instructor_id']); // if there was a foreign key
+        //         $table->dropColumn('instructor_id');
+        //     }
+        // });
 
-        Schema::table('crm_enrolled_courses', function (Blueprint $table) {
-            if (Schema::hasColumn('crm_enrolled_courses', 'group_id')) {
-                $table->dropForeign(['group_id']); // if there was a foreign key
-                $table->dropColumn('group_id');
-            }
-        });
+        // Schema::table('crm_enrolled_courses', function (Blueprint $table) {
+        //     if (Schema::hasColumn('crm_enrolled_courses', 'group_id')) {
+        //         $table->dropForeign(['group_id']); // if there was a foreign key
+        //         $table->dropColumn('group_id');
+        //     }
+        // });
     }
 
     /**
