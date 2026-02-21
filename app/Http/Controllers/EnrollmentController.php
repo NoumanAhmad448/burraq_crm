@@ -82,6 +82,7 @@ class EnrollmentController extends Controller
     public function students(Group $group)
     {
         $students = $group->enrolledCourses()->get();
+        // dd($students);
         $groups = Group::withTrashed()->get();
         return view('admin.groups.students', compact("groups", 'group', 'students'));
     }

@@ -1,8 +1,9 @@
 <!-- Assign Instructor Form -->
 <form method="POST" action="{{ route('admin.group.assign_instructor', $group->id ?? 0) }}">
     @csrf
-    @include('admin.groups.group_listing')
-    <label>Assign Instructors</label>
+    <div class="form-group">
+        @include('admin.groups.group_listing')
+    </div> <label>Assign Instructors</label>
     {{-- @dd(App\Models\User::where('role', "instructor")->get()) --}}
     <select name="instructors[]" multiple class="form-control select">
         @foreach (App\Models\User::where('role', config('setting.roles.instructor'))->get() as $user)

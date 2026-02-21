@@ -515,3 +515,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
 }
 
 
+.min-vh-83 {
+    min-height: 84vh !important;
+}

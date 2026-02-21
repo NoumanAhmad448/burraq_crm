@@ -32,6 +32,9 @@
                         <td>
                             {{-- @dd("here") --}}
                             <x-admin>
+                                
+                                    <a href="{{ route('admin.logs.group_enrollments', $group->id) }}"
+                                    class="btn btn-warning btn-sm ml-2">Logs</a>
                                 <form
                                     action="{{ route('admin.groups.students.destroy', [$group->id, $enrolled_course->id]) }}"
                                     method="POST" style="display:inline;"
