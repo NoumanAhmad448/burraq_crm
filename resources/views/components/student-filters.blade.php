@@ -5,11 +5,14 @@
     <div class="col-md-12 d-flex justify-content-end">
         <form method="GET" action="{{ route('students.index') }}" class="form-inline justify-content-end mb-3">
             <div class="form-group mr-2">
-
                 @include('courses', ['courses' => $all_courses, 'design' => true])
+            </div>
+            <div class="form-group">
+                @include('admin.groups.group_listing', ["hide_labl" => true])
             </div>
             <x-month_year_filter :month="$month" :year="$year" year_select=true />
             <div class="form-group mr-2">
+
                 <select name="type" class="form-control form-control-sm" id="status">
 
                     <option value="">-- All Statuses --</option>

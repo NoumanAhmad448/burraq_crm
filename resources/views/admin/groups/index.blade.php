@@ -34,7 +34,7 @@
             <tbody>
                 @foreach ($groups as $group)
                     <tr>
-                        <td>{{ $group->group_name }}</td>
+                        <td><a href="{{ allowCourseToAdmin() ? route("students.index", ["group_id" => $group->id] ) : '' }}" > {{ $group->group_name }} </a> </td>
                         <td>{{ $group->timing }}</td>
                         <td>
                             @foreach ($group->instructors as $instr)

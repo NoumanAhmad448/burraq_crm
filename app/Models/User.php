@@ -97,9 +97,14 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if the user has the 'instructor' role.
      */
-    public function scopeInstructor($query): bool
+    public function scopeInstructor($query)
     {
-        return $query->where('role', config('settings.roles.instructor'));
+        return $query->where('role', config('setting.roles.instructor'));
+    }
+
+    public function isInstructor(): bool
+    {
+        return $this->role == config('setting.roles.instructor');
     }
 
     public function instructor()

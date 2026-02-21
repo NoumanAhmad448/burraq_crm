@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Models\EnrolledCoursePayment;
+use App\Models\Group;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Log;
@@ -44,8 +45,11 @@ class StudentController extends Controller
             $status,
         );
 
+        $groups = Group::all();
+
+
         $all_courses = StudentEnrolledCourseResolver::allCourses();
-        return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year"));
+        return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year", "groups"));
     }
 
 

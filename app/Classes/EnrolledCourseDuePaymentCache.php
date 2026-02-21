@@ -55,6 +55,7 @@ class EnrolledCourseDuePaymentCache
         }
 
         $query->getCourse();
+        $query->getGroup();
         return $query;
     }
 }

@@ -156,6 +156,18 @@ class EnrolledCourse extends Model
         }
         return $query;
     }
+    public function groupEnrollment(){
+        return $this->hasOne(GroupEnrollment::class, "crm_enrolled_course_id", "id");
+    }
+    public function scopeGetGroup($query)
+    {
+        if (request()->group_id) {
+            return $query->whereHas("groupEnrollment", function($q){
+                $q->where("group_id", request()->group_id);
+            });
+        }
+        return $query;
+    }
 
     public function scopeCanBeRefunded()
     {

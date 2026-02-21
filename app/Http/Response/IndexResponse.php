@@ -33,6 +33,9 @@ class IndexResponse implements IndexContracts
     public function toResponse($request)
     {
 
+        if(auth()->user()->isInstructor()){
+            return redirect()->route("admin.groups.index");
+        }
         try {
 
             $settings = Setting::first();
