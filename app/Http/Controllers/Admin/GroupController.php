@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Http\Requests\GroupRequest;
+use Exception;
 
 class GroupController extends Controller
 {
@@ -16,12 +17,12 @@ class GroupController extends Controller
                 $q->where("instructor_id", auth()->id());
             });
         }
-        $groups->whereHas("enrolledCourses", function($q){
-                $q->activeCourse();
-        });
-        $groups->whereHas("enrolledCourses.student", function($q){
-                $q->active();
-        });
+        // $groups->whereHas("enrolledCourses", function($q){
+        //         $q->activeCourse();
+        // });
+        // $groups->whereHas("enrolledCourses.student", function($q){
+        //         $q->active();
+        // });
 
         $groups = $groups->get();
         
@@ -45,7 +46,13 @@ class GroupController extends Controller
 
     public function store(GroupRequest $request)
     {
-        Group::create($request->validated());
+        // dd($request->validated());
+        try{
+            Group::create($request->validated());
+        }
+        catch(Exception $e){
+            // dd($e->getMessage());
+        }
         return redirect()->route('admin.groups.index')->with('success', 'Group created successfully');
     }
 
