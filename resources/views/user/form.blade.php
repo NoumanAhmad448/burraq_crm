@@ -52,6 +52,9 @@
                 <option value="admission_officer"
                     {{ old('role', $user?->role ?? '') == 'admission_officer' ? 'selected' : '' }}>Admission Officer
                 </option>
+                <option value="instructor"
+                    {{ old('role', $user?->role ?? '') == 'instructor' ? 'selected' : '' }}>Instructor
+                </option>
                 <option value="hr_role" {{ old('role', $user?->role ?? '') == 'hr_role' ? 'selected' : '' }}>HR Manager
                 <option value="print_certificate" {{ old('role', $user?->role ?? '') == 'print_certificate' ? 'selected' : '' }}>Print Certificate
                 </option>

@@ -10,6 +10,7 @@ class AssignInstructorRequest extends FormRequest
     public function rules() {
         return [
             'instructors' => 'required|array',
+            'group_id' => 'required',
             'instructors.*' => 'exists:users,id'
         ];
     }

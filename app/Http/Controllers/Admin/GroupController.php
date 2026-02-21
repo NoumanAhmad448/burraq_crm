@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AssignInstructorRequest;
-use App\Http\Requests\AssignStudentRequest;
 use App\Models\Group;
-use App\Models\GroupInstructor;
-use App\Models\GroupEnrollment;
-use App\Models\EnrolledCourse;
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 
 class GroupController extends Controller
 {
     public function index()
     {
-        $groups = Group::with(['instructors', 'enrolledCourses', 'modules'])->get();
+        $groups = Group::with(['instructors', 'enrolledCourses', 'modules']);
+        if(!auth()->user()->is_admin){
+            $groups->whereHas("instructors", function($q){
+                $q->where("instructor_id", auth()->id());
+            });
+        }
+        $groups = $groups->get();
+        $status = $groups->first()->modules->count();
+        
 
         return view('admin.groups.index', compact('groups'));
     }
@@ -29,24 +30,6 @@ class GroupController extends Controller
 
         return redirect()->route('admin.groups.trashed')
             ->with('success', 'Group restored successfully');
-    }
-    public function assignInstructor(AssignInstructorRequest $request, Group $group)
-    {
-        $instructors = $request->input('instructors', []);
-        $group->instructors()->sync($instructors);
-
-        return redirect()->back()->with('success', 'Instructors assigned successfully.');
-    }
-
-    public function assignStudent(AssignStudentRequest $request, Group $group)
-    {
-        $enrolledCourseId = $request->input('enrolled_course_id');
-        GroupEnrollment::updateOrCreate([
-            'group_id' => $group->id,
-            'crm_enrolled_course_id' => $enrolledCourseId,
-        ]);
-
-        return redirect()->back()->with('success', 'Student assigned successfully.');
     }
 
 

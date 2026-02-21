@@ -32,6 +32,7 @@ class IndexResponse implements IndexContracts
 {
     public function toResponse($request)
     {
+
         try {
 
             $settings = Setting::first();
