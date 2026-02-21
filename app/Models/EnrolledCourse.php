@@ -32,6 +32,9 @@ class EnrolledCourse extends Model
         return $this->belongsTo(User::class, 'instructor_id')
             ->instructor();
     }
+    public function inquiries(){
+        return $this->hasMany(Inquiry::class, "course_id");
+    }
     public function group()
     {
         return $this->belongsTo(Group::class);

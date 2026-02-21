@@ -49,12 +49,12 @@ $menuGroups = [
                 'route' => route('course_dashboard.index'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
-            // [
-            //     'title' => 'Group Managmenet',
-            //     'icon'  => 'fa-question-circle',
-            //     'route' => route('admin.groups.index'),
-            //     'access_roles' => ['admin', 'instructor', 'admission_officer'],
-            // ],
+            [
+                'title' => 'Group Managmenet',
+                'icon'  => 'fa-question-circle',
+                'route' => route('admin.groups.index'),
+                'access_roles' => ['admin', 'instructor', 'admission_officer'],
+            ],
         ],
     ],
 

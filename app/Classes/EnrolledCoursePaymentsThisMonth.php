@@ -34,18 +34,9 @@ class EnrolledCoursePaymentsThisMonth
                     ->where('ec.is_deleted', 0)
                     ->where('s.is_deleted', 0);
             })
-            ->selectRaw("
-                        COALESCE(
-                            SUM(
-                                cp.paid_amount *
-                                (CASE WHEN cp.type = 'refunded' THEN -1 ELSE 1 END)
-                            ), 0
-                        ) as total
-                    ");
-
-
-
-        return $paymentsThisMonth->value('total');
+            ->netAmount();
+        // \printQuery($paymentsThisMonth);
+        return $paymentsThisMonth->value('amount');
         // });
     }
 

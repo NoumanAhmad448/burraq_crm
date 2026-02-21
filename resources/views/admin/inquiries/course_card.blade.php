@@ -1,5 +1,8 @@
 <div class="row mt-4"  id="cardsContainer">
     @foreach ($displayCourses as $data)
+            @php 
+            $data['conversion'] = round($data["students"] / $data['leads'] * 100, 2)
+            @endphp
         <div class="col-xl-3 col-md-4 col-sm-6 my-2 stat-card-wrapper" data-aos="fade-up">
 
             <div class="card shadow-sm stat-card">

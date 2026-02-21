@@ -10,7 +10,7 @@
             </div>
             <x-month_year_filter :month="$month" :year="$year" year_select=true />
             <div class="form-group mr-2">
-                <select name="type" class="form-control form-control-sm">
+                <select name="type" class="form-control form-control-sm" id="status">
 
                     <option value="">-- All Statuses --</option>
                     {{-- <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>
@@ -25,8 +25,12 @@
                     <option value="overdue" {{ request('type') == 'overdue' ? 'selected' : '' }}>
                         Overdue
                     </option>
-                    <option value="dropped" {{ request('type') == 'dropped' ? 'selected' : '' }}>
-                        Dropped
+                    <option value="{{ App\Models\EnrolledCourse::DROPPED }}" {{ request('type') == App\Models\EnrolledCourse::DROPPED ? 'selected' : '' }}>
+                        {{ humanize(App\Models\EnrolledCourse::DROPPED) }}
+                    </option>
+                    </option>
+                    <option value="{{ App\Models\EnrolledCourse::COMPLETED }}" {{ request('status') == App\Models\EnrolledCourse::COMPLETED ? 'selected' : '' }}>
+                        {{  humanize(App\Models\EnrolledCourse::COMPLETED) }}
                     </option>
                     {{-- <option value="certificate_issued" {{ request('type') == 'certificate_issued' ? 'selected' : '' }}>
                             Certificate Issued
@@ -41,3 +45,13 @@
         </form>
     </div>
 </div>
+
+<script>
+document.getElementById('status').addEventListener('change', function () {
+    if (this.value === 'Completed') {
+        this.setAttribute('name', 'status');
+    } else {
+        this.setAttribute('name', 'type');
+    }
+});
+</script>

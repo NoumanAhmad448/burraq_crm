@@ -66,84 +66,45 @@ class InquiryDashboardController extends Controller
             $dateCondition = " AND ec2.admission_date BETWEEN '{$enrollStart}' AND '{$enrollEnd}' ";
         }
 
-        $subquery = "(
-                SELECT count(DISTINCT ec2.id)
-                FROM crm_enrolled_courses ec2
-                INNER JOIN crm_course_payments p
-                    ON p.enrolled_course_id = ec2.id
-                    AND p.is_deleted != 1
-                WHERE ec2.course_id = c.id
-                AND ec2.is_deleted = 0
-                  {$dateCondition}
-            )";
+        $dashboardRaw = Course::query()
+                ->with(["enrolledCourses",
+                    "enrolledCourses.payments" => function($q){
+                        $q->active();
+                    }
+                , "leads"])
+                ->whereHas("enrolledCourses", function($q){
+                    $q->activeStudentInRelation();
+                })
+                ->active()
+                ->get();
 
-        $dashboardRaw = DB::table('crm_courses as c')
-            ->leftJoin('crm_enrolled_courses as ec', function ($join) use ($enrollStart, $enrollEnd) {
-                $join->on('ec.course_id', '=', 'c.id')
-                    ->where('ec.is_deleted', '!=', 1);
+        // dd($dashboardRaw[0]->enrolledCourses->flatMap->payments->first()->totalPaid()
+        // ?->reduce(function ($payment) {
+        //                             $payment->totalPaid();
+        //                         }, 0)
+        // );
+          
+        // dd($courses[0]->leads->count());
 
-                if ($enrollStart && $enrollEnd) {
-                    $join->whereBetween('ec.admission_date', [$enrollStart, $enrollEnd]);
-                }
-            })
-            ->leftJoin('crm_students as s', function ($join) {
-                $join->on('s.id', '=', 'ec.student_id')
-                    ->where('s.is_deleted', '!=', 1);
-            })
-            ->leftJoin('crm_course_payments as p', function ($join) use ($paymentStart, $paymentEnd) {
-                $join->on('p.enrolled_course_id', '=', 'ec.id')
-                    ->where('p.is_deleted', '!=', 1);
-
-                if ($paymentStart && $paymentEnd) {
-                    $join->whereBetween('p.payment_date', [$paymentStart, $paymentEnd]);
-                }
-            })
-            ->leftJoin('crm_inquiries as l', function ($join) use ($leadStart, $leadEnd) {
-                $join->on('l.course_id', '=', 'c.id')
-                    ->whereNull('l.deleted_at');
-
-                if ($leadStart && $leadEnd) {
-                    $join->whereBetween('l.created_at', [$leadStart, $leadEnd]);
-                }
-            })
-            ->when($courseId, fn($q) => $q->where('c.id', $courseId))
-            ->where('c.is_deleted', '!=', 1)
-            ->groupBy('c.id', 'c.name')
-            ->selectRaw("
-            c.id as course_id,
-            c.name as course_name,
-            {$subquery} as students,
-            COALESCE(
-                    SUM(
-                        p.paid_amount *
-                        (CASE WHEN p.type = 'refunded' THEN -1 ELSE 1 END)
-                    ), 0
-                )
-            AS revenue,
-            COUNT(DISTINCT l.id) as leads,
-            CASE 
-                WHEN COUNT(DISTINCT l.id) > 0
-                THEN ROUND(({$subquery} / COUNT(DISTINCT l.id)) * 100, 2)
-                ELSE 0
-            END as conversion
-        ");
-        // \printQuery($dashboardRaw);
-        $dashboardRaw =  $dashboardRaw->get();
         // dd($dashboardRaw);
         // Format for dashboard
         $dashboardData = $dashboardRaw->map(fn($row) => [
-            'course_name' => $row->course_name,
+            'course_name' => $row->name,
             'course_id'   => $row->course_id,
-            'students'    => (int) $row->students,
-            'revenue'     => (float) $row->revenue,
-            'conversion'  => (float) $row->conversion,
-            'leads'       => (int) $row->leads
+            'students'    => (int) $row->enrolledCourses()?->activeCourse()?->count() ?? 0,
+            'revenue'     => (float) $row->enrolledCourses
+                                ?->flatMap?->payments
+                                ?->reduce(function ($carry, $payment) {
+                                    return $carry + $payment->totalPaid();
+                                }, 0)
+                            ,
+            'leads'       => (int) $row->leads()->count()
         ])->toArray();
 
-
+        // dd($dashboardData);
         // Limit cards display
         $displayCourses = $dashboardData;
 
-        return view('admin.inquiries.dashboards', compact('displayCourses', 'dashboardData'));
+        return view('admin.inquiries.dashboards', compact('dashboardData', "displayCourses"));
     }
 }

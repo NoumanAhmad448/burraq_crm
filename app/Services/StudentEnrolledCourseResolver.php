@@ -16,6 +16,7 @@ class StudentEnrolledCourseResolver
 {
     public static function resolve(string|null $type, ?int $month, ?int $year, $status)
     {
+        // dd($status);
         return match ($type) {
             'deleted' => EnrolledCourseStudentFilter::query($month, $year, $status),
 
