@@ -16,6 +16,13 @@ class GroupController extends Controller
                 $q->where("instructor_id", auth()->id());
             });
         }
+        $groups->whereHas("enrolledCourses", function($q){
+                $q->activeCourse();
+        });
+        $groups->whereHas("enrolledCourses.student", function($q){
+                $q->active();
+        });
+
         $groups = $groups->get();
         
         return view('admin.groups.index', compact('groups'));

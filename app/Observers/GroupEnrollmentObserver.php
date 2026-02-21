@@ -2,33 +2,33 @@
 
 namespace App\Observers;
 
-use App\Models\Group;
+use App\Models\GroupEnrollment;
 
-class ModuleObserver
+class GroupEnrollmentObserver
 {
-    public function updating(Group $group)
+    public function updating(GroupEnrollment $group)
     {
         $action = Observer::UDPATED;
 
         Observer::logActivity([
             'action'     => $action,
-            'model_type' => Group::class,
+            'model_type' => GroupEnrollment::class,
         ], $group);
     }
 
-    public function created(Group $group)
+    public function created(GroupEnrollment $group)
     {
         Observer::logActivity([
             'action'     => Observer::CREATED,
-            'model_type' => Group::class,
+            'model_type' => GroupEnrollment::class,
         ], $group);
     }
 
-    public function deleted(Group $group)
+    public function deleted(GroupEnrollment $group)
     {
         Observer::logActivity([
             'action'     => Observer::DELETED,
-            'model_type' => Group::class,
+            'model_type' => GroupEnrollment::class,
         ], $group);
     }
 }

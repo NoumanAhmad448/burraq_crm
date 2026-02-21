@@ -39,7 +39,7 @@ $ann = UserAnnModel::select('message')->orderByDesc('updated_at')->first();
     @yield('page-css')
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-80">
     @include('modals.modal')
     @if (isset($ann) && $ann->count() && config('setting.user_notification'))
         <div class="container-fluid font-bold text-center">

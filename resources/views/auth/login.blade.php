@@ -14,105 +14,81 @@
         </div>
     @endif
 
-    <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="col-md-4 col-sm-10">
-        <div class="text-center mb-4">
-    <img
-        src="{{ asset(config('setting.img_logo_path')) }}"
-        alt="lyskills"
-        class="img-fluid mx-auto d-block"
-        width="150"
-    >
-    @include('messages')
-</div>
-
-        <form method="POST" action="{{ route('login') }}" class="text-center">
-            @csrf
-
-            <!-- Email -->
-            <div class="form-group text-left">
-                <label for="email" class="form-label">Email</label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    class="form-control"
-                    placeholder="Email address"
-                    value="{{ old('email') }}"
-                    required
-                    autofocus
-                >
+    <div class="d-flex justify-content-center align-items-center min-vh-83">
+        <div class="col-md-4 col-sm-10">
+            <div class="text-center mb-4">
+                <img src="{{ asset(config('setting.img_logo_path')) }}" alt="lyskills" class="img-fluid mx-auto d-block"
+                    width="150">
+                @include('messages')
             </div>
 
-            <!-- Password -->
-            <div class="form-group text-left">
-                <label for="password" class="form-label">Password</label>
+            <form method="POST" action="{{ route('login') }}" class="text-center">
+                @csrf
 
-                <div class="input-group">
-                    <input
-                        id="password"
-                        type="password"
-                        name="password"
-                        class="form-control"
-                        placeholder="Password min 8 digits"
-                        required
-                        autocomplete="new-password"
-                    >
-                    <div class="input-group-append">
-                        <span
-                            class="input-group-text bg-website text-white cursor-pointer"
-                            id="show_pass"
-                        >
-                            <i class="fa fa-eye"></i>
-                        </span>
+                <!-- Email -->
+                <div class="form-group text-left">
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" name="email" class="form-control" placeholder="Email address"
+                        value="{{ old('email') }}" required autofocus>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group text-left">
+                    <label for="password" class="form-label">Password</label>
+
+                    <div class="input-group">
+                        <input id="password" type="password" name="password" class="form-control"
+                            placeholder="Password min 8 digits" required autocomplete="new-password">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-website text-white cursor-pointer" id="show_pass">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Remember Me -->
-            <div class="form-group text-left mt-2">
-                <div class="form-check">
-                    <input
-                        id="remember_me"
-                        type="checkbox"
-                        class="form-check-input"
-                        name="remember"
-                    >
-                    <label class="form-check-label" for="remember_me">
-                        Remember me
-                    </label>
+                <!-- Remember Me -->
+                <div class="form-group text-left mt-2">
+                    <div class="form-check">
+                        <input id="remember_me" type="checkbox" class="form-check-input" name="remember">
+                        <label class="form-check-label" for="remember_me">
+                            Remember me
+                        </label>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Captcha -->
-            <div class="form-group mt-3">
-                {!! NoCaptcha::renderJs() !!}
-                {!! NoCaptcha::display() !!}
-                @error('g-recaptcha-response')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
-                @enderror
-            </div>
+                <!-- Captcha -->
+                <div class="form-group mt-3">
+                    {!! NoCaptcha::renderJs() !!}
+                    {!! NoCaptcha::display() !!}
+                    @error('g-recaptcha-response')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <!-- Actions -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                @if (Route::has('password.request'))
-                    <a
-                        href="{{ route('password.request') }}"
-                        class="text-sm text-muted"
-                    >
-                        Forgot your password?
-                    </a>
-                @endif
+                <!-- Actions -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-sm text-muted">
+                            Forgot your password?
+                        </a>
+                    @endif
 
-                <button type="submit" class="btn bg-website text-white">
-                    Login
-                </button>
-            </div>
+                    <button type="submit" class="btn bg-website text-white">
+                        Login
+                    </button>
+                </div>
 
-        </form>
+            </form>
+
+        </div>
 
     </div>
-</div>
+    <footer class="text-center bg-website p-3">
+        <p>CRM All rights are reserved.</p>
+        <p class="text-center">Powered By <a class="text-white border-bottom border-black"
+                href="https://sites.google.com/view/noumanwebsitebuilder/home"> Nouman Website Builder </a></p>
+    </footer>
 
     {{-- </x-jet-authentication-card> --}}
 @endsection

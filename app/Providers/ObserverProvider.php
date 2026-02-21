@@ -18,9 +18,10 @@ use App\Observers\EnrolledCoursePaymentObserver;
 use App\Models\Group;
 use App\Models\GroupCourseProgress;
 use App\Models\CrmEnrolledCourse;
+use App\Models\GroupEnrollment;
 use App\Observers\GroupObserver;
 use App\Observers\GroupCourseProgressObserver;
-use App\Observers\CrmEnrolledCourseObserver;
+use App\Observers\GroupEnrollmentObserver;
 
 
 class ObserverProvider extends ServiceProvider
@@ -51,5 +52,6 @@ class ObserverProvider extends ServiceProvider
         EnrolledCoursePayment::observe(EnrolledCoursePaymentObserver::class);
         Group::observe(GroupObserver::class);
         GroupCourseProgress::observe(GroupCourseProgressObserver::class);
+        GroupEnrollment::observe(GroupEnrollmentObserver::class);
     }
 }

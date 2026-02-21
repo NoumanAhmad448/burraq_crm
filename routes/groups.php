@@ -10,7 +10,8 @@ Route::group(['middleware' => config('middlewares.auth')], function () {
     Route::get('groups', [GroupController::class, 'index'])->name('admin.groups.index');
     Route::post('groups/assign-instructor', [EnrollmentController::class, 'assignInstructor'])->name('admin.group.assign_instructor');
     Route::post('groups/assign-student', [EnrollmentController::class, 'assignStudent'])->name('admin.group.assign_student');
-    Route::get('groups/{group}/assiged-student', [EnrollmentController::class, 'students'])    ->name('admin.group.students');
+    Route::get('groups/{group}/assiged-student', [EnrollmentController::class, 'students'])->name('admin.group.students');
+    
     Route::delete('admin/groups/{group}/students/{student}', 
         [EnrollmentController::class, 'removeStudent']
     )->name('admin.groups.students.destroy');
@@ -43,7 +44,7 @@ Route::group(['middleware' => config('middlewares.auth')], function () {
     Route::delete('{group}/modules/{module}', [GroupModuleController::class, 'destroy'])
         ->name('admin.group.modules.destroy');
 
-    Route::get('admin/{group_id}logs/groups', [ActivityLogController::class, 'groupLogs'])
+    Route::get('admin/{group_id}/logs/groups', [ActivityLogController::class, 'groupLogs'])
     ->name('admin.logs.groups');
 
     Route::get('admin/logs/modules/{module_id}', [ActivityLogController::class, 'moduleLogs'])

@@ -2,6 +2,12 @@
 
 @section('content')
 
+@notempty($routes)
+@foreach ($routes as $route)
+    <a class="btn btn-lg {{ $route["color"] }}" href="{{ $route["route"] }}">{{ $route["msg"] }}</a>
+ @endforeach       
+@endnotempty
+
 <table class="table table-bordered table-striped" id="group_students_table">
     <thead>
         <tr>
@@ -55,6 +61,13 @@
 @endsection
 
 @section('page-js')
-@include("export_to_excel", ["id"=>"#group_students_table"
-])
+<script>
+        $(document).ready(function() {
+            new simpleDatatables.DataTable("#group_students_table", {
+                searchable: true,
+                perPage: 10
+            });
+
+        });
+    </script>
 @endsection
