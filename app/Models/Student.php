@@ -55,9 +55,11 @@ class Student extends Model
     public function scopeIgnoreOrAccept($query, $status)
     {
         if (empty($status)) {
-            return $query->where('status', '<>', self::COMPLETED);
+            return $query
+            // ->where('status', '<>', self::COMPLETED)
+            ;
         }
-
+        // dd($status);
         return $query->where('status', $status);
     }
 

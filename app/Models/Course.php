@@ -17,14 +17,18 @@ class Course extends Model
 
     public function enrolledCourses()
     {
-        return $this->hasMany(EnrolledCourse::class);
+        return $this->hasMany(EnrolledCourse::class, "course_id", "id")->where("is_deleted", "<>", 1);
     }
     public function leads()
     {
-        return $this->hasMany(Inquiry::class, "course_id");
+        return $this->hasMany(Inquiry::class, "course_id")->whereNull("deleted_at");
     }
 
     public static function latestCourse(){
         return self::latest()->get();
+    }
+
+    public function scopeActive($query){
+        return $query->where("is_deleted", "<>", 1);
     }
 }

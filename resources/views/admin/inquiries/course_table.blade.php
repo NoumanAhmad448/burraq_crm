@@ -11,6 +11,9 @@
         </thead>
         <tbody>
             @foreach ($dashboardData as $row)
+                        @php 
+            $row['conversion'] = round($row["students"] / $row['leads'] * 100, 2)
+            @endphp
                 <tr>
                     <td>{{ $row['course_name'] }}</td>
                     <td>{{ $row['leads'] }}</td>
