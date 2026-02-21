@@ -14,17 +14,19 @@ return new class extends Migration
     public function up()
     {
 
+
+        Schema::table('crm_enrolled_courses', function (Blueprint $table) {
             if (Schema::hasColumn('crm_enrolled_courses', 'instructor_id')) {
-            Schema::table('crm_enrolled_courses', function (Blueprint $table) {
                 $table->dropForeign(['instructor_id']); // if there was a foreign key
                 $table->dropColumn('instructor_id');
-            });
+            }
+        });
+
+        Schema::table('crm_enrolled_courses', function (Blueprint $table) {
             if (Schema::hasColumn('crm_enrolled_courses', 'group_id')) {
-            Schema::table('crm_enrolled_courses', function (Blueprint $table) {
                 $table->dropForeign(['group_id']); // if there was a foreign key
                 $table->dropColumn('group_id');
-            });
-        }
+            }
         });
     }
 
