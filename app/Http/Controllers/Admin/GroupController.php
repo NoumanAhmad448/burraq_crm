@@ -17,9 +17,7 @@ class GroupController extends Controller
             });
         }
         $groups = $groups->get();
-        $status = $groups->first()->modules->count();
         
-
         return view('admin.groups.index', compact('groups'));
     }
 
