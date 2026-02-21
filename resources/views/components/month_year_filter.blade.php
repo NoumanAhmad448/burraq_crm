@@ -4,7 +4,7 @@
     "year"
 ])
 <div class="form-group mr-2 mb-0">
-    <label for="month" class="mr-1">Month</label>
+    {{-- <label for="month" class="mr-1">Month</label> --}}
     <select name="month" id="month" class="form-control form-control-sm">
         <option value=""> -- Select Month --
         </option>
@@ -18,7 +18,7 @@
 </div>
 
 <div class="form-group mr-2 mb-0">
-    <label for="year" class="mr-1">Year</label>
+    {{-- <label for="year" class="mr-1">Year</label> --}}
     <select name="year" id="year" class="form-control form-control-sm">
         @if ($year_select)
             <option value=""> -- Select Year --
