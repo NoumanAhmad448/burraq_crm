@@ -7,6 +7,7 @@
 
             <div class="card shadow-sm stat-card">
                 <div class="card-body">
+                    {{-- @dd(['course_id' => $data["course_id"]]) --}}
                     <a href="{{ route("students.index", array_merge(request()->all(), ['course_id' => $data["course_id"]])) }}">
                         <h6 class="text-uppercase text-muted small mb-1">
                             {{ $data['course_name'] }}

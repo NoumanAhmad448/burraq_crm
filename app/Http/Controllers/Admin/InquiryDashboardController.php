@@ -110,7 +110,7 @@ class InquiryDashboardController extends Controller
         // Format for dashboard
         $dashboardData = $dashboardRaw->map(fn($row) => [
             'course_name' => $row->name,
-            'course_id'   => $row->course_id,
+            'course_id'   => $row->id,
             'students'    => (int) $row->enrolledCourses()?->count() ?? 0,
             'revenue'     => (float) $row->enrolledCourses
                                 ?->flatMap?->payments
