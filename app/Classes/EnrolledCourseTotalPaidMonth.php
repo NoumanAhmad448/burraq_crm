@@ -39,13 +39,14 @@ class EnrolledCourseTotalPaidMonth
                             ) as total_paid
                         FROM crm_course_payments
                         WHERE is_deleted = 0
-                        AND payment_date BETWEEN '{$startOfMonth}' AND '{$endOfMonth}'
+                        AND payment_date BETWEEN ? AND ?
                         GROUP BY enrolled_course_id
                     ) as p
                 "), 'p.enrolled_course_id', '=', 'ec.id')
+                ->addBinding([$startOfMonth, $endOfMonth], 'join')
             ->where('ec.is_deleted', 0)
             ->whereNull('ec.status')
-            ->whereRaw('p.total_paid >= ec.total_fee')
+            ->whereRaw('COALESCE(p.total_paid,0) >= ec.total_fee')
             ->sum('p.total_paid');
 
         return $totalPaid_m;
