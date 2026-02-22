@@ -13,14 +13,11 @@ class MacroServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        
 
         CommonMacros::register();
         EnrolledCourseScope::register();
         EnrolledCourseMacros::register();
         EnrolledCourseFilterMacros::register();
         Paymentmacros::register();
-
-
     }
 }

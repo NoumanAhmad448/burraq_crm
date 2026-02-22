@@ -4,7 +4,7 @@ namespace App\Macros;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class PaymentMacros
+class Paymentmacros
 {
     /**
      * Register all payment-related macros
