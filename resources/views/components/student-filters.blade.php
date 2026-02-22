@@ -7,13 +7,13 @@
             <div class="form-group mr-2">
                 @include('courses', ['courses' => $all_courses, 'design' => true])
             </div>
-            <div class="form-group">
+            <div class="form-group mr-2">
                 @include('admin.groups.group_listing', ["hide_labl" => true])
             </div>
             <x-month_year_filter :month="$month" :year="$year" year_select=true />
             <div class="form-group mr-2">
 
-                <select name="type" class="form-control form-control-sm" id="status">
+                <select name="type" class="form-control form-control-sm select" id="status">
 
                     <option value="">-- All Statuses --</option>
                     {{-- <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>

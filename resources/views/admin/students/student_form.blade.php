@@ -118,7 +118,8 @@
                             value="{{ old('registration_date', $student->registration_date ?? '') }}">
                     </div>
                 </div>
-                {{-- <div class="col-md-4 mt-2">
+                @if(false)
+                <div class="col-md-4 mt-2">
                     <label>Admission Date</label>
                     <input type="text" name="admission_date" class="form-control datepicker"
                         value="@if($is_update){{ old('admission_date', $student?->admission_date)}}@endif">
@@ -138,16 +139,14 @@
                     <label>Paid Fee </label>
                     <input type="text" name="paid_fee" class="form-control" required step="0.01"
                         value="@if ($is_update) {{ (int) $student->paid_fee }}@else{{ old('paid_fee') }} @endif">
-                </div> --}}
+                </div>
+                @endif
                 <div class="col-md-4 mt-2">
                     <label>Photo</label>
-                    {{-- <input type="file" name="photo" class="form-control" value="{{ old('photo') }}"> --}}
                     @include('file', ['name' => 'photo'])
                 </div>
                 <div class="col-md-4 mt-2">
                     <label>Payment Slip</label>
-                    {{-- <input type="file" name="payment_slip_path" class="form-control"
-                            value="{{ old('payment_slip_path') }}"> --}}
                     @include('file', ['name' => 'payment_slip_path'])
                     <br />
                     @if ($is_update && $student->payment_slip_path)
@@ -229,7 +228,6 @@
                                     <input type="hidden" name="courses[{{ $course->id }}][payId]"
                                         value="{{ $enrolledCourse?->payments?->first()->id }}">
                                 @endif
-{{-- {{dump(dateFormat($course?->admission_date))}} --}}
                                 <input type="text" name="courses[{{ $course->id }}][paid_amount]"
                                     class="form-control paid-amount" placeholder="Paid"
                                     value="{{ old('courses['.$course->id.'][paid_amount]', $enrolledCourse?->payments?->first()->paid_amount > 0 ? (int) $enrolledCourse?->payments?->first()->paid_amount : '') }}">
@@ -281,12 +279,14 @@
 
 <script>
 $(document).ready(function() {
+
     new DataTable('.courses', {
         language: {
-                    search: '',
-                    searchPlaceholder: 'Search Courses ...'
+            search: '',
+            searchPlaceholder: 'Search Courses ...'
                 },
     pageLength: 5,
+    order: [[0, 'desc']],           // checked first
     columnDefs: [
         { targets: 0, width: '5%' },   // first column (e.g., checkbox)
         { targets: 1, width: '15%' },  // second column
@@ -304,12 +304,13 @@ $(document).ready(function() {
     $(document).ready(function() {
 
         setTimeout(function() {
-            console.log($(".dtsp-emptyMessage").first());
+            // console.log($(".dtsp-emptyMessage").first());
             $(".dtsp-emptyMessage").first().hide(); // Hide 'No panes to display' message
         }, 5000);
     });
 
     $('#form_submisssion').on('submit', function(e) {
+
         e.preventDefault(); // prevent the default submit until we are ready
             var form = this;
         var table = new DataTable('#course_table');
