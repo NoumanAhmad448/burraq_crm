@@ -16,6 +16,7 @@ use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    public const INSTRUCTOR_ID = "instructor_id";
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;

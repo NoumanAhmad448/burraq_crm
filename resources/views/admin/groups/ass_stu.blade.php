@@ -17,5 +17,5 @@
             @endforeach
         </select>
     </div>
-    <button class="btn btn-primary mt-2">Assign</button>
+    <button class="btn btn-primary mt-2"> <i class="fa fa-save"></i> Assign</button>
 </form>

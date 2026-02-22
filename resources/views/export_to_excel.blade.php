@@ -41,7 +41,7 @@
                 pageLength: 10,
                 language: {
                     search: '',
-                    searchPlaceholder: 'Search Student ...'
+                    searchPlaceholder: 'Search ...'
                 },
                 scrollX: true,
                 // dom: 'lBfrtip',   // 👈 l is REQUIRED

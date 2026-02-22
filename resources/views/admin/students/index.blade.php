@@ -25,13 +25,10 @@
                         <tr>
                             <th>Name</th>
                             <th>Mobile No</th>
-                            {{-- <th>Cnic</th> --}}
                             <th>Father Name</th>
                             <th>Total Fee</th>
                             <th>Paid Fee</th>
                             <th>Remaining Fee</th>
-                            {{-- <th>Admission Date</th> --}}
-                            {{-- <th>Due Date</th> --}}
                             <th>Status</th>
                             <th>Courses(Payments)</th>
                             <th>Actions</th>
@@ -39,14 +36,12 @@
                     </thead>
 
                     <tbody>
-                        {{-- {{dd($enrolledCourses)}} --}}
                         @foreach ($enrolledCourses as $course)
                             <tr @if($course->student->is_deleted == 1) class="table-danger" title="Student Deleted"
                                 @elseif(\App\Models\Certificate::where('student_id', $course->student->id)->where('enrolled_course_id', $course->id)->exists()) class="table-success" title="Certificate Issued"
                                 @endif>
                                 <td>{{ $course->student->name }}</td>
                                 <td>{{ $course->student->mobile }}</td>
-                                {{-- <td>{{ $course->student->cnic }}</td> --}}
                                 <td>{{ $course->student->father_name }}</td>
                                 <td>{{ show_payment($course?->total_fee) }}</td>
                                 @php
@@ -58,8 +53,6 @@
                                 <td>
                                     {{ show_payment($course->total_fee - $paid_payment) }}
                                 </td>
-                                {{-- <td>{{ $course->admission_date ? dateFormat($course->admission_date) : 'N/A' }}</td> --}}
-                                {{-- <td>{{ $course->due_date ? dateFormat($course->due_date) : 'N/A' }}</td> --}}
                                 @include("payment_status")
                                 <td>
                                     @if($course)
@@ -69,52 +62,7 @@
                                         </a>
                                     @endif
                                 </td>
-                                <td>
-                                    <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                        <a href="{{ route('students.edit', $course->student->id) }}"
-                                        class="btn btn-sm btn-info"
-                                        title="Edit the Student and his course info">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-
-                                        @if(isset($course))
-                                            <a href="{{ $course ? route('students.course.payments', ['student_id' => $course->student->id, 'enrolledCourseId' => $course->id]) : '#' }}"
-                                            class="btn btn-sm btn-warning ml-1 {{ !$course ? 'disabled' : '' }}"
-                                            title="All Course Payments"
-                                            @if(!$course) onclick="return false;" @endif>
-                                                <i class="fa fa-credit-card"></i>
-                                            </a>
-                                        @endif
-
-                                        <x-admin>
-                                            <a href="{{ route('students.logs', $course->student->id) }}"
-                                            class="btn btn-sm btn-primary mt-1 ml-1"
-                                            title="View Student Logs">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-
-                                            <a href="{{ route('students.course.payments_logs', $course->student->id) }}"
-                                            class="btn btn-sm btn-secondary mt-1 ml-1"
-                                            title="Payments Logs of the course">
-                                                <i class="fa fa-credit-card"></i>
-                                            </a>
-                                            <a href="{{ route('enrolled-courses.status.edit', $course->id) }}"
-                                            class="btn btn-sm btn-secondary mt-1 ml-1"
-                                            title="Course Enrollement">
-                                                <i class="fa fa-credit-card"></i>
-                                            </a>
-
-                                            <x-delete :route="route('students.delete', $course->student->id)"
-                                                title="Delete the student permanently"/>
-                                        </x-admin>
-                                        <x-super-admin>
-                                            @can("is-deleted-student", $course->student)
-                                                <x-active :route="route('students.activate', $course->student->id)"
-                                                    />
-                                            @endcan
-                                        </x-super-admin>
-                                    </div>
-                                </td>
+                                @include('admin.students.student_action')
 
                             </tr>
                         @endforeach
