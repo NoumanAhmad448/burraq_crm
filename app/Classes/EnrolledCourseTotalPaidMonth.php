@@ -27,7 +27,7 @@ class EnrolledCourseTotalPaidMonth
                 $join->on('s.id', '=', 'ec.student_id')
                     ->where('s.is_deleted', 0);
             })
-            ->join(DB::raw("
+            ->leftJoin(DB::raw("
                     (
                         SELECT 
                             enrolled_course_id,
@@ -44,7 +44,7 @@ class EnrolledCourseTotalPaidMonth
                     ) as p
                 "), 'p.enrolled_course_id', '=', 'ec.id')
             ->where('ec.is_deleted', 0)
-            ->where('ec.status', 'active') // assuming active() scope means this
+            ->whereNull('ec.status')
             ->whereRaw('p.total_paid >= ec.total_fee')
             ->sum('p.total_paid');
 
