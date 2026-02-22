@@ -7,7 +7,7 @@ use App\Macros\CommonMacros;
 use App\Macros\EnrolledCourseScope;
 use App\Macros\EnrolledCourseMacros;
 use App\Macros\EnrolledCourseFilterMacros;
-use App\Macros\Paymentmacros;
+use App\Macros\PaymentMacros;
 
 class MacroServiceProvider extends ServiceProvider
 {
@@ -18,6 +18,6 @@ class MacroServiceProvider extends ServiceProvider
         EnrolledCourseScope::register();
         EnrolledCourseMacros::register();
         EnrolledCourseFilterMacros::register();
-        Paymentmacros::register();
+        PaymentMacros::register();
     }
 }
