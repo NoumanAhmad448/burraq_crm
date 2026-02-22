@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Macros\CommonMacros;
+use App\Macros\EnrolledCourseScope;
+use App\Macros\EnrolledCourseMacros;
+use App\Macros\EnrolledCourseFilterMacros;
+use App\Macros\Paymentmacros;
 
 class MacroServiceProvider extends ServiceProvider
 {
@@ -10,11 +15,11 @@ class MacroServiceProvider extends ServiceProvider
     {
         
 
-        \App\Macros\CommonMacros::register();
-        \App\Macros\EnrolledCourseScope::register();
-        \App\Macros\EnrolledCourseMacros::register();
-        \App\Macros\EnrolledCourseFilterMacros::register();
-        \App\Macros\Paymentmacros::register();
+        CommonMacros::register();
+        EnrolledCourseScope::register();
+        EnrolledCourseMacros::register();
+        EnrolledCourseFilterMacros::register();
+        Paymentmacros::register();
 
 
     }
