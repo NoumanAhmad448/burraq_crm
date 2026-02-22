@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\HomeController1Provider;
+use App\Providers\MacroServiceProvider;
 
 return [
 
@@ -173,6 +174,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         HomeController1Provider::class,
+        MacroServiceProvider::class,
 
         /*
          * Package Service Providers...

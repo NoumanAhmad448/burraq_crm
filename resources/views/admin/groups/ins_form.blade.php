@@ -6,9 +6,9 @@
     </div> <label>Assign Instructors</label>
     {{-- @dd(App\Models\User::where('role', "instructor")->get()) --}}
     <select name="instructors[]" multiple class="form-control select">
-        @foreach (App\Models\User::where('role', config('setting.roles.instructor'))->get() as $user)
+        @foreach (\App\Services\InstructorService::get() as $user)
             <option value="{{ $user->id }}">{{ $user->name }} -- {{ $user->email }} </option>
         @endforeach
     </select>
-    <button class="btn btn-success mt-2">Assign</button>
+    <button class="btn btn-success mt-2"><i class="fa fa-save"></i> Assign</button>
 </form>

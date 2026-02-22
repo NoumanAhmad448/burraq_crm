@@ -72,6 +72,6 @@ class Kernel extends HttpKernel
         'isHr' => \App\Http\Middleware\IsDev::class,
         "show_text" =>             ShowText::class,
         "lang" =>             LanguageMiddleware::class,
-
+        'redirect.instructor' => \App\Http\Middleware\RedirectIfInstructor::class,
     ];
 }

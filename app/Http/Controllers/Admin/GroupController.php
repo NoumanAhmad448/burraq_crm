@@ -12,18 +12,13 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with(['instructors', 'enrolledCourses', 'modules']);
-        if(!auth()->user()->is_admin){
+        if(!auth()->user()->is_admin || request()->instructor_id){
             $groups->whereHas("instructors", function($q){
-                $q->where("instructor_id", auth()->id());
+                $q->where("instructor_id", request()->instructor_id ?? auth()->id());
             });
         }
-        // $groups->whereHas("enrolledCourses", function($q){
-        //         $q->activeCourse();
-        // });
-        // $groups->whereHas("enrolledCourses.student", function($q){
-        //         $q->active();
-        // });
 
+        // \printQuery($groups);
         $groups = $groups->get();
         
         return view('admin.groups.index', compact('groups'));
@@ -51,7 +46,7 @@ class GroupController extends Controller
             Group::create($request->validated());
         }
         catch(Exception $e){
-            // dd($e->getMessage());
+            return server_logs([true, $e], [false], true);
         }
         return redirect()->route('admin.groups.index')->with('success', 'Group created successfully');
     }
@@ -72,6 +67,7 @@ class GroupController extends Controller
         $group->delete(); // Soft delete
         return redirect()->route('admin.groups.index')->with('success', 'Group deleted successfully');
     }
+
     public function trashed()
     {
         // Only soft deleted groups
