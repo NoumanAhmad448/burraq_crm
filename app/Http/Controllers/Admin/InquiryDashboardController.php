@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\EnrolledCourse;
 use App\Classes\LyskillsCarbon;
+use App\Models\EnrolledCoursePayment;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -16,25 +17,37 @@ use Carbon\Carbon;
 class InquiryDashboardController extends Controller
 {
     // Helper function to get date range
-    function getDateRange($month, $year, $lastMonths, $startDate, $endDate)
+    public static function getDateRange($month, $year, $lastMonths, $startDate, $endDate)
     {
+        $start = null;
+        $end   = null;
+
         if ($month && $year) {
-            $start = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-            $end   = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+            $base  = Carbon::createFromDate($year, $month, 1);
+            $start = $base->copy()->startOfMonth();
+            $end   = $base->copy()->endOfMonth();
+
         } elseif ($year) {
-            $date = Carbon::createFromDate($year, 1, 1);
-            $start = $date->copy()->startOfYear();
-            $end   = $date->copy()->endOfYear();
+
+            $base  = Carbon::createFromDate($year, 1, 1);
+            $start = $base->copy()->startOfYear();
+            $end   = $base->copy()->endOfYear();
+
         } elseif ($lastMonths) {
-            $end   = Carbon::now()->endOfDay();
-            $start = Carbon::now()->subMonths($lastMonths)->startOfDay();
-        } elseif ($startDate && $endDate) {
-            $start = Carbon::parse($startDate)->startOfDay();
-            $end   = Carbon::parse($endDate)->endOfDay();
-        } elseif ($endDate) {
-            $start = $end = Carbon::parse($endDate);
-        } else {
-            $start = $end = null;
+
+            $end   = now()->endOfDay();
+            $start = now()->subMonths($lastMonths)->startOfDay();
+
+        } elseif ($startDate || $endDate) {
+
+            $start = $startDate
+                ? Carbon::parse($startDate)->startOfDay()
+                : Carbon::parse($endDate)->startOfDay();
+
+            $end = $endDate
+                ? Carbon::parse($endDate)->endOfDay()
+                : Carbon::parse($startDate)->endOfDay();
         }
         // dump($start);
         // dd($end);
@@ -52,36 +65,43 @@ class InquiryDashboardController extends Controller
         $courseId    = $request->course_id ?? null;
 
         // Enrollment filter range
-        [$enrollStart, $enrollEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
-
+        [$enrollStart, $enrollEnd] = self::getDateRange($month, $year, $lastMonths, $startDate, $endDate);
+        // dd($enrollStart);
         // Payment filter range
-        [$paymentStart, $paymentEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
+        [$paymentStart, $paymentEnd] = [$enrollStart, $enrollEnd];
 
         // Lead filter range
-        [$leadStart, $leadEnd] = $this->getDateRange($month, $year, $lastMonths, $startDate, $endDate);
-
-        $dateCondition = '';
-
-        if ($enrollStart && $enrollEnd) {
-            $dateCondition = " AND ec2.admission_date BETWEEN '{$enrollStart}' AND '{$enrollEnd}' ";
-        }
+        [$leadStart, $leadEnd] = [$enrollStart, $enrollEnd];
 
         $dashboardRaw = Course::query()
-                ->with(["enrolledCourses",
-                    "enrolledCourses.payments" => function($q){
-                        $q->active();
-                    }
+                ->with(["enrolledCourses"                    
                 , "leads"])
-                ->whereHas("enrolledCourses", function($q){
-                    $q->activeStudentInRelation();
+                ->whereHas("enrolledCourses", function($q) use($enrollStart, $enrollEnd){
+                    $q->activeCourse()->activeStudentInRelation()
+                    ->when(!is_null($enrollStart) && !is_null($enrollEnd), function($q) use($enrollStart, $enrollEnd){
+                        $q->dateFilter($enrollStart, $enrollEnd);
+                    });
                 })
-                ->active()
-                ->get();
+                ->whereHas("enrolledCourses.payments", function($q){
+                        $q->active();
+                })
+                ->active();
 
-        // dd($dashboardRaw[0]->enrolledCourses->flatMap->payments->first()->totalPaid()
-        // ?->reduce(function ($payment) {
-        //                             $payment->totalPaid();
-        //                         }, 0)
+        if($leadStart && $leadEnd){
+            $dashboardRaw->whereHas("leads", function($q) use($leadStart, $leadEnd){
+                $q->dateFilter("created_at", $leadStart, $leadEnd);
+            });
+        }
+
+        // dd($dashboardRaw);
+        $dashboardRaw = $dashboardRaw->get();
+
+        // dd(
+        // $dashboardRaw[0]->enrolledCourses
+        // ->flatMap
+        // ->payments
+        // ->first()
+        // ->selectRaw("CASE WHEN type = 'refunded' THEN -paid_amount ELSE paid_amount END")
         // );
           
         // dd($courses[0]->leads->count());
@@ -91,11 +111,19 @@ class InquiryDashboardController extends Controller
         $dashboardData = $dashboardRaw->map(fn($row) => [
             'course_name' => $row->name,
             'course_id'   => $row->course_id,
-            'students'    => (int) $row->enrolledCourses()?->activeCourse()?->count() ?? 0,
+            'students'    => (int) $row->enrolledCourses()?->count() ?? 0,
             'revenue'     => (float) $row->enrolledCourses
                                 ?->flatMap?->payments
-                                ?->reduce(function ($carry, $payment) {
-                                    return $carry + $payment->totalPaid();
+                                ?->reduce(function ($carry, $payment) use($paymentStart, $paymentEnd) {
+                                    $pay = $payment->selectRaw("CASE WHEN type = 'refunded' THEN -paid_amount ELSE paid_amount END as payment")
+                                        ->when(!is_null($paymentStart) && !is_null($paymentEnd), function($q) use($paymentStart, $paymentEnd){
+                                            $q->dateFilter($paymentStart, $paymentEnd);
+                                        });
+                                    ;
+                                    if(!is_null($pay)){
+                                        return $carry + $pay->value("payment");
+                                    }
+                                    return $carry;
                                 }, 0)
                             ,
             'leads'       => (int) $row->leads()->count()

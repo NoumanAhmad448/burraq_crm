@@ -132,7 +132,7 @@ class EnrolledCourse extends Model
         );
     }
 
-    public function scopeRegDate($q, $month, $year, $date = "registration_date")
+    public function scopeRegDate($q, $month, $year, $date = "admission_date")
     {
         return $q->when(!is_null($month), function ($q) use ($month, $date) {
             $q->whereMonth($date, $month);
@@ -140,6 +140,10 @@ class EnrolledCourse extends Model
             ->when(!is_null($year), function ($q) use ($year, $date) {
                 $q->whereYear($date, $year);
             });
+    }
+    public function scopeDateFilter($q, $startDate, $endDate, $date = "admission_date")
+    {
+        return $q->whereBetween($date, [$startDate, $endDate]);
     }
 
     public function scopeignoreOrAccept($query, $status)

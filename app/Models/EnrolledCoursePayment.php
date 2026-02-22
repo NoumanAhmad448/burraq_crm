@@ -74,7 +74,7 @@ class EnrolledCoursePayment extends Model
     {
         return !$query->exists();
     }
-    public function scopeRegDate($query, $month, $year, $date = "registration_date")
+    public function scopeRegDate($query, $month, $year, $date = "payment_date")
     {
         return $query->when(!is_null($month), function ($q) use ($month, $date) {
             $q->whereMonth($date, $month);
@@ -82,6 +82,11 @@ class EnrolledCoursePayment extends Model
             ->when(!is_null($year), function ($q) use ($year, $date) {
                 $q->whereYear($date, $year);
             });
+    }
+
+    public function scopeDateFilter($q, $startDate, $endDate, $date = "payment_date")
+    {
+        return $q->whereBetween($date, [$startDate, $endDate]);
     }
 
     public function scopeNetAmount($query)
