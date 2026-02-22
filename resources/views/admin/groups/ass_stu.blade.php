@@ -10,7 +10,7 @@
         <label for="enrolled_course_id">Choose Student <small class="text-danger"> Listing format: name -- email -- phone
                 -- course-name</small></label>
         <select name="enrolled_course_id" class="form-control select">
-            <option value=""> -- Select Instructor -- </option>
+            <option value=""> -- Select Student -- </option>
 
             @foreach (App\Models\EnrolledCourse::with('student', 'course')->get() as $enrolled)
                 <option value="{{ $enrolled->id }}">
