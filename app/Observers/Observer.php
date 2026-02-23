@@ -24,7 +24,7 @@ class Observer
         $original = $model->getOriginal();
         $new = $model->getAttributes();
 
-        self::updateLogic($data, $model, $new);
+        self::updateLogic($data, $model, $new, $original);
 
         $data['old_values'] = $original;
         $data['new_values'] = $new;
