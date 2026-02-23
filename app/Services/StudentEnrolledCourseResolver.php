@@ -16,7 +16,9 @@ class StudentEnrolledCourseResolver
 {
     public static function resolve(string|null $type, ?int $month, ?int $year, $status)
     {
-        // dd($status);
+        if(request()->group_id){
+            return StudentEnrolledCourseCache::group($month, $year, $status, "payment_date");
+        }
         return match ($type) {
             'deleted' => EnrolledCourseStudentFilter::query($month, $year, $status),
 

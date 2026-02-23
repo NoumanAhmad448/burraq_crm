@@ -89,7 +89,7 @@
          ],
          [
              'title' => 'Total Income (This Month)',
-             'count' => show_payment($paymentsThisMonth + $pendingThisMonth),
+             'count' => show_payment($totalPaid_m + $pendingThisMonth),
              'icon' => 'img/fa-fa-check-circle.png',
              'bg' => 'bg-info',
              'amount_color' => 'success',

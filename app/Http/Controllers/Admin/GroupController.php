@@ -19,7 +19,7 @@ class GroupController extends Controller
         }
 
         // \printQuery($groups);
-        $groups = $groups->get();
+        $groups = $groups->latest()->get();
         
         return view('admin.groups.index', compact('groups'));
     }

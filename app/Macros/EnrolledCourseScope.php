@@ -2,6 +2,7 @@
 
 namespace App\Macros;
 
+use App\Models\EnrolledCourse;
 use Illuminate\Database\Eloquent\Builder;
 
 
@@ -45,7 +46,7 @@ class EnrolledCourseScope
         |--------------------------------------------------------------------------
         */
         Builder::macro('activeStatus', function () {
-            return $this->whereNull('status')
+            return $this->whereNull('status')->orWhere("status", EnrolledCourse::ACTIVE)
                 ->activeCourse();
         });
 

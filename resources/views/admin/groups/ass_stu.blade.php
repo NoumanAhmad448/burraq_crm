@@ -12,7 +12,7 @@
         <select name="enrolled_course_id" class="form-control select">
             <option value=""> -- Select Student -- </option>
 
-            @foreach (App\Models\EnrolledCourse::with('student', 'course')->get() as $enrolled)
+            @foreach (App\Models\EnrolledCourse::with('activeStudent', 'course')->activeStudentInRelation()->activeCourse()->get() as $enrolled)
                 <option value="{{ $enrolled->id }}">
                     @include('admin.groups.listed_stu')
                 </option>

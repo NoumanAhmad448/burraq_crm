@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         @include('messages')
         <x-admin>
             <h2>Assign Instructors</h2>
@@ -45,6 +45,7 @@
                             @endforeach
                         </td>
                         <td>{{ $group->status }}</td>
+                        <td>{{ showWebPageDate($group->created_at) }}</td>
                         @include('admin.groups.group_action')
                     </tr>
                 @endforeach

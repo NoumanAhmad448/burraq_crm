@@ -38,7 +38,7 @@ $menuGroups = [
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
             [
-                'title' => 'Inquiries Leeds',
+                'title' => 'Inquiries Leads',
                 'icon'  => 'fa-bullseye',
                 'route' => route('inquiry_dashboard.index'),
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
@@ -50,7 +50,7 @@ $menuGroups = [
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
             [
-                'title' => 'Group Managmenet',
+                'title' => 'Group Management',
                 'icon'  => 'fa-dashboard',
                 'route' => route('admin.groups.index'),
                 'access_roles' => ['admin', 'instructor', 'admission_officer'],
