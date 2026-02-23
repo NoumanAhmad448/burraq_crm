@@ -22,8 +22,9 @@
         
         @elseif($dropped_cond) class="btn btn-secondary"
         @elseif($refunded_cond) class="btn btn-outline-primary"
+        @elseif($course->is_deleted == 1 || $course->student->is_deleted == 1) class="btn btn-danger"
         
-        @else class="btn btn-danger" @endif>
+        @else class="btn btn-primary" @endif>
         {{-- @dump($course->total_fee) --}}
         {{-- @dump($paid_payment) --}}
 
@@ -37,8 +38,10 @@
             Dropped
         @elseif($refunded_cond)
             Refunded
-        @else
+        @elseif($course->is_deleted == 1 || $course->student->is_deleted == 1)
             Deleted
+        @else
+            {{ humanize($course->status) }}
         @endif
     </small>
 </td>

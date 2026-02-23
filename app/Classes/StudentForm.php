@@ -90,4 +90,22 @@ class StudentForm
         // dd($student);
         return $student;
     }
+
+    public static function sendEmail($student)
+    {
+        // Main recipients
+        $toEmails = config("setting.student_emails");
+
+        // Remove empty emails just in case
+        $toEmails = array_filter($toEmails);
+        // Do not proceed if no valid TO emails
+        if (!empty($toEmails) && !empty($student?->email)) {
+            $mail = Mail::to($student->email);
+
+            // CC student if email exists
+            $mail->cc($toEmails);
+
+            $mail->send(new StudentFeeReceiptMail($student));
+        }
+    }
 }
