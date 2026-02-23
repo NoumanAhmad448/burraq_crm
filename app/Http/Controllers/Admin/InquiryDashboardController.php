@@ -77,7 +77,7 @@ class InquiryDashboardController extends Controller
                 ->with(["enrolledCourses"                    
                 , "leads"])
                 ->whereHas("enrolledCourses", function($q) use($enrollStart, $enrollEnd){
-                    $q->activeCourse()->activeStudentInRelation()
+                    $q->activeCourse()
                     ->when(!is_null($enrollStart) && !is_null($enrollEnd), function($q) use($enrollStart, $enrollEnd){
                         $q->dateFilter($enrollStart, $enrollEnd);
                     });
@@ -85,7 +85,12 @@ class InquiryDashboardController extends Controller
                 ->whereHas("enrolledCourses.payments", function($q){
                         $q->active();
                 })
-                ->active();
+                ->whereHas("enrolledCourses.student", function($q){
+                        $q->active();
+                })
+                ->active()
+                // ->groupBy("enrolledCourses.id")
+                ;
 
         if($leadStart && $leadEnd){
             $dashboardRaw->whereHas("leads", function($q) use($leadStart, $leadEnd){

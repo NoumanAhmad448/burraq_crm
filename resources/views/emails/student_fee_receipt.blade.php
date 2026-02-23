@@ -185,6 +185,7 @@
                                 <th>Paid Amount</th>
                                 <th>Paid At</th>
                                 <th>Received By</th>
+                                <th>Payment Method</th>
                             </tr>
                             </tr>
                         </thead>
@@ -194,6 +195,7 @@
                                     <td class="text-left">{{ show_payment($payment->paid_amount, 2) }}</td>
                                     <td>{{ showWebPageDate($payment->paid_at) }}</td>
                                     <td>{{ $payment->paidBy?->name ?? 'System' }}</td>
+                                    <td>{{ humanize($payment->payment_method) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -85,26 +85,9 @@ class StudentController extends Controller
                 }
             }
 
-            // Main recipients
-            $toEmails = config("setting.student_emails");
-
-            // Remove empty emails just in case
-            $toEmails = array_filter($toEmails);
 
             // Do not proceed if no valid TO emails
-            if (!empty($toEmails) && !empty($student?->email)) {
-                $mail = Mail::to($student->email);
-
-                // CC student if email exists
-                $mail->cc($toEmails);
-
-                $mail->send(new StudentFeeReceiptMail($student));
-            } else {
-                Log::warning('Student fee receipt email NOT sent: No primary recipient emails found.', [
-                    'student_id' => $student->id ?? null,
-                    'student_email' => $student->email ?? null,
-                ]);
-            }
+            StudentForm::sendEmail($student);
 
             /* ---------- CHECKBOX LOGIC ---------- */
             if ($request->print) {
@@ -213,7 +196,7 @@ class StudentController extends Controller
 
         $student = Student::findOrFail($id);
         StudentForm::studentForm($request, true, $student);
-
+        
         $this->updateEnrolledCourses($request, $student);
         if ($student && $request->status == "Completed") {
             // dd($student->status);
@@ -227,7 +210,7 @@ class StudentController extends Controller
             }
         }
         DB::commit();
-
+        StudentForm::sendEmail($student);
         if ($request->print) {
             return redirect()
                 ->route('students.print', $student->id)
