@@ -58,6 +58,7 @@ class IndexResponse implements IndexContracts
             $totalFee = EnrolledCourseTotalFee::get();
 
             // Get cached payments for this month
+            // sum of pending payment + this month paid payment
             $paymentsThisMonth = EnrolledCoursePaymentsThisMonth::get($startOfMonth, $endOfMonth);
 
             $totalPaid_g = EnrolledCoursePaymentTotal::get();

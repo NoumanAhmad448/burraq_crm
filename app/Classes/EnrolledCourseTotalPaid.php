@@ -42,36 +42,34 @@ class EnrolledCourseTotalPaid
         $cacheKey = "enrolled_course_total_paid_{$startOfMonth}_{$endOfMonth}";
 
         // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
-        return DB::table('crm_enrolled_courses as ec')
+        $totalPaid_m =  DB::table('crm_enrolled_courses as ec')
             ->join('crm_students as s', function ($join) {
                 $join->on('s.id', '=', 'ec.student_id')
                     ->where('s.is_deleted', 0);
             })
-            ->leftJoin('crm_course_payments as cp', function ($join) use ($startOfMonth, $endOfMonth) {
-                $join->on('cp.enrolled_course_id', '=', 'ec.id')
-                    ->where('cp.is_deleted', 0)
-                    ->whereBetween('cp.payment_date', [$startOfMonth, $endOfMonth]);
-            })
+            ->leftJoin(DB::raw("
+                    (
+                        SELECT 
+                            enrolled_course_id,
+                            SUM(
+                                CASE 
+                                    WHEN type = 'refunded' THEN -paid_amount
+                                    ELSE paid_amount
+                                END
+                            ) as total_paid
+                        FROM crm_course_payments
+                        WHERE is_deleted = 0
+                        AND payment_date BETWEEN ? AND ?
+                        GROUP BY enrolled_course_id
+                    ) as p
+                "), 'p.enrolled_course_id', '=', 'ec.id')
+                ->addBinding([$startOfMonth, $endOfMonth], 'join')
             ->where('ec.is_deleted', 0)
-            ->groupBy('ec.id', 'ec.total_fee')
-            ->havingRaw("
-                COALESCE(
-                    SUM(
-                        cp.paid_amount *
-                        (CASE WHEN cp.type = 'refunded' THEN -1 ELSE 1 END)
-                    ), 0
-                ) >= ec.total_fee
-            ")
-            ->selectRaw("
-                SUM(
-                    COALESCE(
-                        cp.paid_amount *
-                        (CASE WHEN cp.type = 'refunded' THEN -1 ELSE 1 END),
-                        0
-                    )
-                ) as total
-            ")
-            ->value('total');
+            ->whereNull('ec.status')
+            ->whereRaw('COALESCE(p.total_paid,0) >= ec.total_fee')
+            ->sum('p.total_paid');
+
+        return $totalPaid_m;
 
 
         // });

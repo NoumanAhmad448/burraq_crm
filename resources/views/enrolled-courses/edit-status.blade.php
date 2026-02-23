@@ -28,8 +28,9 @@
                     <div class="mb-3">
                         <label class="form-label">New Status</label>
                         <select name="status" class="form-select">
-                            <option value="dropped">Dropped</option>
-                            <option value="refunded">Refunded</option>
+                            <option value="{{ App\Models\EnrolledCourse::ACTIVE }}"> {{ humanize(App\Models\EnrolledCourse::ACTIVE) }} </option>
+                            <option value="{{ App\Models\EnrolledCourse::DROPPED }}"> {{ humanize(App\Models\EnrolledCourse::DROPPED) }} </option>
+                            <option value="{{ App\Models\EnrolledCourse::REFUNDED }}"> {{ humanize(App\Models\EnrolledCourse::REFUNDED) }} </option>
                         </select>
                     </div>
 

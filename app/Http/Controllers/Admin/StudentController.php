@@ -47,7 +47,7 @@ class StudentController extends Controller
 
         $groups = Group::all();
 
-
+        // dd($enrolledCourses);
         $all_courses = StudentEnrolledCourseResolver::allCourses();
         return view('admin.students.index', compact('enrolledCourses', 'all_courses', "month", "year", "groups"));
     }

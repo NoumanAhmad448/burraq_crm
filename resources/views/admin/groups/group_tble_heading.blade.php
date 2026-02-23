@@ -4,6 +4,7 @@
         <th>Timing</th>
         <th>Instructor</th>
         <th>Status (%)</th>
+        <th>Created Date</th>
         <th>Actions</th>
     </tr>
 </thead>

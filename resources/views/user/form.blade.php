@@ -36,7 +36,15 @@
         {{-- Password --}}
         <div class="form-group mt-2">
             <label for="password">{{ isset($user) & $is_update ? 'Change Password (optional)' : 'Password' }}</label>
-            <input type="password" class="form-control" name="password" {{ isset($user) ? '' : 'required' }}>
+            <div class="input-group">
+
+                <input id="password" type="password" class="form-control" name="password" {{ isset($user) ? '' : 'required' }}>
+                <div class="input-group-append">
+                    <span class="input-group-text bg-website text-white cursor-pointer" id="show_pass">
+                        <i class="fa fa-eye" id="pass_icon"></i>
+                    </span>
+                </div>
+            </div>
             @error('password')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -52,11 +60,12 @@
                 <option value="admission_officer"
                     {{ old('role', $user?->role ?? '') == 'admission_officer' ? 'selected' : '' }}>Admission Officer
                 </option>
-                <option value="instructor"
-                    {{ old('role', $user?->role ?? '') == 'instructor' ? 'selected' : '' }}>Instructor
+                <option value="instructor" {{ old('role', $user?->role ?? '') == 'instructor' ? 'selected' : '' }}>
+                    Instructor
                 </option>
                 <option value="hr_role" {{ old('role', $user?->role ?? '') == 'hr_role' ? 'selected' : '' }}>HR Manager
-                <option value="print_certificate" {{ old('role', $user?->role ?? '') == 'print_certificate' ? 'selected' : '' }}>Print Certificate
+                <option value="print_certificate"
+                    {{ old('role', $user?->role ?? '') == 'print_certificate' ? 'selected' : '' }}>Print Certificate
                 </option>
             </select>
             @error('role')
@@ -73,3 +82,21 @@
         </form>
     </div>
 </div>
+<script>
+    var showPassword = (pass) => {
+        if (pass.attr('type') === "password") {
+            $("#pass_icon").removeClass('fa-eye').addClass('fa-eye-slash');
+        pass.attr('type', 'text');
+        } else {
+            pass.attr('type', 'password');
+            $("#pass_icon").addClass('fa-eye').removeClass('fa-eye-slash');
+
+        }
+    }
+
+    var pass = $('#show_pass');
+    pass.click(function() {
+        var other_el = $('#password');
+        showPassword(other_el);
+    });
+</script>

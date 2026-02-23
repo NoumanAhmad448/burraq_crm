@@ -52,17 +52,6 @@ class Student extends Model
         }
     }
 
-    public function scopeIgnoreOrAccept($query, $status)
-    {
-        if (empty($status)) {
-            return $query
-            // ->where('status', '<>', self::COMPLETED)
-            ;
-        }
-        // dd($status);
-        return $query->where('status', $status);
-    }
-
     public function scopeActive($query)
     {
         return $query->where('is_deleted', 0)->orWhereNull('is_deleted');

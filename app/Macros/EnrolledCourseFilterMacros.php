@@ -40,8 +40,14 @@ class EnrolledCourseFilterMacros
         |--------------------------------------------------------------------------
         */
         Builder::macro('ignoreOrAccept', function ($status) {
-            return $this->when($status, function ($q, $status) {
-                $q->where("status", empty($status) ? "<>" : "=", empty($status) ? 'completed' : $status);
+            return $this->when($status, function ($query, $status) {
+                if (empty($status)) {
+                    return $query
+                    // ->where('status', '<>', self::COMPLETED)
+                    ;
+                }
+            // dd($status);
+             return $query->where('status', $status);
             });
         });
 

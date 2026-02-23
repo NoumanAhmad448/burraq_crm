@@ -12,6 +12,7 @@ class EnrolledCourse extends Model
     public const REFUNDED = "refunded";
     public const COMPLETED = "Completed";
     public const DROPPED = "dropped";
+    public const ACTIVE = "active";
     public const DELETED = "deleted";
 
     protected $fillable = [
