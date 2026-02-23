@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\StudentForm;
 use App\Models\EnrolledCourse;
 use App\Models\EnrolledCoursePayment;
 use App\Models\Student;
@@ -52,7 +53,7 @@ class EnrolledCoursePaymentController extends Controller
     {
         // dd($request->all());
         $data = $request->validated();
-
+        $student = Student::find($data['student_id']);
         // dd($data);
         // Handle file upload
         $paymentSlipPath = null;
@@ -108,6 +109,8 @@ class EnrolledCoursePaymentController extends Controller
             ]);
         }
 
+        StudentForm::sendEmail($student);
+
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }
 
@@ -116,6 +119,7 @@ class EnrolledCoursePaymentController extends Controller
     {
         // Only allow updating paid_amount and payment_slip_path
         $payment->paid_amount = $request->input('paid_amount', $payment->paid_amount);
+        $student = $payment->enrolledCourse->student;
 
         if ($request->hasFile('payment_slip')) {
             $img = $request->file('payment_slip');
@@ -128,6 +132,8 @@ class EnrolledCoursePaymentController extends Controller
         $payment->payment_method = $request->payment_method;
 
         $payment->save();
+
+        StudentForm::sendEmail($student);
 
         return redirect()->back()->with('success', 'Payment updated successfully.');
     }
