@@ -23,6 +23,13 @@ class CommonMacros
         QueryBuilder::macro('whereNotDeleted', function () {
             return $this->where('is_deleted', 0);
         });
+        EloquentBuilder::macro('whereNotSoftDeleted', function () {
+            return $this->whereNull('deleted_at');
+        });
+
+        QueryBuilder::macro('whereNotSoftDeleted', function () {
+            return $this->whereNull('deleted_at');
+        });
 
         /*
         |--------------------------------------------------------------------------

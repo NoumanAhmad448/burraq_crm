@@ -46,8 +46,10 @@ class EnrolledCourseScope
         |--------------------------------------------------------------------------
         */
         Builder::macro('activeStatus', function () {
-            return $this->whereNull('status')->orWhere("status", EnrolledCourse::ACTIVE)
-                ->activeCourse();
+            return $this->where(function($q){
+                $q->whereNull('status')->orWhere("status", EnrolledCourse::ACTIVE);
+            })
+            ->activeCourse();
         });
 
         /*

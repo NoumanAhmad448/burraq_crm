@@ -6,10 +6,10 @@
         $course->total_fee - $paid_payment > 0 &&
         empty($course->status);
 
-    $unpaid_cond = $paid_payment > 0 && $course->total_fee - $paid_payment > 0 && empty($course->status);
+    $unpaid_cond = $paid_payment > 0 && $course->total_fee - $paid_payment > 0 && empty($course->status) || $course->status == App\Models\EnrolledCourse::ACTIVE;
 
-    $dropped_cond = $course->status == "dropped";
-    $refunded_cond = $course->status == "refunded";
+    $dropped_cond = $course->status == App\Models\EnrolledCourse::DROPPED;
+    $refunded_cond = $course->status == App\Models\EnrolledCourse::REFUNDED;
 @endphp
 
 <td>
@@ -35,11 +35,11 @@
         @elseif($unpaid_cond)
             Unpaid
         @elseif($dropped_cond)
-            Dropped
+            {{ humanize(App\Models\EnrolledCourse::DROPPED) }}
         @elseif($refunded_cond)
-            Refunded
+            {{ humanize(App\Models\EnrolledCourse::REFUNDED) }}
         @elseif($course->is_deleted == 1 || $course->student->is_deleted == 1)
-            Deleted
+            {{ humanize(App\Models\EnrolledCourse::DELETED) }}
         @else
             {{ humanize($course->status) }}
         @endif
