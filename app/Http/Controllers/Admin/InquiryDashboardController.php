@@ -22,17 +22,26 @@ class InquiryDashboardController extends Controller
         $start = null;
         $end   = null;
 
+        // dump($year);
+        // dd($month);
         if ($month && $year) {
-
             $base  = Carbon::createFromDate($year, $month, 1);
             $start = $base->copy()->startOfMonth();
             $end   = $base->copy()->endOfMonth();
-        } elseif ($year) {
+        }
+         elseif ($year) {
 
-            $base  = Carbon::createFromDate($year, 1, 1);
+        $base  = Carbon::createFromDate($year, 1, 1);
             $start = $base->copy()->startOfYear();
             $end   = $base->copy()->endOfYear();
-        } elseif ($lastMonths) {
+        }
+         elseif ($month && !$year) {
+
+            $base  = Carbon::createFromDate(LyskillsCarbon::currentYear(), $month, 1);
+            $start = $base->copy()->startOfMonth();
+            $end   = $base->copy()->endOfMonth();
+        }
+         elseif ($lastMonths) {
 
             $end   = now()->endOfDay();
             $start = now()->subMonths($lastMonths)->startOfDay();
@@ -83,12 +92,12 @@ class InquiryDashboardController extends Controller
             // Enroll count
             ->withCount([
                 'enrolledCourses as enroll_count' => function ($q) use ($enrollStart, $enrollEnd) {
-                    $q->activeStatus()->whereNotDeleted()
+                    $q->activeStatus()
                         ->whereHas('student', function ($q) {
                             $q->active();
                         })
-                        ->whereHas('payments', function ($q) {
-                            $q->active();
+                        ->whereHas('payments', function ($q) use($enrollStart, $enrollEnd) {
+                            $q->active()->dateFilter($enrollStart, $enrollEnd, "payment_date", "crm_enrolled_courses");
                         })
                         ->when($enrollStart && $enrollEnd, function ($q) use ($enrollStart, $enrollEnd) {
                             $q->dateFilter($enrollStart, $enrollEnd, "admission_date", "crm_enrolled_courses");
@@ -108,7 +117,10 @@ class InquiryDashboardController extends Controller
                         ), 0)
                     ")
                     ->whereHas('enrolledCourse', function ($q) {
-                        $q->whereColumn('crm_enrolled_courses.course_id', 'crm_courses.id');
+                        $q->whereColumn('crm_enrolled_courses.course_id', 'crm_courses.id')->activeStatus();
+                    })
+                    ->whereHas('enrolledCourse.student', function ($q) {
+                        $q->active();
                     })
                     ->when($paymentStart && $paymentEnd, function ($q) use ($paymentStart, $paymentEnd) {
                         $q->dateFilter($paymentStart, $paymentEnd, 'payment_date', "crm_course_payments");
@@ -117,9 +129,9 @@ class InquiryDashboardController extends Controller
                 'total_payment'
             )
             ->active()
-
             ->get();
-        // dd($dashboardRaw[0]->total_payment);
+
+        // dd($dashboardRaw[0]);
         // Format for dashboard
         $dashboardData = $dashboardRaw->map(fn($row) => [
             'course_name' => $row->name,
