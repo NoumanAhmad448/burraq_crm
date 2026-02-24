@@ -20,24 +20,15 @@ class EnrolledCoursePaymentTotal
 
         // return Cache::remember($cacheKey, $ttl, function () {
             $totalPaid_g = EnrolledCoursePayment::query()
-                ->where('is_deleted', 0)
+                ->active()
                 ->whereHas('enrolledCourse', function ($q) {
-                    $q->where('is_deleted', 0);
+                    $q->active()->activeStatus();
                 })
                 ->whereHas('enrolledCourse.student', function ($q) {
-                    $q->where('is_deleted', 0);
+                    $q->active();
                 })
-                ->selectRaw("
-                    COALESCE(
-                        SUM(
-                            CASE 
-                                WHEN type = 'refunded' THEN -paid_amount
-                                ELSE paid_amount
-                            END
-                        ), 0
-                    ) as net_total
-                ")
-                ->value('net_total');
+                ->totalPaid()
+                ;
 
 
             return $totalPaid_g;
