@@ -97,7 +97,10 @@ class InquiryDashboardController extends Controller
                             $q->active();
                         })
                         ->whereHas('payments', function ($q) use($enrollStart, $enrollEnd) {
-                            $q->active()->dateFilter($enrollStart, $enrollEnd, "payment_date", "crm_enrolled_courses");
+                            $q->active();
+                            if($enrollStart && $enrollEnd){
+                                $q->dateFilter($enrollStart, $enrollEnd, "payment_date", "crm_enrolled_courses");
+                            }
                         })
                         ->when($enrollStart && $enrollEnd, function ($q) use ($enrollStart, $enrollEnd) {
                             $q->dateFilter($enrollStart, $enrollEnd, "admission_date", "crm_enrolled_courses");
