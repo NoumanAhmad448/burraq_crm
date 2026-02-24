@@ -26,9 +26,10 @@ class EnrolledCourseTotalOverdueCount
                     $query->active();
                 })
                 ->activeStatus()
-                ->paidStudentsOnly()->count();
+                ->paidStudentsOnly();
 
-            return $totalOverdue_count;
+                // \printQuery($totalOverdue_count);
+            return $totalOverdue_count->count();
         // });
     }
 

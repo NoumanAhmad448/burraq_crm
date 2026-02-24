@@ -73,4 +73,5 @@ class Inquiry extends Model
     public function scopeDateFilter($q, $created_at, $start, $end){
         return $q->whereBetween($created_at, [$start, $end]);
     }
+
 }

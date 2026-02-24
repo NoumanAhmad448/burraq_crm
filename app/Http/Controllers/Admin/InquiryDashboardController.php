@@ -27,18 +27,15 @@ class InquiryDashboardController extends Controller
             $base  = Carbon::createFromDate($year, $month, 1);
             $start = $base->copy()->startOfMonth();
             $end   = $base->copy()->endOfMonth();
-
         } elseif ($year) {
 
             $base  = Carbon::createFromDate($year, 1, 1);
             $start = $base->copy()->startOfYear();
             $end   = $base->copy()->endOfYear();
-
         } elseif ($lastMonths) {
 
             $end   = now()->endOfDay();
             $start = now()->subMonths($lastMonths)->startOfDay();
-
         } elseif ($startDate || $endDate) {
 
             $start = $startDate
@@ -74,64 +71,62 @@ class InquiryDashboardController extends Controller
         [$leadStart, $leadEnd] = [$enrollStart, $enrollEnd];
 
         $dashboardRaw = Course::query()
-                ->with(["enrolledCourses"                    
-                , "leads"])
-                ->whereHas("enrolledCourses", function($q) use($enrollStart, $enrollEnd){
-                    $q->activeCourse()
-                    ->when(!is_null($enrollStart) && !is_null($enrollEnd), function($q) use($enrollStart, $enrollEnd){
-                        $q->dateFilter($enrollStart, $enrollEnd);
+            // Leads count
+            ->withCount([
+                'leads as leads_count' => function ($q) use ($leadStart, $leadEnd) {
+                    $q->whereNotSoftDeleted()->when($leadStart && $leadEnd, function ($q) use ($leadStart, $leadEnd) {
+                        $q->dateFilter($leadStart, $leadEnd, 'created_at', "crm_inquiries");
                     });
-                })
-                ->whereHas("enrolledCourses.payments", function($q){
-                        $q->active();
-                })
-                ->whereHas("enrolledCourses.student", function($q){
-                        $q->active();
-                })
-                ->active()
-                // ->groupBy("enrolledCourses.id")
-                ;
+                }
+            ])
 
-        if($leadStart && $leadEnd){
-            $dashboardRaw->whereHas("leads", function($q) use($leadStart, $leadEnd){
-                $q->dateFilter("created_at", $leadStart, $leadEnd);
-            });
-        }
+            // Enroll count
+            ->withCount([
+                'enrolledCourses as enroll_count' => function ($q) use ($enrollStart, $enrollEnd) {
+                    $q->activeStatus()->whereNotDeleted()
+                        ->whereHas('student', function ($q) {
+                            $q->active();
+                        })
+                        ->whereHas('payments', function ($q) {
+                            $q->active();
+                        })
+                        ->when($enrollStart && $enrollEnd, function ($q) use ($enrollStart, $enrollEnd) {
+                            $q->dateFilter($enrollStart, $enrollEnd, "admission_date", "crm_enrolled_courses");
+                        });
+                }
+            ])
 
-        // dd($dashboardRaw);
-        $dashboardRaw = $dashboardRaw->get();
+            // Payment sum (CASE logic)
+            ->selectSub(
+                \App\Models\EnrolledCoursePayment::query()
+                    ->selectRaw("
+                        COALESCE(SUM(
+                            CASE 
+                                WHEN type = 'refunded' THEN -paid_amount 
+                                ELSE paid_amount 
+                            END
+                        ), 0)
+                    ")
+                    ->whereHas('enrolledCourse', function ($q) {
+                        $q->whereColumn('crm_enrolled_courses.course_id', 'crm_courses.id');
+                    })
+                    ->when($paymentStart && $paymentEnd, function ($q) use ($paymentStart, $paymentEnd) {
+                        $q->dateFilter($paymentStart, $paymentEnd, 'payment_date', "crm_course_payments");
+                    })
+                    ->active(),
+                'total_payment'
+            )
+            ->active()
 
-        // dd(
-        // $dashboardRaw[0]->enrolledCourses
-        // ->flatMap
-        // ->payments
-        // ->first()
-        // ->selectRaw("CASE WHEN type = 'refunded' THEN -paid_amount ELSE paid_amount END")
-        // );
-          
-        // dd($courses[0]->leads->count());
-
-        // dd($dashboardRaw);
+            ->get();
+        // dd($dashboardRaw[0]->total_payment);
         // Format for dashboard
         $dashboardData = $dashboardRaw->map(fn($row) => [
             'course_name' => $row->name,
             'course_id'   => $row->id,
-            'students'    => (int) $row->enrolledCourses()?->count() ?? 0,
-            'revenue'     => (float) $row->enrolledCourses
-                                ?->flatMap?->payments
-                                ?->reduce(function ($carry, $payment) use($paymentStart, $paymentEnd) {
-                                    $pay = $payment->selectRaw("CASE WHEN type = 'refunded' THEN -paid_amount ELSE paid_amount END as payment")
-                                        ->when(!is_null($paymentStart) && !is_null($paymentEnd), function($q) use($paymentStart, $paymentEnd){
-                                            $q->dateFilter($paymentStart, $paymentEnd);
-                                        });
-                                    ;
-                                    if(!is_null($pay)){
-                                        return $carry + $pay->value("payment");
-                                    }
-                                    return $carry;
-                                }, 0)
-                            ,
-            'leads'       => (int) $row->leads()->count()
+            'students'    => (int) $row->enroll_count ?? 0,
+            'revenue'     => (float) $row->total_payment ?? 0,
+            'leads'       => (int) $row->leads_count
         ])->toArray();
 
         // dd($dashboardData);

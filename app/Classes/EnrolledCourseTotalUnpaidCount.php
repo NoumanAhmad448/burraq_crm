@@ -23,11 +23,18 @@ class EnrolledCourseTotalUnpaidCount
             $totalUnpaid_count = EnrolledCourse::query()
                 ->paidStudentsOnly()
                 ->activeStudentInRelation()
-                ->totalActivePayment()
+                ->whereHas('payments', function ($q){
+                    $q->active();
+                })
+                // ->totalActivePayment()
                 ->activeStatus()
-                ->count();
+                ;
 
-            return $totalUnpaid_count;
+                // \printQuery($totalUnpaid_count);
+                
+                
+
+            return $totalUnpaid_count->count();
         // });
     }
 

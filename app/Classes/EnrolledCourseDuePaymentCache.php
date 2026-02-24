@@ -17,13 +17,16 @@ class EnrolledCourseDuePaymentCache
             $date = "registration_date";
             return
                 self::commonLogic($month, $year, $status, $date)
+                ->paidStudentsOnly()
+                ->latest()
                 ->get()
-                ->filter(function ($enrolledCourse) {
-                    $totalPaid = $enrolledCourse->payments->sum('paid_amount');
-                    return $totalPaid < $enrolledCourse->total_fee;
-                })
-                ->sortByDesc('created_at')
-                ->values();
+                // ->filter(function ($enrolledCourse) {
+                //     $totalPaid = $enrolledCourse->payments->sum('paid_amount');
+                //     return $totalPaid < $enrolledCourse->total_fee;
+                // })
+                // ->sortByDesc('created_at')
+                // ->values()
+                ;
         });
     }
 
@@ -42,7 +45,7 @@ class EnrolledCourseDuePaymentCache
         $query = EnrolledCourse::query()->whereHas('payments', function ($q) use ($month, $year, $date) {
             $q->regDate($month, $year, $date)->active();
         })
-        ->activeCourse();
+        ->activeStatus();
         if (EnrolledCourse::DROPPED == $status) {
             $query->droppedCourse();
             $query->whereHas('student', function ($q) {

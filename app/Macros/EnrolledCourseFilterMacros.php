@@ -30,8 +30,8 @@ class EnrolledCourseFilterMacros
         | dateFilter
         |--------------------------------------------------------------------------
         */
-        Builder::macro('dateFilter', function ($startDate, $endDate, $date = "admission_date") {
-            return $this->whereBetween($date, [$startDate, $endDate]);
+        Builder::macro('dateFilter', function ($startDate, $endDate, $date = "admission_date", $table_name="") {
+            return $this->whereBetween($table_name ? $table_name.$date : $date, [$startDate, $endDate]);
         });
 
         /*
