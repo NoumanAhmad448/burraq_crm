@@ -87,7 +87,7 @@ class StudentController extends Controller
 
 
             // Do not proceed if no valid TO emails
-            StudentForm::sendEmail($student);
+            // StudentForm::sendEmail($student);
 
             /* ---------- CHECKBOX LOGIC ---------- */
             if ($request->print) {
@@ -210,7 +210,7 @@ class StudentController extends Controller
             }
         }
         DB::commit();
-        StudentForm::sendEmail($student);
+        // StudentForm::sendEmail($student);
         if ($request->print) {
             return redirect()
                 ->route('students.print', $student->id)
