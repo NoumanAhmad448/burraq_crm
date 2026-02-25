@@ -42,7 +42,7 @@ class StartEndDateFilter
          if(empty($start) && empty($end)){
             return $query;
          }
-        $query->dateFilter($created_at, $start, $end);
+        $query->dateFilter($start, $end, $created_at);
         return $query;
     }
 
@@ -61,7 +61,7 @@ class StartEndDateFilter
             $start = LyskillsCarbon::parse($startDate)->startOfDay();
             $end = LyskillsCarbon::parse($endDate)->endOfDay();
 
-            $query->dateFilter($created_at, $start, $end);
+            $query->dateFilter($start, $end, $created_at);
         }
         return $query;
     }
