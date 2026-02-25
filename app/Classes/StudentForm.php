@@ -95,7 +95,7 @@ class StudentForm
     {
         // Main recipients
         $toEmails = config("setting.student_emails");
-
+        // dd($toEmails);
         // Remove empty emails just in case
         $toEmails = array_filter($toEmails);
         // Do not proceed if no valid TO emails
