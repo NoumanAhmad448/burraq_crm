@@ -11,7 +11,7 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $groups = Group::with(['instructors', 'enrolledCourses', 'modules']);
+        $groups = Group::with(['instructors', 'enrolledCourses', 'modules', "groupEnrollment"]);
         if(!auth()->user()->is_admin || request()->instructor_id){
             $groups->whereHas("instructors", function($q){
                 $q->where("instructor_id", request()->instructor_id ?? auth()->id());

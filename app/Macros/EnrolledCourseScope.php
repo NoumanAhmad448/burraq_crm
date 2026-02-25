@@ -18,7 +18,7 @@ class EnrolledCourseScope
         */
         Builder::macro('canBeRefunded', function () {
             return $this->whereHas('payments', function ($query) {
-                $query->where('status', self::REFUNDED ?? 'refunded')->exists();
+                $query->where('status', \App\Models\EnrolledCourse::REFUNDED ?? 'refunded')->exists();
             });
         });
 
@@ -28,7 +28,7 @@ class EnrolledCourseScope
         |--------------------------------------------------------------------------
         */
         Builder::macro('refundedPayment', function () {
-            return $this->where('status', self::REFUNDED ?? 'refunded');
+            return $this->where('status', \App\Models\EnrolledCourse::REFUNDED ?? 'refunded');
         });
 
         /*
@@ -37,7 +37,7 @@ class EnrolledCourseScope
         |--------------------------------------------------------------------------
         */
         Builder::macro('droppedCourse', function () {
-            return $this->where('status', self::DROPPED ?? 'dropped');
+            return $this->where('status', \App\Models\EnrolledCourse::DROPPED ?? 'dropped');
         });
 
         /*

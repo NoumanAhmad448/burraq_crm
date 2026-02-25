@@ -20,6 +20,10 @@ class Group extends Model
         return $this->hasMany(GroupCourseProgress::class);
     }
 
+    public function groupEnrollment(){
+        return $this->hasMany(GroupEnrollment::class, "group_id", "id")->whereNotSoftDeleted();
+    }
+
     public function enrolledCourses()
     {
         return $this->belongsToMany(
