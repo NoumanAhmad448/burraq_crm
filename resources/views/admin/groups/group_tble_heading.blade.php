@@ -3,6 +3,7 @@
         <th>Group Name</th>
         <th>Timing</th>
         <th>Instructor</th>
+        <th>Student Count</th>
         <th>Status (%)</th>
         <th>Created Date</th>
         <th>Actions</th>

@@ -39,10 +39,19 @@
                         <td>{{ $group->timing }}</td>
                         <td>
                             @foreach ($group->instructors as $instr)
-                                {{ $instr->name }}@if (!$loop->last)
+                                {{ $instr->name }}
+                                @if($instr->enrolledGroup?->count()) 
+                                 - Group Count ( 
+                                    {{ $instr->enrolledGroup?->count() }}
+                                     {{ ")" }}
+                                 @endif
+                                 @if (!$loop->last)
                                     ,
                                 @endif
                             @endforeach
+                        </td>
+                        <td>
+                            {{ $group->groupEnrollment?->count() }}
                         </td>
                         <td>{{ $group->status }}</td>
                         <td>{{ showWebPageDate($group->created_at) }}</td>

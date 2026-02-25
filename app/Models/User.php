@@ -131,4 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role == config('settings.roles.dev');
 
     }
+    public function enrolledGroup(){
+        return $this->hasMany(GroupInstructor::class, "instructor_id", "id")->whereNotSoftDeleted();
+    }
 }

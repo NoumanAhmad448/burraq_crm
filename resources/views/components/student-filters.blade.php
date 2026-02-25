@@ -13,7 +13,7 @@
             <x-month_year_filter :month="$month" :year="$year" year_select=true />
             <div class="form-group mr-2">
 
-                <select name="type" class="form-control form-control-sm select" id="status">
+                <select name="type" class="form-control form-control-sm" id="status">
 
                     <option value="">-- All Statuses --</option>
                     {{-- <option value="deleted" {{ request('type') == 'deleted' ? 'selected' : '' }}>
@@ -51,7 +51,7 @@
 
 <script>
 document.getElementById('status').addEventListener('change', function () {
-    if (this.value === 'Completed') {
+    if (this.value === "{{ \App\Models\EnrolledCourse::COMPLETED  }}") {
         this.setAttribute('name', 'status');
     } else {
         this.setAttribute('name', 'type');
