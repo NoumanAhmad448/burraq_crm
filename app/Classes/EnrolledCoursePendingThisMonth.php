@@ -23,45 +23,47 @@ class EnrolledCoursePendingThisMonth
 
         // return Cache::remember($cacheKey, $ttl, function () use ($startOfMonth, $endOfMonth) {
 
+        // dump($startOfMonth);
+        // dd($endOfMonth);
+        $paymentsSub = DB::table('crm_course_payments as p')
+            ->selectRaw("
+                    p.enrolled_course_id,
+                    SUM(
+                        CASE
+                            WHEN p.type = 'refunded' THEN -p.paid_amount
+                            ELSE p.paid_amount
+                        END
+                    ) as total_paid
+                ")
+            ->where('p.is_deleted', 0)
+            ->when($startOfMonth && $endOfMonth, function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
+            })
+            ->groupBy('p.enrolled_course_id');
 
-        $innerQuery = DB::table('crm_enrolled_courses as ec')
+        $totalUnpaid = DB::table('crm_enrolled_courses as ec')
             ->join('crm_students as s', function ($join) {
                 $join->on('s.id', '=', 'ec.student_id')
                     ->where('s.is_deleted', 0);
             })
-            ->leftJoin('crm_course_payments as p', function ($join) {
-                $join->on('p.enrolled_course_id', '=', 'ec.id')
-                    ->where('p.is_deleted', 0);
+            ->leftJoinSub($paymentsSub, 'payments', function ($join) {
+                $join->on('payments.enrolled_course_id', '=', 'ec.id');
             })
             ->where('ec.is_deleted', 0)
-            ->groupBy('ec.id', 'ec.total_fee')
             ->selectRaw("
-        ec.id,
-        CASE
-            WHEN COALESCE(SUM(
-                CASE
-                    WHEN p.type = 'refunded' THEN -p.paid_amount
-                    ELSE p.paid_amount
-                END
-            ), 0) < ec.total_fee
-            THEN ec.total_fee - COALESCE(SUM(
-                CASE
-                    WHEN p.type = 'refunded' THEN -p.paid_amount
-                    ELSE p.paid_amount
-                END
-            ), 0)
-            ELSE 0
-        END AS outstanding
-    ");
-
-        $pendingThisMonth = DB::query()
-            ->fromSub($innerQuery, 't')
-            ->selectRaw('SUM(outstanding) as total_outstanding')
-            ->value('total_outstanding');;
+                    SUM(
+                        CASE
+                            WHEN COALESCE(payments.total_paid, 0) < ec.total_fee
+                            THEN ec.total_fee - COALESCE(payments.total_paid, 0)
+                            ELSE 0
+                        END
+                    ) as total_outstanding
+                ")
+            ->value('total_outstanding');
 
 
 
-        return $pendingThisMonth;
+        return $totalUnpaid;
         // });
     }
 
