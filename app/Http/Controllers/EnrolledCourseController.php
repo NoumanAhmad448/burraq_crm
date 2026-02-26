@@ -24,8 +24,9 @@ class EnrolledCourseController extends Controller
             ]);
         }
 
+        $canBeRef = $enrollment->first()->payments()->where("crm_course_payments.type", "refunded")->exists();
         // 🔴 If Refunded → ensure at least one refunded payment exists
-        if ($request->status === EnrolledCourse::REFUNDED && !$enrollment->canBeRefunded()) {
+        if ($request->status === EnrolledCourse::REFUNDED && $enrollment && !$canBeRef) {
             return back()->withErrors([
                 'status' => 'Cannot mark as refunded. No refunded payment found.'
             ]);

@@ -39,7 +39,7 @@ class EnrolledCoursePayment extends Model
     {
         return $this->hasMany(
             EnrolledCoursePaymentLog::class,
-            'enrolled_course_payment_id'
+            'enrolled_course_payment_id', "id"
         );
     }
 }
