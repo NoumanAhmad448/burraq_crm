@@ -17,9 +17,6 @@
             ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_method ?? null
             : null,
     );
-
-    $payment_slip_path =
-        $is_update && $student ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_slip_path : '';
 @endphp
 
 <div class="col-md-4 mt-2">

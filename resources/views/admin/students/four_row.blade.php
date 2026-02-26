@@ -25,6 +25,10 @@
     <label>Photo</label>
     @include('file', ['name' => 'photo'])
 </div>
+@php
+    $payment_slip_path =
+        $is_update && $student ? $student?->enrolledCourses()->first()->payments()?->first()?->payment_slip_path : '';
+@endphp
 <div class="col-md-4 mt-2">
     <label>Payment Slip</label>
     @include('file', ['name' => 'payment_slip_path'])
