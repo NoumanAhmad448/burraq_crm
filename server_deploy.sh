@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Enable maintenance mode
-yes | php artisan down --force
+yes | php artisan down
 
 # Create necessary directories
 mkdir -p /home/nomilyskills/public_html/crm.burraqengineering.com/storage/app
@@ -56,7 +56,7 @@ sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com
 # yes | php artisan storage:link
 
 # Run database migrations
-yes | php artisan migrate --force
+yes | php artisan migrate
 
 # Clear caches
 php artisan cache:clear && php artisan config:clear && php artisan route:clear

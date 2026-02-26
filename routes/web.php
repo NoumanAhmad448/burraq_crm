@@ -1,6 +1,7 @@
 <?php
 
 use App\Features\GuestFeatures;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CourseController;
@@ -303,3 +304,12 @@ Route::get('{enrolledCourse}/status', [EnrolledCourseController::class, 'editSta
 
 Route::put('{enrolledCourse}/status', [EnrolledCourseController::class, 'updateStatus'])
     ->name('enrolled-courses.status.update');
+
+
+
+Route::get("test-email", function(){
+    Mail::raw('Test email', function($message){
+    $message->to('nouman.laravel@outlook.com')
+            ->subject('Test from Laravel');
+});
+});
