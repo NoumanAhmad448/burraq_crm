@@ -5,8 +5,9 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class StudentFeeReceiptMail extends Mailable
+class StudentFeeReceiptMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -14,11 +15,13 @@ class StudentFeeReceiptMail extends Mailable
 
     public function __construct($student)
     {
+        // dd($student);
         $this->student = $student;
     }
 
     public function build()
     {
+        // dd($this->student);
         return $this->subject('Student Enrollment & Fee Receipt')
             ->view('emails.student_fee_receipt');
     }

@@ -88,6 +88,7 @@ class StudentController extends Controller
 
             // Do not proceed if no valid TO emails
             // StudentForm::sendEmail($student);
+            
 
             /* ---------- CHECKBOX LOGIC ---------- */
             if ($request->print) {
