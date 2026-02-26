@@ -109,7 +109,7 @@ class EnrolledCoursePaymentController extends Controller
             ]);
         }
 
-        // StudentForm::sendEmail($student);
+        StudentForm::sendEmail($student);
 
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }
@@ -133,7 +133,7 @@ class EnrolledCoursePaymentController extends Controller
 
         $payment->save();
 
-        // StudentForm::sendEmail($student);
+        StudentForm::sendEmail($student);
 
         return redirect()->back()->with('success', 'Payment updated successfully.');
     }
