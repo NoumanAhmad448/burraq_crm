@@ -44,9 +44,9 @@ class EnrolledCourseDuePaymentCache
     {
         $query = EnrolledCourse::query()->whereHas('payments', function ($q) use ($month, $year, $date) {
             $q->regDate($month, $year, $date)->active();
-        })
-        ->activeStatus();
-        if (EnrolledCourse::DROPPED == $status) {
+        });
+        // dd($status);
+        if (EnrolledCourse::DROPPED == request("type") ) {
             $query->droppedCourse();
             $query->whereHas('student', function ($q) {
                 $q->active();
@@ -55,6 +55,7 @@ class EnrolledCourseDuePaymentCache
             $query->whereHas('student', function ($q) use ($status) {
                 $q->ignoreOrAccept($status)->active();
             });
+            $query->activeStatus();
         }
 
         $query->getCourse();

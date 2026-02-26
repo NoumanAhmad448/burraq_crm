@@ -12,7 +12,7 @@ class InqStatus
         $type = request('type', 'all');
 
 
-        $query = Inquiry::withTrashed()->latest();
+        $query = Inquiry::latest();
 
         switch ($type) {
             case 'pending':

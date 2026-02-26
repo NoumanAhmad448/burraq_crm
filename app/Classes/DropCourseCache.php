@@ -17,13 +17,15 @@ class DropCourseCache
     {
         $cacheKey = self::cacheKey($month, $year);
 
-        return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
+        // return Cache::remember($cacheKey, $ttlSeconds, function () use ($month, $year, $status) {
 
-            return EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
-                ->droppedCourse()
-                ->latest()
+            $query =  EnrolledCourseDuePaymentCache::commonLogic($month, $year, $status, "payment_date")
+                ->droppedCourse();
+
+                // printQuery($query);
+                return $query->latest()
                 ->get();
-        });
+        // });
     }
 
     /**

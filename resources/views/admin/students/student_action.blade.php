@@ -19,7 +19,7 @@
                 <i class="fa fa-history"></i>
             </a>
 
-            <a href="{{ route('students.course.payments_logs', $course->student->id) }}"
+            <a href="{{ route('course.payments_logs', $course->id) }}"
                 class="btn btn-sm btn-secondary mt-1 ml-1" title="Payments Logs of the course">
                 <i class="fa fa-credit-card"></i>
             </a>

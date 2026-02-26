@@ -17,9 +17,7 @@ class EnrolledCourseScope
         | Filters models that have at least one refunded payment
         */
         Builder::macro('canBeRefunded', function () {
-            return $this->whereHas('payments', function ($query) {
-                $query->where('status', \App\Models\EnrolledCourse::REFUNDED ?? 'refunded')->exists();
-            });
+            return $this->payments()->where("crm_course_payments.type", "refunded")->exists();
         });
 
         /*
