@@ -99,10 +99,10 @@ class StudentForm
         // Remove empty emails just in case
         $ccEmails = array_filter($ccEmails);
         // Do not proceed if no valid TO emails
-        if (!empty($student?->email)) {
+        if (!empty($student?->email) && config("app.live_env") == config("app.env")) {
             Mail::to($student->email)
             ->when(!empty($ccEmails), fn ($mail) => $mail->cc($ccEmails))
-            ->queue(new StudentFeeReceiptMail($student));
+            ->send(new StudentFeeReceiptMail($student));
         }
     }
 }

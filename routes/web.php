@@ -307,9 +307,9 @@ Route::put('{enrolledCourse}/status', [EnrolledCourseController::class, 'updateS
 
 
 
-Route::get("test-email", function(){
-    Mail::raw('Test email', function($message){
-    $message->to('nouman.laravel@outlook.com')
-            ->subject('Test from Laravel');
-});
-});
+// Route::get("test-email", function(){
+//     Mail::raw('Test email', function($message){
+//     $message->to('nouman.laravel@outlook.com')
+//             ->subject('Test from Laravel');
+// });
+// });
