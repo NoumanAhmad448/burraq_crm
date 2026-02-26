@@ -186,13 +186,19 @@ sudo chmod 444 /home/nomilyskills/public_html/crm.burraqengineering.com/.env
 # echo "📁 Installing Horizon Supervisor config..."
 # echo "Confirm the location of supervisor location in the files section if it is supervisord.d it means /etc/supervisord.d/"
 # yes | cp deploy/supervisor/horizon.conf /etc/supervisord.d/laravel-horizon.ini
+# yes | cp /etc/supervisor/conf.d/laravel-queue.conf /etc/supervisord.d/laravel-queue.ini
 
-# echo "🔄 Reloading Supervisor..."
-# supervisorctl reread
-# supervisorctl update
+echo "🔄 Reloading Supervisor..."
+supervisorctl reread
+supervisorctl update
 
 # echo "▶️ Starting Horizon via Supervisor..."
 # supervisorctl start laravel-horizon || supervisorctl restart laravel-horizon
+
+echo "▶️ Starting quue worker via Supervisor..."
+php artisan queue:restart
+supervisorctl start laravel_queue:*
+supervisorctl status laravel_queue:*
 
 php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan event:cache && php artisan optimize
