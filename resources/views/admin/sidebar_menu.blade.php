@@ -7,16 +7,14 @@ $menuGroups = [
         'items' => [
             [
                 'title' => 'Students',
-                'icon'  => 'fa-users',
+                'icon'  => 'fa-user',
                 'route' => route('students.index'),
-                'img'   => 'user.png',
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
             [
                 'title' => 'Completed Students',
-                'icon'  => 'fa-chalkboard-user',
+                'icon'  => 'fa-graduation-cap',
                 'route' => route('students.index', ["status" => "Completed"]),
-                'img'   => 'user.png',
                 'access_roles' => ['admin', 'hr', 'admission_officer'],
             ],
             [
