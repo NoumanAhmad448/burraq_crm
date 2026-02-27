@@ -39,14 +39,18 @@ class EnrolledCoursePendingThisMonth
             ->when($startOfMonth && $endOfMonth, function ($q) use ($startOfMonth, $endOfMonth) {
                 $q->whereBetween('payment_date', [$startOfMonth, $endOfMonth]);
             })
-            ->groupBy('p.enrolled_course_id');
+            // ->where("p.enrolled_course_id", 92)
+            ->groupBy('p.enrolled_course_id')
+            ;
+
+            // dd($paymentsSub->get());
 
         $totalUnpaid = DB::table('crm_enrolled_courses as ec')
             ->join('crm_students as s', function ($join) {
                 $join->on('s.id', '=', 'ec.student_id')
                     ->where('s.is_deleted', 0);
             })
-            ->leftJoinSub($paymentsSub, 'payments', function ($join) {
+            ->joinSub($paymentsSub, 'payments', function ($join) {
                 $join->on('payments.enrolled_course_id', '=', 'ec.id');
             })
             ->where('ec.is_deleted', 0)
@@ -59,11 +63,11 @@ class EnrolledCoursePendingThisMonth
                         END
                     ) as total_outstanding
                 ")
-            ->value('total_outstanding');
+            ;
 
 
-
-        return $totalUnpaid;
+        // printQuery($totalUnpaid);
+        return $totalUnpaid->value('total_outstanding');
         // });
     }
 

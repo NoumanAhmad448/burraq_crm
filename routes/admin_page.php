@@ -20,7 +20,7 @@ $route->group(function () {
     Route::get('page/{page}/edit-page', [AdminPageController::class, 'editPage'])->name('admin_edit_page');
     Route::put('page/{page}/update-page', [AdminPageController::class, 'updatePage'])->name('admin_update_page');
 
-    Route::get('/inquiry-dashboard', [InquiryDashboardController::class, 'index'])
+    Route::get('/admin-inquiry-dashboard', [InquiryDashboardController::class, 'index'])
         ->name('admin.inquiry.dashboard');
 
     Route::get(
