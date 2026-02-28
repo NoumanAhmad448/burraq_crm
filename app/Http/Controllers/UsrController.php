@@ -23,7 +23,7 @@ class UsrController extends Controller
         $users->where('is_deleted', 0);
         }
     $is_update = false; // show add user form
-    $users = $users->get();
+    $users = $users->latest()->get();
 
     return view('user.index', compact('users', 'is_update', 'type'));
 }
@@ -39,6 +39,7 @@ class UsrController extends Controller
        $data = $this->usrForm($data);
 
         $user = User::create($data);
+        $user->syncRoles([$request->role]);
 
         return redirect()->route('admin.user.index')
                         ->with('success', 'User created successfully.');
@@ -71,6 +72,8 @@ class UsrController extends Controller
         $data = $this->usrForm($data);
 
         $user->update($data);
+
+        $user->syncRoles([$request->role]);
 
         return redirect()->route('admin.user.index')
                         ->with('success', 'User updated successfully.');

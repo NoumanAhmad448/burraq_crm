@@ -116,23 +116,20 @@ $menuGroups = [
             ],
             [
                 'title' => 'Deleted Courses',
-                'icon'  => 'fa-trash',
+                'icon'  => 'fa-book text-danger',
                 'route' => route('courses.index', ['type' => 'deleted']),
-                'img'   => 'deleted_course.png',
                 'access_roles' => ['admin'],
             ],
             [
                 'title' => 'Dropped Courses',
-                'icon'  => 'fa-trash',
+                'icon'  => 'fa-trash text-danger',
                 'route' => route('students.index', ['type' => 'dropped']),
-                'img'   => 'deleted_course.png',
                 'access_roles' => ['admin'],
             ],
             [
                 'title' => 'Dropped Groups',
-                'icon'  => 'fa-trash',
+                'icon'  => 'fa-user-times text-danger',
                 'route' => route('admin.groups.trashed'),
-                'img'   => 'deleted_course.png',
                 'access_roles' => ['admin'],
             ],
         ],
@@ -146,7 +143,26 @@ $menuGroups = [
                 'title' => 'Cron Jobs',
                 'icon'  => 'fa-clock',
                 'route' => route('cron-jobs.index'),
-                'access_roles' => ['admin'],
+                'access_roles' => ['super_admin'],
+            ],
+            [
+                'title' => 'Role Management',
+                'icon'  => 'fa-user-shield',
+                'route' => route('admin.roles.index'),
+                'access_roles' => ['super_admin'],
+            ],
+
+            [
+                'title' => 'Assign User Roles',
+                'icon'  => 'fa-user-cog',
+                'route' => route('admin.users.assign.roles'),
+                'access_roles' => ['super_admin'],
+            ],
+            [
+                'title' => 'Health Report',
+                'icon'  => 'fa-user-cog',
+                'route' => route('health'),
+                'access_roles' => ['super_admin'],
             ],
         ],
     ],
@@ -157,8 +173,9 @@ $menuGroups = [
     @php
         $visibleItems = collect($group['items'])->filter(function ($item) {
             return empty($item['access_roles'])
-                || in_array(auth()->user()->role, $item['access_roles'])
-                || auth()->user()->is_admin;
+                || auth()->user()->hasRoleOrSuperAdmin($item['access_roles']) 
+                || (in_array("admin", $item['access_roles']) && isCurrentUserAdmin())
+                ;
         });
     @endphp
 

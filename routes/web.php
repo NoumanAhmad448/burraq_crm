@@ -253,9 +253,9 @@ Route::domain(config("app.url"))->middleware([config("middlewares.auth"), 'admin
 
 
 // Route::get('/testing-paypal-integration', [PaypalController::class, 'testingPaypal']);
-Route::domain(config("app.url"))->middleware(config("middlewares.auth"))->post('/paypal-integration/{slug}', [PaypalController::class, 'testingPaypalPost'])->name('PaypalPost');
+// Route::domain(config("app.url"))->middleware(config("middlewares.auth"))->post('/paypal-integration/{slug}', [PaypalController::class, 'testingPaypalPost'])->name('PaypalPost');
 // Route::get('cancel-payment', [PaypalController::class, 'paymentCancel'])->name('cancel.payment');
-Route::domain(config("app.url"))->middleware(config("middlewares.auth"))->get('payment-success', [PaypalController::class, 'paymentSuccess'])->name('success.payment');
+// Route::domain(config("app.url"))->middleware(config("middlewares.auth"))->get('payment-success', [PaypalController::class, 'paymentSuccess'])->name('success.payment');
 
 
 

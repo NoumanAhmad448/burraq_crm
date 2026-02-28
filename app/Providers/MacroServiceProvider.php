@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Macros\UserMacros;
 use Illuminate\Support\ServiceProvider;
 use App\Macros\CommonMacros;
 use App\Macros\EnrolledCourseScope;
@@ -19,5 +20,6 @@ class MacroServiceProvider extends ServiceProvider
         EnrolledCourseMacros::register();
         EnrolledCourseFilterMacros::register();
         PaymentMacros::register();
+        UserMacros::register();
     }
 }

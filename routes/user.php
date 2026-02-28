@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\Access\UserRoleController;
 use App\Http\Controllers\UsrController;
+use App\Http\Controllers\Admin\Role\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'middleware' => [config('middlewares.auth'), config('middlewares.admin')]], function () {
@@ -13,4 +15,14 @@ Route::group(['prefix' => 'admin', 'middleware' => [config('middlewares.auth'), 
 
     // Logs
     Route::get('users/logs', [UsrController::class, 'logs'])->name('admin.user.logs');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
+
+    Route::get('users/assign-roles', [UserRoleController::class, 'index'])->name('users.assign.roles');
+    Route::post('users/assign-roles', [UserRoleController::class, 'store'])->name('users.assign.roles.store');
 });

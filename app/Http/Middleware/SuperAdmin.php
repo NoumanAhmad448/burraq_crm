@@ -16,7 +16,8 @@ class SuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->email !== config("auth.bpe")){
+        // dd(ICUSA());
+        if (!ICUSA()) {
             abort(403);
         }
         return $next($request);

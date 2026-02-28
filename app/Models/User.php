@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Traits\UserTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,10 +12,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Cashier\Billable;
+use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\FilamentUser;
 
 
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     public const INSTRUCTOR_ID = "instructor_id";
     use HasApiTokens;
@@ -23,8 +26,12 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
     use Billable;
+    use HasRoles;
+    use UserTrait;
 
 
+
+    protected $guard_name = 'web';
     /**
      * The attributes that are mass assignable.
      *
@@ -83,6 +90,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return true;
     }
 
     public function wishLists()
