@@ -48,7 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         "role",
         "language",
         "profile_photo_path",
-        "is_deleted"
+        "is_deleted",
+        "is_super_admin"
     ];
 
     /**
