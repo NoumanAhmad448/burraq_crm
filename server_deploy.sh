@@ -47,7 +47,6 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev -
 
 # Laravel Seeders
 # yes | php artisan db:seed --class=LanguageSeeder
-yes | php artisan db:seed --class=RolesAndUserRoleSeeder
 
 
 # Avoid any node permission error
