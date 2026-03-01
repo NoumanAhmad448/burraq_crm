@@ -18,7 +18,7 @@ class AuthenticateUser
 
         // dd($user);
         // 🔐 Custom rules
-        if ($user->is_deleted == 1) {
+        if ($user && $user->is_deleted == 1) {
             Auth::logout();
 
             throw ValidationException::withMessages([

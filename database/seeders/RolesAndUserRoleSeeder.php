@@ -14,14 +14,14 @@ class RolesAndUserRoleSeeder extends Seeder
         $rolesConfig = config('crm_roles.roles');
 
         foreach ($rolesConfig as $key => $roleData) {
-            Role::firstOrCreate(['name' => $key]);
+            Role::firstOrCreate(attributes: ['name' => $key]);
         }
+        Role::firstOrCreate(['name' => 'super_admin']);
 
         // 2️⃣ Assign roles to users
-        $users = User::all();
+        $users = User::where('is_super_admin', 1)->get();
 
         foreach ($users as $user) {
-
             // Admin user
             if ($user->is_admin) {
                 $user->assignRole('admin');
