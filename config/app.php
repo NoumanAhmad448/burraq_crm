@@ -174,7 +174,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         HomeController1Provider::class,
-        MacroServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -196,6 +195,8 @@ return [
         App\Providers\RuleServiceProvider::class,
         App\Providers\HealthServiceProvider::class,
         App\Providers\ObserverProvider::class,
+        MacroServiceProvider::class,
+
         // Mostafaznv\Recaptcha\RecaptchaServiceProvider::class,
     ],
 

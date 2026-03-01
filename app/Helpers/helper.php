@@ -102,6 +102,13 @@ if (!function_exists('isSuperAdmin')) {
         return auth()->user()->is_super_admin == 1 ?? abort(403);
     }
 }
+if (!function_exists('ICUSA')) {
+
+    function ICUSA()
+    {
+        return auth()->user()->is_super_admin == 1 ? true: false;
+    }
+}
 if (!function_exists('isCurrentUserAdmin')) {
 
     function isCurrentUserAdmin()

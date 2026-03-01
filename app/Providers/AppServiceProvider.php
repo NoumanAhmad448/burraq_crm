@@ -42,9 +42,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        
-
-
         try {
             DB::connection()->getPdo();  // Try to connect to the database
             if (Schema::hasTable('socials')) {

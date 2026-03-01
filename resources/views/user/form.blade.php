@@ -54,19 +54,12 @@
         <div class="form-group mt-2">
             <label for="role">Role</label>
             <select name="role" class="form-control" required>
-                <option value="admin"
-                    {{ old('role', $user?->is_admin ?? 0 ? 'admin' : $user?->role ?? '') == 'admin' ? 'selected' : '' }}>
-                    Admin</option>
-                <option value="admission_officer"
-                    {{ old('role', $user?->role ?? '') == 'admission_officer' ? 'selected' : '' }}>Admission Officer
-                </option>
-                <option value="instructor" {{ old('role', $user?->role ?? '') == 'instructor' ? 'selected' : '' }}>
-                    Instructor
-                </option>
-                <option value="hr_role" {{ old('role', $user?->role ?? '') == 'hr_role' ? 'selected' : '' }}>HR Manager
-                <option value="print_certificate"
-                    {{ old('role', $user?->role ?? '') == 'print_certificate' ? 'selected' : '' }}>Print Certificate
-                </option>
+                @foreach(config('crm_roles.roles') as $key => $role)
+                    <option value="{{ $key }}"
+                        {{ old('role', $user?->is_admin ?? 0 ? 'admin' : $user?->role ?? '') == $key ? 'selected' : '' }}>
+                        {{ $role['label'] }}
+                    </option>
+                @endforeach
             </select>
             @error('role')
                 <span class="text-danger">{{ $message }}</span>

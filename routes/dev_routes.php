@@ -6,11 +6,11 @@ use App\Http\Controllers\ScheduleMonitorController;
 use Illuminate\Support\Facades\Route;
 
 
-$route = Route::prefix("dev")->middleware("is_dev");
+$route = Route::prefix("dev")->middleware(["super_admin", config("middlewares.auth")]);
 if (config("setting.enable_dev_domain")) {
-    $route->domain(config("setting.dev_domain"));
+    // $route->domain(config("setting.dev_domain"));
 }
-$route->group(function () {
+$route->group(callback: function () {
     Route::get('/health', HealthCheckResultsController::class)->name('health');
     Route::get('/delete-project', [DeleteProject::class, "deleteProject"])->name('deleteProject');
     Route::delete('/delete-project', [DeleteProject::class, "deleteProjectDelete"])->name('deleteProjectDelete');
