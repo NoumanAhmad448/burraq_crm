@@ -19,7 +19,7 @@ class RolesAndUserRoleSeeder extends Seeder
         Role::firstOrCreate(['name' => 'super_admin']);
 
         // 2️⃣ Assign roles to users
-        $users = User::where('is_super_admin', 1)->get();
+        $users = User::all();
 
         foreach ($users as $user) {
             // Admin user

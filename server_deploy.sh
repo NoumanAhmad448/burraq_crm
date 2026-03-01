@@ -49,7 +49,6 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev -
 # yes | php artisan db:seed --class=LanguageSeeder
 yes | php artisan db:seed --class=RolesAndUserRoleSeeder
 
-
 # Avoid any node permission error
 sudo chown -R root:root /home/nomilyskills/public_html/crm.burraqengineering.com/
 
