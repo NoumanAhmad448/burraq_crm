@@ -169,11 +169,10 @@ $menuGroups = [
 ];
 @endphp
 @foreach ($menuGroups as $gIndex => $group)
-
     @php
         $visibleItems = collect($group['items'])->filter(function ($item) {
             return empty($item['access_roles'])
-                || auth()->user()->hasRoleOrSuperAdmin($item['access_roles']) 
+                || auth()->user()->hasRoleOrSuperAdmin($item['access_roles'], false) 
                 || (in_array("admin", $item['access_roles']) && isCurrentUserAdmin())
                 ;
         });
