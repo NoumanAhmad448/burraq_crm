@@ -13,8 +13,8 @@ class EnrolledCourseDuePaymentCache
     public static function get(?int $month = null, ?int $year = null, $ttl = 1, $status = "")
     {
         $cacheKey = self::cacheKey($month, $year);
-        return Cache::remember($cacheKey, $ttl, function () use ($month, $year, $status) {
-            $date = "registration_date";
+        // return Cache::remember($cacheKey, $ttl, function () use ($month, $year, $status) {
+            $date = "payment_date";
             return
                 self::commonLogic($month, $year, $status, $date)
                 ->paidStudentsOnly()
@@ -27,7 +27,7 @@ class EnrolledCourseDuePaymentCache
                 // ->sortByDesc('created_at')
                 // ->values()
                 ;
-        });
+        // });
     }
 
     /**
