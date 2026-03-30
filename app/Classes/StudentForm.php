@@ -102,7 +102,7 @@ class StudentForm
         if (!empty($student?->email) && config("app.live_env") == config("app.env")) {
             Mail::to($student->email)
             ->when(!empty($ccEmails), fn ($mail) => $mail->cc($ccEmails))
-            ->queue(new StudentFeeReceiptMail($student));
+            ->send(new StudentFeeReceiptMail($student));
         }
     }
 }
