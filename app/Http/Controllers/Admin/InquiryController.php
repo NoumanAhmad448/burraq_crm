@@ -35,7 +35,7 @@ class InquiryController extends Controller
             $query->where('course_id', $request->course_id);
         }
 
-        $inquiries = $query->get();
+        $inquiries = $query->latest()->get();
 
         $courses = Course::latestCourse();
         return view('admin.inquiries.index', compact('inquiries', 'courses'));
